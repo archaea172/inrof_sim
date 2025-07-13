@@ -27,6 +27,7 @@ public:
             v[i] = 0;
         }
         T = 30;
+        dt = 0.001; // ms
     }
     //desconstructor
     ~PursuitControler()
@@ -72,18 +73,31 @@ private:
         std::vector<std::vector<float>> p_array(3, std::vector<float>(T, 0));
         std::vector<std::vector<float>> v_array(3, std::vector<float>(T, 0));
 
-        std::tie(p_array, v_array) = predict_position(this->p, this->v);
+        p_array = predict_position_array(this->p, v_array);
+
+        std::cout << this->p.size() << std::endl;
     }
 
-    std::tuple<std::vector<std::vector<float>>, std::vector<std::vector<float>>>
-    predict_position(std::vector<float> p, std::vector<float> v)
+    std::vector<std::vector<float>> predict_position_array(std::vector<float> p_value,  std::vector<std::vector<float>> v_array)
     {
-        std::vector<std::vector<float>> velocity;
-        return std::tie(velocity, velocity);
+        std::vector<std::vector<float>> p_matrix;
+
+        p_matrix[0] = p_value;
+        return p_matrix;
     }
 
-    float T;// predict horizon
+    std::vector<float> predict_position(std::vector<float> pre_p, std::vector<float> current_v)
+    {
+        std::vector<float> post_p(3);
+        for (int i = 0; i < 3; i++) post_p[i] = pre_p[i] + dt*current_v[i];
 
+        return post_p;
+    }
+
+    // predict horizon
+    float T;
+    // control cycle
+    float dt;
     // current value
     std::vector<float> p;
     std::vector<float> v;
