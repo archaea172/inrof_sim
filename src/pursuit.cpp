@@ -18,7 +18,12 @@ public:
     PursuitControler()
     : rclcpp_lifecycle::LifecycleNode(std::string("pursuit_controler"))
     {
-
+        this->x     = 0;
+        this->y     = 0;
+        this->theta = 0;
+        this->vx    = 0;
+        this->vy    = 0;
+        this->omega = 0;
     }
     //desconstructor
     ~PursuitControler()
@@ -61,8 +66,15 @@ private:
 
     void control_callback()
     {
-        printf("hello world\r\n");
+        
     }
+
+    float x;
+    float y;
+    float theta;
+    float vx;
+    float vy;
+    float omega;
 };
 
 int main(int argc, char *argv[])
