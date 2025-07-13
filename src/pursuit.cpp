@@ -25,18 +25,24 @@ public:
     {
 
     }
-    
+
 private:
+    rclcpp::TimerBase::SharedPtr control_timer;
+
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
     {
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_activate(const rclcpp_lifecycle::State &state)
     {
+        control_timer = this->create_wall_timer(0.001s, std::bind(&PursuitControler::control_callback, this));
+
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_deactivate(const rclcpp_lifecycle::State &state)
     {
+        control_timer.reset();
+
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_cleanup(const rclcpp_lifecycle::State &state)
@@ -45,6 +51,7 @@ private:
     }
     CallbackReturn on_error(const rclcpp_lifecycle::State &state)
     {
+        RCLCPP_INFO(this->get_logger(), "on error!");
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_shutdown(const rclcpp_lifecycle::State &state)
@@ -52,6 +59,10 @@ private:
         return CallbackReturn::SUCCESS;
     }
 
+    void control_callback()
+    {
+        printf("hello world\r\n");
+    }
 };
 
 int main(int argc, char *argv[])
