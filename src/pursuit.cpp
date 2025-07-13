@@ -25,7 +25,7 @@ public:
     {
 
     }
-private:
+    
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
     {
 
