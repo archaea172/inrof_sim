@@ -108,14 +108,20 @@ public:
 
     void vel_callback(const geometry_msgs::msg::Twist rxdata) const
     {
-        float theta = 0;
-        float vx = rxdata.linear.x;
-        float vy = rxdata.linear.y;
-        float omega = rxdata.angular.z;
+        if (joint_pub->is_activated())
+        {
+            float theta = 0;
+            float vx = rxdata.linear.x;
+            float vy = rxdata.linear.y;
+            float omega = rxdata.angular.z;
 
-        float w[4] = {};
-        omni_calc(theta, vx, vy, omega, &w[0], &w[1], &w[2], &w[3]);
-
+            // publish
+            float w[4] = {};
+            omni_calc(theta, vx, vy, omega, &w[0], &w[1], &w[2], &w[3]);
+            std_msgs::msg::Float32MultiArray txdata;
+            for (int i = 0; i < 4; i++) txdata.data[i] = w[i];
+            joint_pub->publish(txdata);
+        }
     }
 
 private:
