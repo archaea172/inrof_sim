@@ -107,30 +107,27 @@ public:
         return CallbackReturn::SUCCESS;
     }
 
-    void vel_callback(const geometry_msgs::msg::Twist::SharedPtr rxdata) const
+    void vel_callback(const geometry_msgs::msg::Twist::SharedPtr rxdata)
     {
         if (joint_pub->is_activated())
         {
-            float theta = 0;
-            float vx = rxdata->linear.x;
-            float vy = rxdata->linear.y;
-            float omega = rxdata->angular.z;
-
-            // publish
-            float w[4] = {0, 0, 0, 0};
-            omni_calc(theta, vx, vy, omega, &w[0], &w[1], &w[2], &w[3]);
-            std_msgs::msg::Float32MultiArray txdata;
-            std::vector<float> w_vector(4);
-            txdata.data.resize(4);
-            for (int i = 0; i < 4; i++) w_vector[i] = w[i];
-            txdata.data = w_vector;
-            joint_pub->publish(txdata);
+            this->vx = rxdata->linear.x;
+            this->vy = rxdata->linear.y;
+            this->omega = rxdata->angular.z;
         }
     }
 
     void timer_callback()
     {
-
+        // publish
+        float w[4] = {0, 0, 0, 0};
+        omni_calc(theta, vx, vy, omega, &w[0], &w[1], &w[2], &w[3]);
+        std_msgs::msg::Float32MultiArray txdata;
+        std::vector<float> w_vector(4);
+        txdata.data.resize(4);
+        for (int i = 0; i < 4; i++) w_vector[i] = w[i];
+        txdata.data = w_vector;
+        joint_pub->publish(txdata);
     }
 
 private:
@@ -140,6 +137,10 @@ private:
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr vel_subscriber;
     // define timer
     rclcpp::TimerBase::SharedPtr pub_timer;
+    float theta = 0;
+    float vx = 0;
+    float vy = 0;
+    float omega = 0;
 };
 
 int main(int argc, char * argv[])
