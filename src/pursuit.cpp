@@ -72,14 +72,17 @@ private:
     }
     // lifecycle end
 
+    // control timer callback
     void control_callback()
     {
         std::vector<std::vector<float>> v_array(T, std::vector<float>(3, 0));
-        std::cout << v_array.size() << std::endl;
 
         std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
+        std::cout << p_array.size() << std::endl;
+        std::cout << p_array[0].size() << std::endl;
     }
 
+    //control function
     std::vector<std::vector<float>> predict_position_array(const std::vector<float> &p_value, const std::vector<std::vector<float>> &v_array)
     {
         std::vector<std::vector<float>> p_matrix(T, std::vector<float>(3, 0));
