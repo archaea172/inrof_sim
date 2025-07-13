@@ -80,7 +80,16 @@ private:
     // control timer callback
     void control_callback()
     {
-        const int dim = 3;
+        std::vector<std::vector<float>> v_array = generate_v_array(3);
+        std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
+        
+    }
+
+    // probability
+    std::vector<std::vector<float>> generate_v_array(const int dim)
+    {
+        std::vector<std::vector<float>> v_matrix(T, std::vector<float>(3));
+
         Eigen::VectorXd mu(dim);
         mu << 1.0, 1.0, 0.5;
 
@@ -92,16 +101,12 @@ private:
 
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::vector<std::vector<float>> v_array(T, std::vector<float>(3));
         for (size_t i = 0; i < T; i++)
         {
             Eigen::VectorXd v_eigen = sample_multivariate_normal(mu, sigma, gen);
-            for (size_t j = 0; j < 3; j++) v_array[i][j] = v_eigen[j];
+            for (size_t j = 0; j < 3; j++) v_matrix[i][j] = v_eigen[j];
         }
-
-        std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
-        std::cout << p_array.size() << std::endl;
-        std::cout << p_array[0].size() << std::endl;
+        return v_matrix;
     }
 
     //control function
