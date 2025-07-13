@@ -76,6 +76,7 @@ public:
             rclcpp::SystemDefaultsQoS(),
             std::bind(&OmniControler::vel_callback, this, _1)
         );
+        pub_timer = this->create_wall_timer(0.001s, std::bind(&OmniControler::timer_callback, this));
         return CallbackReturn::SUCCESS;
     }
 
@@ -127,11 +128,18 @@ public:
         }
     }
 
+    void timer_callback()
+    {
+
+    }
+
 private:
     // define publisher
     rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float32MultiArray>::SharedPtr joint_pub;
     // define subscriber
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr vel_subscriber;
+    // define timer
+    rclcpp::TimerBase::SharedPtr pub_timer;
 };
 
 int main(int argc, char * argv[])
