@@ -91,3 +91,11 @@ private:
     // define subscriber
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr vel_subscriber;
 };
+
+int main(int argc, char * argv[])
+{
+    rclcpp::init(argc, argv);
+    rclcpp::spin(std::make_shared<OmniControler>()->get_node_base_interface());
+    rclcpp::shutdown();
+    return 0;
+}
