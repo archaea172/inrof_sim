@@ -82,8 +82,12 @@ private:
     {
         std::vector<std::vector<float>> v_array = generate_v_array(3);
         std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
-        
+
+
     }
+
+    // estimate function
+    
 
     // probability
     std::vector<std::vector<float>> generate_v_array(const int dim)
