@@ -106,20 +106,23 @@ public:
         return CallbackReturn::SUCCESS;
     }
 
-    void vel_callback(const geometry_msgs::msg::Twist rxdata) const
+    void vel_callback(const geometry_msgs::msg::Twist::SharedPtr rxdata) const
     {
         if (joint_pub->is_activated())
         {
             float theta = 0;
-            float vx = rxdata.linear.x;
-            float vy = rxdata.linear.y;
-            float omega = rxdata.angular.z;
+            float vx = rxdata->linear.x;
+            float vy = rxdata->linear.y;
+            float omega = rxdata->angular.z;
 
             // publish
-            float w[4] = {};
+            float w[4] = {0, 0, 0, 0};
             omni_calc(theta, vx, vy, omega, &w[0], &w[1], &w[2], &w[3]);
             std_msgs::msg::Float32MultiArray txdata;
-            for (int i = 0; i < 4; i++) txdata.data[i] = w[i];
+            std::vector<float> w_vector(4);
+            txdata.data.resize(4);
+            for (int i = 0; i < 4; i++) w_vector[i] = w[i];
+            txdata.data = w_vector;
             joint_pub->publish(txdata);
         }
     }
@@ -134,7 +137,8 @@ private:
 int main(int argc, char * argv[])
 {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<OmniControler>()->get_node_base_interface());
+    std::shared_ptr<OmniControler> node = std::make_shared<OmniControler>();
+    rclcpp::spin(node->get_node_base_interface());
     rclcpp::shutdown();
     return 0;
 }
