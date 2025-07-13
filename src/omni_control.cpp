@@ -39,7 +39,28 @@ public:
         return CallbackReturn::SUCCESS;
     }
 
-private:
-    rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float32>::SharedPtr joint_pub;
+    CallbackReturn on_activate(const rclcpp_lifecycle::State &state)
+    {
+        // activate publisher
+        joint_pub->on_activate();
 
+        // create subscriber
+        vel_subscriber = this->create_subscription<geometry_msgs::msg::Twist>(
+            std::string("cmd_vel"),
+            rclcpp::SystemDefaultsQoS(),
+            std::bind(&OmniControler::vel_callback, this, _1)
+        );
+        return CallbackReturn::SUCCESS;
+    }
+
+    void vel_callback(const geometry_msgs::msg::Twist rxdata) const
+    {
+
+    }
+
+private:
+    // define publisher
+    rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float32>::SharedPtr joint_pub;
+    // define subscriber
+    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr vel_subscriber;
 };
