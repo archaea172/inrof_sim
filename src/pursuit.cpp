@@ -19,13 +19,8 @@ public:
     PursuitControler()
     : rclcpp_lifecycle::LifecycleNode(std::string("pursuit_controler"))
     {
-        this->x     = 0;
-        this->y     = 0;
-        this->theta = 0;
-        this->vx    = 0;
-        this->vy    = 0;
-        this->omega = 0;
-
+        p.resize(3);
+        v.resize(3);
         T = 30;
     }
     //desconstructor
@@ -69,21 +64,24 @@ private:
 
     void control_callback()
     {
-        std::vector<std::vector<float>> p_array(2, std::vector<float>(T, 0));
-        std::vector<std::vector<float>> v_array(2, std::vector<float>(T, 0));
+        std::vector<std::vector<float>> p_array(3, std::vector<float>(T, 0));
+        std::vector<std::vector<float>> v_array(3, std::vector<float>(T, 0));
 
+        std::tie(p_array, v_array) = predict_position(this->p, this->v);
+    }
+
+    std::tuple<std::vector<std::vector<float>>, std::vector<std::vector<float>>>
+    predict_position(std::vector<float> p, std::vector<float> v)
+    {
+        std::vector<std::vector<float>> velocity;
+        return std::tie(velocity, velocity);
     }
 
     float T;// predict horizon
 
     // current value
-    float x;
-    float y;
-    float theta;
-
-    float vx;
-    float vy;
-    float omega;
+    std::vector<float> p;
+    std::vector<float> v;
 };
 
 int main(int argc, char *argv[])
