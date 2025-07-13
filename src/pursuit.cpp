@@ -92,7 +92,7 @@ private:
     {
         std::vector<std::vector<float>> v_array = generate_v_array(3);
         std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
-        float S;
+        float S = estimate_goal(p_array) + estimate_smooth_rotate(v_array) + estimate_smooth_wheel(p_array, v_array) + estimate_smooth_vel(v_array) + estimate_vel(v_array) + estimate_vel_rotate(v_array);
         std::cout << S << std::endl;
     }
 
@@ -152,7 +152,7 @@ private:
         }
         return difference_sum_vel;
     }
-    float estimate_wheel(std::vector<std::vector<float>> X_array, std::vector<std::vector<float>> V_array)
+    float estimate_smooth_wheel(std::vector<std::vector<float>> X_array, std::vector<std::vector<float>> V_array)
     {
         std::vector<float> smooth_wheel_difference(T);
         std::vector<std::vector<float>> wheel_array(T, std::vector<float>(4, 0));
