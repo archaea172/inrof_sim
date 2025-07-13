@@ -24,6 +24,8 @@ public:
         this->vx    = 0;
         this->vy    = 0;
         this->omega = 0;
+
+        T = 30;
     }
     //desconstructor
     ~PursuitControler()
@@ -66,12 +68,16 @@ private:
 
     void control_callback()
     {
-        
+        std::vector<float> x_array(T);
     }
 
+    float T;// predict horizon
+
+    // current value
     float x;
     float y;
     float theta;
+
     float vx;
     float vy;
     float omega;
