@@ -53,6 +53,15 @@ public:
         return CallbackReturn::SUCCESS;
     }
 
+    CallbackReturn on_deactivate(const rclcpp_lifecycle::State &state)
+    {
+        // deactivate publisher
+        joint_pub->on_deactivate();
+        // reset subscriber
+        vel_subscriber.reset();
+        return CallbackReturn::SUCCESS;
+    }
+
     void vel_callback(const geometry_msgs::msg::Twist rxdata) const
     {
 
