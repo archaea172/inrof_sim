@@ -2,6 +2,8 @@
 #include <chrono>
 #include <memory>
 #include <iostream>
+#include <random>
+#include <Eigen/Dense>
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -79,6 +81,12 @@ private:
     void control_callback()
     {
         std::vector<std::vector<float>> v_array(T, std::vector<float>(3, 0));
+        std::random_device seed;
+        std::mt19937 engine(seed());
+        double mu = 0.0;
+        double sig = 1.0;
+        std::normal_distribution<> dist(mu, sig);
+
 
         std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
         std::cout << p_array.size() << std::endl;
