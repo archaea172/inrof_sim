@@ -34,6 +34,7 @@ add_executable(pursuit_controler
 ament_target_dependencies(pursuit_controler
   rclcpp
   rclcpp_lifecycle
+  geometry_msgs
 )
 install(
   TARGETS pursuit_controler
