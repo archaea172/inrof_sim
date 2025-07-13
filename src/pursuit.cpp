@@ -26,10 +26,15 @@ public:
     {
         p.resize(3);
         v.resize(3);
+        v_ref.resize(2);
         for (int i = 0; i < 3; i++)
         {
             p[i] = 0;
             v[i] = 0;
+        }
+        for (int i = 0; i < 2; i++)
+        {
+            v_ref[i] = 0;
         }
         T = 30;
         dt = 0.001; // ms
@@ -87,7 +92,18 @@ private:
     }
 
     // estimate function
-    
+    float estimate_vel(std::vector<std::vector<float>> V_array)
+    {
+        std::vector<float> vel_difference;
+        vel_difference.resize(T);
+        for (int i = 0; i < T; i++)
+        {
+            vel_difference[i] = std::pow(V_array[i][0], 2) + std::pow(V_array[i][1], 2) - std::pow(v_ref[0], 2) ;
+        }
+        float difference_sum = 0;
+        for (size_t i = 0; i < T; i++) difference_sum += vel_difference[i];
+        return difference_sum;
+    }
 
     // probability
     std::vector<std::vector<float>> generate_v_array(const int dim)
@@ -147,9 +163,13 @@ private:
     float T;
     // control cycle
     float dt;
+    // goal pose
+    std::vector<float> goal_p;
     // current value
     std::vector<float> p;
     std::vector<float> v;
+    // vel ref
+    std::vector<float> v_ref;
 };
 
 int main(int argc, char *argv[])
