@@ -8,7 +8,7 @@
 #include "rclcpp_lifecycle/lifecycle_publisher.hpp"
 
 #include "geometry_msgs/msg/twist.hpp"
-#include "std_msgs/msg/float32.hpp"
+#include "std_msgs/msg/float32_multi_array.hpp"
 
 using std::placeholders::_1;
 
@@ -59,7 +59,7 @@ public:
 
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
     {
-        joint_pub = this->create_publisher<std_msgs::msg::Float32>(
+        joint_pub = this->create_publisher<std_msgs::msg::Float32MultiArray>(
             std::string("wheel_joint"), rclcpp::SystemDefaultsQoS()
         );
         return CallbackReturn::SUCCESS;
@@ -108,12 +108,19 @@ public:
 
     void vel_callback(const geometry_msgs::msg::Twist rxdata) const
     {
+        float theta = 0;
+        float vx = rxdata.linear.x;
+        float vy = rxdata.linear.y;
+        float omega = rxdata.angular.z;
+
+        float w[4] = {};
+        omni_calc(theta, vx, vy, omega, &w[0], &w[1], &w[2], &w[3]);
 
     }
 
 private:
     // define publisher
-    rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float32>::SharedPtr joint_pub;
+    rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float32MultiArray>::SharedPtr joint_pub;
     // define subscriber
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr vel_subscriber;
 };
