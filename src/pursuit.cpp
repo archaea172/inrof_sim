@@ -37,6 +37,10 @@ public:
         {
             v_ref[i] = 0;
         }
+        goal_p.resize(3);
+        goal_p[0] = 0;
+        goal_p[1] = 0;
+        goal_p[2] = 0;
         T = 30;
         dt = 0.001; // ms
     }
@@ -89,7 +93,7 @@ private:
         std::vector<std::vector<float>> v_array = generate_v_array(3);
         std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
         float S = estimate_goal(p_array) + estimate_smooth(p_array, v_array) + estimate_vel(v_array);
-
+        std::cout << "no segfo" << std::endl;
     }
 
     // estimate function
