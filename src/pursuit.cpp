@@ -80,13 +80,24 @@ private:
     // control timer callback
     void control_callback()
     {
-        std::vector<std::vector<float>> v_array(T, std::vector<float>(3, 0));
-        std::random_device seed;
-        std::mt19937 engine(seed());
-        double mu = 0.0;
-        double sig = 1.0;
-        std::normal_distribution<> dist(mu, sig);
+        const int dim = 3;
+        Eigen::VectorXd mu(dim);
+        mu << 1.0, 1.0, 0.5;
 
+        Eigen::MatrixXd sigma(dim, dim);
+        sigma << 
+        1.0, 0.5, 0.2,
+        0.5, 1.0, 0.3,
+        0.2, 0.3, 1.0;
+
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::vector<std::vector<float>> v_array(T, std::vector<float>(3));
+        for (size_t i = 0; i < T; i++)
+        {
+            Eigen::VectorXd v_eigen = sample_multivariate_normal(mu, sigma, gen);
+            for (size_t j = 0; j < 3; j++) v_array[i][j] = v_eigen[j];
+        }
 
         std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
         std::cout << p_array.size() << std::endl;
@@ -107,6 +118,20 @@ private:
         std::vector<float> post_p(3);
         for (size_t i = 0; i < 3; i++) post_p[i] = pre_p[i] + dt*current_v[i];
         return post_p;
+    }
+
+    // probability function
+    Eigen::VectorXd sample_multivariate_normal(
+        const Eigen::VectorXd &mean,
+        const Eigen::MatrixXd &cov,
+        std::mt19937 &gen
+    )
+    {
+        std::normal_distribution<> dist(0.0, 1.0);
+        Eigen::VectorXd z(mean.size());
+        for (int i = 0; i < mean.size(); ++i) z(i) = dist(gen);
+        Eigen::MatrixXd L = cov.llt().matrixL();
+        return mean + L*z;
     }
 
     // predict horizon

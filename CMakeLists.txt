@@ -12,6 +12,7 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 # add omni
 add_executable(omni_controler
@@ -36,6 +37,7 @@ ament_target_dependencies(pursuit_controler
   rclcpp_lifecycle
   geometry_msgs
 )
+target_link_libraries(pursuit_controler Eigen3::Eigen )
 install(
   TARGETS pursuit_controler
   DESTINATION lib/${PROJECT_NAME}
