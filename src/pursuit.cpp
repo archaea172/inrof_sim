@@ -88,7 +88,7 @@ private:
     {
         std::vector<std::vector<float>> v_array = generate_v_array(3);
         std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
-
+        float S = estimate_goal(p_array) + estimate_smooth(p_array, v_array) + estimate_vel(v_array);
 
     }
 
