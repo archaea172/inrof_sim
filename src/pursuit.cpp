@@ -98,11 +98,20 @@ private:
         vel_difference.resize(T);
         for (int i = 0; i < T; i++)
         {
-            vel_difference[i] = std::pow(V_array[i][0], 2) + std::pow(V_array[i][1], 2) - std::pow(v_ref[0], 2) ;
+            vel_difference[i] = std::pow(V_array[i][0], 2) + std::pow(V_array[i][1], 2) - std::pow(v_ref[0], 2);
+            vel_difference[i] += std::pow(V_array[i][2] - v_ref[1], 2);
         }
         float difference_sum = 0;
         for (size_t i = 0; i < T; i++) difference_sum += vel_difference[i];
         return difference_sum;
+    }
+    float estimate_smooth(std::vector<std::vector<float>> V_array)
+    {
+
+    }
+    float estimate_goal(std::vector<std::vector<float>> X_array)
+    {
+        
     }
 
     // probability
