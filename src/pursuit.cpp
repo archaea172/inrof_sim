@@ -92,8 +92,8 @@ private:
     {
         std::vector<std::vector<float>> v_array = generate_v_array(3);
         std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
-        float S = estimate_goal(p_array) + estimate_smooth(p_array, v_array) + estimate_vel(v_array);
-        std::cout << "no segfo" << std::endl;
+        float S;
+        std::cout << S << std::endl;
     }
 
     // estimate function
@@ -104,15 +104,56 @@ private:
         for (int i = 0; i < T; i++)
         {
             vel_difference[i] = std::pow(V_array[i][0], 2) + std::pow(V_array[i][1], 2) - std::pow(v_ref[0], 2);
-            vel_difference[i] += std::pow(V_array[i][2] - v_ref[1], 2);
         }
         float difference_sum = 0;
         for (size_t i = 0; i < T; i++) difference_sum += vel_difference[i];
         return difference_sum;
     }
-    float estimate_smooth(std::vector<std::vector<float>> X_array, std::vector<std::vector<float>> V_array)
+    float estimate_vel_rotate(std::vector<std::vector<float>> V_array)
+    {
+        std::vector<float> vel_difference;
+        vel_difference.resize(T);
+        for (int i = 0; i < T; i++)
+        {
+            vel_difference[i] = std::pow(V_array[i][2] - v_ref[1], 2);
+        }
+        float difference_sum = 0;
+        for (size_t i = 0; i < T; i++) difference_sum += vel_difference[i];
+        return difference_sum;
+
+    }
+    float estimate_smooth_vel(std::vector<std::vector<float>> V_array)
     {
         std::vector<float> smooth_vel_difference(T);
+        for (size_t i = 0; i < T - 1; i++)
+        {
+            float v_ab_sq = std::pow(V_array[i][0], 2) + std::pow(V_array[i][1], 2);
+            float v_ab_sq_post = std::pow(V_array[i+1][0], 2) + std::pow(V_array[i+1][1], 2);
+            smooth_vel_difference[i] = std::pow(v_ab_sq_post - v_ab_sq, 2);
+        }
+        float difference_sum_vel = 0;
+        for (size_t i = 0; i < T; i++)
+        {
+            difference_sum_vel += smooth_vel_difference[i];
+        }
+        return difference_sum_vel;
+    }
+    float estimate_smooth_rotate(std::vector<std::vector<float>> V_array)
+    {
+        std::vector<float> smooth_vel_difference(T);
+        for (size_t i = 0; i < T - 1; i++)
+        {
+            smooth_vel_difference[i] += std::pow(V_array[i+1][2] - V_array[i][2], 2);
+        }
+        float difference_sum_vel = 0;
+        for (size_t i = 0; i < T; i++)
+        {
+            difference_sum_vel += smooth_vel_difference[i];
+        }
+        return difference_sum_vel;
+    }
+    float estimate_wheel(std::vector<std::vector<float>> X_array, std::vector<std::vector<float>> V_array)
+    {
         std::vector<float> smooth_wheel_difference(T);
         std::vector<std::vector<float>> wheel_array(T, std::vector<float>(4, 0));
         for (size_t i = 0; i < T; i++)
@@ -123,21 +164,15 @@ private:
         }
         for (size_t i = 0; i < T - 1; i++)
         {
-            float v_ab_sq = std::pow(V_array[i][0], 2) + std::pow(V_array[i][1], 2);
-            float v_ab_sq_post = std::pow(V_array[i+1][0], 2) + std::pow(V_array[i+1][1], 2);
-            smooth_vel_difference[i] = std::pow(v_ab_sq_post - v_ab_sq, 2);
-            smooth_vel_difference[i] += std::pow(V_array[i+1][2] - V_array[i][2], 2);
             smooth_wheel_difference[i] = 0;
             for (size_t j = 0; j < 4; j++) smooth_wheel_difference[i] += std::pow(wheel_array[i+1][j] - wheel_array[i][j], 2);
         }
-        float difference_sum_vel = 0;
         float difference_sum_wheel = 0;
         for (size_t i = 0; i < T; i++)
         {
-            difference_sum_vel += smooth_vel_difference[i];
             difference_sum_wheel += smooth_wheel_difference[i];
         }
-        return difference_sum_vel + difference_sum_wheel;
+        return difference_sum_wheel;
     }
     float estimate_goal(std::vector<std::vector<float>> X_array)
     {
