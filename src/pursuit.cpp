@@ -21,6 +21,11 @@ public:
     {
         p.resize(3);
         v.resize(3);
+        for (int i = 0; i < 3; i++)
+        {
+            p[i] = 0;
+            v[i] = 0;
+        }
         T = 30;
     }
     //desconstructor
