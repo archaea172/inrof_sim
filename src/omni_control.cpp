@@ -62,6 +62,13 @@ public:
         return CallbackReturn::SUCCESS;
     }
 
+    CallbackReturn on_cleanup(const rclcpp_lifecycle::State &state)
+    {
+        // reset publisher
+        joint_pub.reset();
+        return CallbackReturn::SUCCESS;
+    }
+
     void vel_callback(const geometry_msgs::msg::Twist rxdata) const
     {
 
