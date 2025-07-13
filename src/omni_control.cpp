@@ -86,6 +86,7 @@ public:
         joint_pub->on_deactivate();
         // reset subscriber
         vel_subscriber.reset();
+        pub_timer.reset();
         return CallbackReturn::SUCCESS;
     }
 
