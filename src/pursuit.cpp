@@ -108,8 +108,8 @@ private:
     }
     float estimate_smooth(std::vector<std::vector<float>> X_array, std::vector<std::vector<float>> V_array)
     {
-        std::vector<float> smooth_vel_difference;
-        std::vector<float> smooth_wheel_difference;
+        std::vector<float> smooth_vel_difference(T);
+        std::vector<float> smooth_wheel_difference(T);
         std::vector<std::vector<float>> wheel_array(T, std::vector<float>(4, 0));
         for (size_t i = 0; i < T; i++)
         {
@@ -137,7 +137,14 @@ private:
     }
     float estimate_goal(std::vector<std::vector<float>> X_array)
     {
-
+        std::vector<float> differential_goal(T);
+        for (size_t i = 0; i < T; i++)
+        {
+            differential_goal[i] = std::pow(goal_p[0] - X_array[i][0], 2) + std::pow(goal_p[1] - X_array[i][1], 2) + std::pow(goal_p[2] - X_array[i][2], 2);
+        }
+        float difference_sum = 0;
+        for (size_t i = 0; i < T; i++) difference_sum += differential_goal[i];
+        return difference_sum;
     }
 
     // omni_simulate
