@@ -69,6 +69,12 @@ public:
         return CallbackReturn::SUCCESS;
     }
 
+    CallbackReturn on_error(const rclcpp_lifecycle::State &state)
+    {
+        RCLCPP_INFO(this->get_logger(), "on error!", state.label().c_str());
+        return CallbackReturn::SUCCESS;
+    }
+
     void vel_callback(const geometry_msgs::msg::Twist rxdata) const
     {
 
