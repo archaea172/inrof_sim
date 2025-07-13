@@ -75,6 +75,11 @@ public:
         return CallbackReturn::SUCCESS;
     }
 
+    CallbackReturn on_shutdown(const rclcpp_lifecycle::State &state)
+    {
+        return CallbackReturn::SUCCESS;
+    }
+
     void vel_callback(const geometry_msgs::msg::Twist rxdata) const
     {
 
