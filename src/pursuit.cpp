@@ -1,6 +1,7 @@
 #include <string>
 #include <chrono>
 #include <memory>
+#include <iostream>
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -42,7 +43,7 @@ private:
     }
     CallbackReturn on_activate(const rclcpp_lifecycle::State &state)
     {
-        control_timer = this->create_wall_timer(0.001s, std::bind(&PursuitControler::control_callback, this));
+        control_timer = this->create_wall_timer(1s, std::bind(&PursuitControler::control_callback, this));
 
         return CallbackReturn::SUCCESS;
     }
@@ -68,7 +69,9 @@ private:
 
     void control_callback()
     {
-        std::vector<float> x_array(T);
+        std::vector<std::vector<float>> p_array(2, std::vector<float>(T, 0));
+        std::vector<std::vector<float>> v_array(2, std::vector<float>(T, 0));
+
     }
 
     float T;// predict horizon
