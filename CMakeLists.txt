@@ -23,9 +23,20 @@ ament_target_dependencies(omni_controler
   geometry_msgs
   std_msgs
 )
-
 install(
   TARGETS omni_controler
+  DESTINATION lib/${PROJECT_NAME}
+)
+# add pursuit
+add_executable(pursuit_controler
+  src/pursuit.cpp
+)
+ament_target_dependencies(pursuit_controler
+  rclcpp
+  rclcpp_lifecycle
+)
+install(
+  TARGETS pursuit_controler
   DESTINATION lib/${PROJECT_NAME}
 )
 
