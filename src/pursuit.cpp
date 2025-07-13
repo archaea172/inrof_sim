@@ -36,8 +36,11 @@ public:
     }
 
 private:
+
+    // node function
     rclcpp::TimerBase::SharedPtr control_timer;
 
+    // lifecycle begin
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
     {
         return CallbackReturn::SUCCESS;
@@ -67,30 +70,28 @@ private:
     {
         return CallbackReturn::SUCCESS;
     }
+    // lifecycle end
 
     void control_callback()
     {
-        std::vector<std::vector<float>> p_array(3, std::vector<float>(T, 0));
-        std::vector<std::vector<float>> v_array(3, std::vector<float>(T, 0));
+        std::vector<std::vector<float>> v_array(T, std::vector<float>(3, 0));
+        std::cout << v_array.size() << std::endl;
 
-        p_array = predict_position_array(this->p, v_array);
-
-        std::cout << this->p.size() << std::endl;
+        std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
     }
 
-    std::vector<std::vector<float>> predict_position_array(std::vector<float> p_value,  std::vector<std::vector<float>> v_array)
+    std::vector<std::vector<float>> predict_position_array(const std::vector<float> &p_value, const std::vector<std::vector<float>> &v_array)
     {
-        std::vector<std::vector<float>> p_matrix;
-
+        std::vector<std::vector<float>> p_matrix(T, std::vector<float>(3, 0));
         p_matrix[0] = p_value;
+        for (size_t i = 1; i < T; i++) p_matrix[i] = predict_position(p_matrix[i-1], v_array[i]);
         return p_matrix;
     }
 
-    std::vector<float> predict_position(std::vector<float> pre_p, std::vector<float> current_v)
+    std::vector<float> predict_position(const std::vector<float> &pre_p, const std::vector<float> &current_v)
     {
         std::vector<float> post_p(3);
-        for (int i = 0; i < 3; i++) post_p[i] = pre_p[i] + dt*current_v[i];
-
+        for (size_t i = 0; i < 3; i++) post_p[i] = pre_p[i] + dt*current_v[i];
         return post_p;
     }
 
