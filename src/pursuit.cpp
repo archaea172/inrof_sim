@@ -37,12 +37,14 @@ public:
         {
             v_ref[i] = 0;
         }
+        // m/s
         goal_p.resize(3);
         goal_p[0] = 0;
         goal_p[1] = 0;
         goal_p[2] = 0;
         T = 30;
-        dt = 0.001; // ms
+        K = 100;
+        dt = 0.001; // s
     }
     //desconstructor
     ~PursuitControler()
@@ -99,6 +101,7 @@ private:
         float k_vel_linear = 1;
         std::vector<std::vector<std::vector<float>>> all_v_array(K, std::vector<std::vector<float>>(T, std::vector<float>(3, 0)));
         std::vector<float> S_array(K, 0);
+        // sampling
         for (size_t i = 0; i < K; i++)
         {
             std::vector<std::vector<float>> v_array = generate_v_array(3);
@@ -110,7 +113,7 @@ private:
             all_v_array[i] = v_array;
             S_array[i] = S;
         }
-        
+        std::cout << "no segfo" << std::endl;
     }
 
     // estimate function
