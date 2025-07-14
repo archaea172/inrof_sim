@@ -109,7 +109,7 @@ private:
         // sampling
         for (size_t i = 0; i < K; i++)
         {
-            std::vector<std::vector<float>> v_array = generate_v_array(3, max_value[0], max_value[1], max_value[2]);
+            std::vector<std::vector<float>> v_array = generate_v_array(3, max_value);
             std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
             float S = k_goal_angle*estimate_goal_angle(p_array)
             + k_goal_linear*estimate_goal_linear(p_array) + k_smooth_angle*estimate_smooth_rotate(v_array) 
@@ -129,12 +129,18 @@ private:
             float iota = 1;
             weight[i] = std::exp(-(S_array[i] - S_ref) / iota);
         }
-        float sum_wight = 0;
-        for (int i = 0; i < K; i++) sum_wight += weight[i];
+        float sum_weight = 0;
+        for (int i = 0; i < K; i++) sum_weight += weight[i];
         std::vector<float> weight_normal(K);
-        for (int i = 0; i < K; i++) weight_normal[i] = weight[i] / sum_wight;
+        for (int i = 0; i < K; i++) weight_normal[i] = weight[i] / sum_weight;
         // calc
-        
+        std::vector<float> sum_data(3, 0);
+        std::vector<float> input_array(3, 0);
+        for (int i = 0; i < 3; i++) for (int j = 0; j < K; j++) sum_data[i] += weight[j] * all_v_array[j][0][i];
+        for (int i = 0; i < 3; i++) input_array[i] = sum_data[i] / sum_weight;
+        std::cout << input_array[0] << std::endl;
+        std::cout << input_array[1] << std::endl;
+        std::cout << input_array[2] << std::endl;
     }
 
     // estimate function
@@ -264,7 +270,7 @@ private:
 
     // probability
     std::vector<std::vector<float>>
-    generate_v_array(const int dim, const float max_Vx, const float max_Vy, const float max_Omega)
+    generate_v_array(const int dim, const std::vector<float> Max_value)
     {
         std::vector<std::vector<float>> v_matrix(T, std::vector<float>(3));
 
@@ -282,7 +288,7 @@ private:
         for (size_t i = 0; i < T; i++)
         {
             Eigen::VectorXd v_eigen = sample_multivariate_normal(mu, sigma, gen);
-            for (size_t j = 0; j < 3; j++) v_matrix[i][j] = clamp(v_eigen[j], max_value[j]);
+            for (size_t j = 0; j < 3; j++) v_matrix[i][j] = clamp(v_eigen[j], Max_value[j]);
         }
         return v_matrix;
     }
