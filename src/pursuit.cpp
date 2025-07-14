@@ -90,10 +90,19 @@ private:
     // control timer callback
     void control_callback()
     {
-        float k_goal;
+        float k_goal_angle;
+        float k_goal_linear;
+        float k_smooth_angle;
+        float k_smooth_wheel;
+        float k_smooth_linear;
+        float k_vel_angle;
+        float k_vel_linear;
         std::vector<std::vector<float>> v_array = generate_v_array(3);
         std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
-        float S = estimate_goal(p_array) + estimate_smooth_rotate(v_array) + estimate_smooth_wheel(p_array, v_array) + estimate_smooth_vel(v_array) + estimate_vel(v_array) + estimate_vel_rotate(v_array);
+        float S = k_goal_angle*estimate_goal_angle(p_array)
+         + k_goal_linear*estimate_goal_linear(p_array) + k_smooth_angle*estimate_smooth_rotate(v_array) 
+         + k_smooth_wheel*estimate_smooth_wheel(p_array, v_array) + k_smooth_linear*estimate_smooth_vel(v_array) 
+         + k_vel_linear*estimate_vel(v_array) + k_vel_angle*estimate_vel_rotate(v_array);
         std::cout << S << std::endl;
     }
 
