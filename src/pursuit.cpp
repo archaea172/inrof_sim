@@ -28,6 +28,22 @@ public:
         p.resize(3);
         v.resize(3);
         v_ref.resize(2);
+        max_value.resize(3);
+    }
+    //desconstructor
+    ~PursuitControler()
+    {
+
+    }
+
+private:
+
+    // node function
+    rclcpp::TimerBase::SharedPtr control_timer;
+
+    // lifecycle begin
+    CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
+    {
         for (int i = 0; i < 3; i++)
         {
             p[i] = 0;
@@ -45,21 +61,10 @@ public:
         T = 30;
         K = 100;
         dt = 0.001; // s
-    }
-    //desconstructor
-    ~PursuitControler()
-    {
-
-    }
-
-private:
-
-    // node function
-    rclcpp::TimerBase::SharedPtr control_timer;
-
-    // lifecycle begin
-    CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
-    {
+        // add max
+        max_value[0] = 2;
+        max_value[1] = 2;
+        max_value[2] = 1;
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_activate(const rclcpp_lifecycle::State &state)
@@ -104,7 +109,7 @@ private:
         // sampling
         for (size_t i = 0; i < K; i++)
         {
-            std::vector<std::vector<float>> v_array = generate_v_array(3);
+            std::vector<std::vector<float>> v_array = generate_v_array(3, max_value[0], max_value[1], max_value[2]);
             std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
             float S = k_goal_angle*estimate_goal_angle(p_array)
             + k_goal_linear*estimate_goal_linear(p_array) + k_smooth_angle*estimate_smooth_rotate(v_array) 
@@ -242,7 +247,8 @@ private:
     }
 
     // probability
-    std::vector<std::vector<float>> generate_v_array(const int dim)
+    std::vector<std::vector<float>>
+    generate_v_array(const int dim, const float max_Vx, const float max_Vy, const float max_Omega)
     {
         std::vector<std::vector<float>> v_matrix(T, std::vector<float>(3));
 
@@ -260,9 +266,14 @@ private:
         for (size_t i = 0; i < T; i++)
         {
             Eigen::VectorXd v_eigen = sample_multivariate_normal(mu, sigma, gen);
-            for (size_t j = 0; j < 3; j++) v_matrix[i][j] = v_eigen[j];
+            for (size_t j = 0; j < 3; j++) v_matrix[i][j] = clamp(v_eigen[j], max_value[j]);
         }
         return v_matrix;
+    }
+    // clamp
+    float clamp(const float V, const float max_Value)
+    {
+        std::min(std::max(V, -1*max_Value), max_Value);
     }
 
     //control function
@@ -301,6 +312,8 @@ private:
     float K;
     // control cycle
     float dt;
+    // max value
+    std::vector<float> max_value;
     // goal pose
     std::vector<float> goal_p;
     // current value
