@@ -90,20 +90,27 @@ private:
     // control timer callback
     void control_callback()
     {
-        float k_goal_angle;
-        float k_goal_linear;
-        float k_smooth_angle;
-        float k_smooth_wheel;
-        float k_smooth_linear;
-        float k_vel_angle;
-        float k_vel_linear;
-        std::vector<std::vector<float>> v_array = generate_v_array(3);
-        std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
-        float S = k_goal_angle*estimate_goal_angle(p_array)
-         + k_goal_linear*estimate_goal_linear(p_array) + k_smooth_angle*estimate_smooth_rotate(v_array) 
-         + k_smooth_wheel*estimate_smooth_wheel(p_array, v_array) + k_smooth_linear*estimate_smooth_vel(v_array) 
-         + k_vel_linear*estimate_vel(v_array) + k_vel_angle*estimate_vel_rotate(v_array);
-        std::cout << S << std::endl;
+        float k_goal_angle = 1;
+        float k_goal_linear = 1;
+        float k_smooth_angle = 1;
+        float k_smooth_wheel = 1;
+        float k_smooth_linear = 1;
+        float k_vel_angle = 1;
+        float k_vel_linear = 1;
+        std::vector<std::vector<std::vector<float>>> all_v_array(K, std::vector<std::vector<float>>(T, std::vector<float>(3, 0)));
+        std::vector<float> S_array(K, 0);
+        for (size_t i = 0; i < K; i++)
+        {
+            std::vector<std::vector<float>> v_array = generate_v_array(3);
+            std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
+            float S = k_goal_angle*estimate_goal_angle(p_array)
+            + k_goal_linear*estimate_goal_linear(p_array) + k_smooth_angle*estimate_smooth_rotate(v_array) 
+            + k_smooth_wheel*estimate_smooth_wheel(p_array, v_array) + k_smooth_linear*estimate_smooth_vel(v_array) 
+            + k_vel_linear*estimate_vel(v_array) + k_vel_angle*estimate_vel_rotate(v_array);
+            all_v_array[i] = v_array;
+            S_array[i] = S;
+        }
+        
     }
 
     // estimate function
@@ -287,6 +294,8 @@ private:
 
     // predict horizon
     float T;
+    // sample
+    float K;
     // control cycle
     float dt;
     // goal pose
