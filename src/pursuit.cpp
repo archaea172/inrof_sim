@@ -90,6 +90,7 @@ private:
     // control timer callback
     void control_callback()
     {
+        float k_goal;
         std::vector<std::vector<float>> v_array = generate_v_array(3);
         std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
         float S = estimate_goal(p_array) + estimate_smooth_rotate(v_array) + estimate_smooth_wheel(p_array, v_array) + estimate_smooth_vel(v_array) + estimate_vel(v_array) + estimate_vel_rotate(v_array);
@@ -174,12 +175,23 @@ private:
         }
         return difference_sum_wheel;
     }
-    float estimate_goal(std::vector<std::vector<float>> X_array)
+    float estimate_goal_linear(std::vector<std::vector<float>> X_array)
     {
         std::vector<float> differential_goal(T);
         for (size_t i = 0; i < T; i++)
         {
             differential_goal[i] = std::pow(goal_p[0] - X_array[i][0], 2) + std::pow(goal_p[1] - X_array[i][1], 2) + std::pow(goal_p[2] - X_array[i][2], 2);
+        }
+        float difference_sum = 0;
+        for (size_t i = 0; i < T; i++) difference_sum += differential_goal[i];
+        return difference_sum;
+    }
+    float estimate_goal_angle(std::vector<std::vector<float>> X_array)
+    {
+        std::vector<float> differential_goal(T);
+        for (size_t i = 0; i < T; i++)
+        {
+            differential_goal[i] = std::pow(goal_p[2] - X_array[i][2], 2);
         }
         float difference_sum = 0;
         for (size_t i = 0; i < T; i++) difference_sum += differential_goal[i];
