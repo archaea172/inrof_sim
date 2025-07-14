@@ -119,14 +119,11 @@ private:
             S_array[i] = S;
         }
         // calc weight
-        float lamda;
-        float gamma;
-        float rho;
+        float iota = 1;
         std::vector<float> weight(K);
         float S_ref = *std::min_element(S_array.begin(), S_array.end());
         for (int i = 0; i < K; i++)
         {
-            float iota = 1;
             weight[i] = std::exp(-(S_array[i] - S_ref) / iota);
         }
         float sum_weight = 0;
