@@ -49,10 +49,10 @@ private:
             p[i] = 0;
             v[i] = 0;
         }
-        for (int i = 0; i < 2; i++)
-        {
-            v_ref[i] = 0;
-        }
+        
+        v_ref[0] = 1;
+        v_ref[1] = 0.4;
+        
         // m/s
         goal_p.resize(3);
         goal_p[0] = 0;
