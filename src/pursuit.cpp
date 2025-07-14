@@ -118,7 +118,23 @@ private:
             all_v_array[i] = v_array;
             S_array[i] = S;
         }
-        std::cout << "no segfo" << std::endl;
+        // calc weight
+        float lamda;
+        float gamma;
+        float rho;
+        std::vector<float> weight(K);
+        float S_ref = *std::min_element(S_array.begin(), S_array.end());
+        for (int i = 0; i < K; i++)
+        {
+            float iota = 1;
+            weight[i] = std::exp(-(S_array[i] - S_ref) / iota);
+        }
+        float sum_wight = 0;
+        for (int i = 0; i < K; i++) sum_wight += weight[i];
+        std::vector<float> weight_normal(K);
+        for (int i = 0; i < K; i++) weight_normal[i] = weight[i] / sum_wight;
+        // calc
+        
     }
 
     // estimate function
@@ -273,7 +289,8 @@ private:
     // clamp
     float clamp(const float V, const float max_Value)
     {
-        std::min(std::max(V, -1*max_Value), max_Value);
+        float clamp_number = std::min(std::max(V, -1*max_Value), max_Value);
+        return clamp_number;
     }
 
     //control function
