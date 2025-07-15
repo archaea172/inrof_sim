@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+project(omni_plugin)
+
+# Find Ignition Gazebo
+find_package(ignition-gazebo6 REQUIRED) # あなたのGazeboのバージョンに合わせて変更 (e.g., ignition-gazebo6, ignition-gazebo7)
+
+# Find Ignition Transport
+find_package(ignition-transport11 REQUIRED) # あなたのTransportのバージョンに合わせて変更 (e.g., ignition-transport11, ignition-transport12)
+
+# Find Protobuf for Twist messages
+find_package(Protobuf REQUIRED)
+
+# Add the plugin library
+add_library(${PROJECT_NAME} SHARED hovercraft_plugin.cc)
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC
+    ignition-gazebo6::ignition-gazebo6
+    ignition-transport11::ignition-transport11
+    ${PROTOBUF_LIBRARIES}
+)
+
+# Install the plugin to a location where Gazebo can find it
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}/ignition-gazebo6/plugins) # Gazeboのバージョンに合わせて変更
