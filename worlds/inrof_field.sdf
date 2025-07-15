@@ -36,7 +36,7 @@
     </light>
 
     
-    <model name="measurement">
+    <model name="field">
     <static>true</static>
         <link name="link">
         <collision name="collision">
@@ -55,6 +55,7 @@
             </friction>
             </surface>
         </collision>
+
         <visual name="visual">
             <geometry>
             <mesh>
@@ -65,6 +66,11 @@
         </visual>
         </link>
     </model>
+
+    <include>
+        <uri>package://inrof_sim/models/daisha</uri>
+        <pose>0.2 0.2 0.31 0 0 -0.7853981</pose>
+    </include>
 
     </world>
 </sdf>
