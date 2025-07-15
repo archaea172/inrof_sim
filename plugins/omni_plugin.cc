@@ -6,8 +6,8 @@
 #include <ignition/gazebo/components/World.hh>
 #include <ignition/gazebo/components/Pose.hh>
 #include <ignition/gazebo/components/Inertial.hh>
-#include <ignition/gazebo/components/ExternalWorldForce.hh> // For applying force
-#include <ignition/gazebo/components/ExternalWorldTorque.hh> // For applying torque
+#include <ignition/gazebo/components/ExternalForce.hh> // これを使用
+#include <ignition/gazebo/components/ExternalTorque.hh> // これを使用
 
 #include <ignition/transport/Node.hh>
 #include <ignition/msgs/twist.pb.h>
