@@ -55,7 +55,7 @@
             </friction>
             </surface>
         </collision>
-        
+
         <visual name="visual">
             <geometry>
             <mesh>
@@ -69,7 +69,7 @@
 
     <include>
         <uri>package://inrof_sim/models/daisha</uri>
-        <pose>0 0 10 0 0 0</pose>
+        <pose>0.2 0.2 0.31 0 0 -0.7853981</pose>
     </include>
 
     </world>
