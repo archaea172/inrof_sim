@@ -68,7 +68,7 @@
             <geometry>
             <mesh>
                 <scale>1 1 1</scale>
-                <uri>package://inrof_sim/worlds/meshes/InrofField.stl</uri>
+                <uri>/home/t-semi/sim_ws/src/inrof_sim/worlds/meshs/InrofField.stl</uri>
             </mesh>
             </geometry>
             <surface>
@@ -84,7 +84,7 @@
             <geometry>
             <mesh>
                 <scale>1 1 1</scale>
-                <uri>package://inrof_sim/worlds/meshes/InrofField.dae</uri>
+                <uri>/home/t-semi/sim_ws/src/inrof_sim/worlds/meshs/InrofField.dae</uri>
             </mesh>
             </geometry>
         </visual>
