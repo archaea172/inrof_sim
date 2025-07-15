@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+
+<sdf version="1.6">
+    <model name="daisha">
+        <link name="base_link">
+        <collision name="collision">
+        <geometry>
+        <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://inrof_sim/models/daisha/meshs/daisha.stl</uri>
+        </mesh>
+        </geometry>
+        <surface>
+            <friction>
+                <ode>
+                    <mu>0.7</mu>  <mu2>0.7</mu2> </ode>
+            </friction>
+        </surface>
+        <inertial>
+            <inertia>
+                <ixx>1</ixx>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyy>1</iyy>
+                <iyz>0</iyz>
+                <izz>1</izz>
+            </inertia>
+            <mass>1.0</mass>
+        </inertial>
+        </collision>
+
+        <visual name="visual">
+        <geometry>
+        <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://inrof_sim/models/daisha/meshs/daisha.stl</uri>
+        </mesh>
+        </geometry>
+        </visual>
+        </link>
+    </model>
+</sdf>
