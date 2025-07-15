@@ -11,7 +11,7 @@ find_package(ignition-transport11 REQUIRED) # あなたのTransportのバージ�
 find_package(Protobuf REQUIRED)
 
 # Add the plugin library
-add_library(${PROJECT_NAME} SHARED hovercraft_plugin.cc)
+add_library(${PROJECT_NAME} SHARED omni_plugin.cc)
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
     ignition-gazebo6::ignition-gazebo6
