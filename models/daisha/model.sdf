@@ -28,7 +28,7 @@
         <geometry>
         <mesh>
             <scale>1 1 1</scale>
-            <uri>package://inrof_sim/models/daisha/meshs/daisha.stl</uri>
+            <uri>package://inrof_sim/models/daisha/meshs/daisha.dae</uri>
         </mesh>
         </geometry>
         </visual>
