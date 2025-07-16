@@ -18,5 +18,15 @@ class TwistConverter : public rclcpp_lifecycle::LifecycleNode
 public:
     using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
+    // constructor
+    TwistConverter()
+    : rclcpp_lifecycle::LifecycleNode(std::string("twist_converter"))
+    {
 
+    }
+    // desconstructor
+    ~TwistConverter()
+    {
+        RCLCPP_INFO(this->get_logger(), "finish");
+    }
 };
