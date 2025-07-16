@@ -1,5 +1,6 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch_ros.actions import LifecycleNode
 from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -27,10 +28,11 @@ def generate_launch_description():
         namespace='daisha'
     )
 
-    joy_vel_converter = Node(
+    joy_vel_converter = LifecycleNode(
         package='control_pkg',
+        name='joy_vel_converter',
         executable='joy_vel_converter',
-        namespace='daisha'
+        namespace='daisha',
     )
 
     gz_bridge_node = Node(
@@ -38,6 +40,7 @@ def generate_launch_description():
         executable='parameter_bridge',
         arguments=['/daisha/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist']
     )
+
     ld.add_action(sim)
     ld.add_action(joy_node)
     ld.add_action(joy_vel_converter)
