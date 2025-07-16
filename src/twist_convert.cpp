@@ -36,6 +36,7 @@ private:
     {
         for (size_t i = 0; i < 3; i++) v[i] = 0;
         theta = 0;
+
         robot_twist_publisher = this->create_publisher<geometry_msgs::msg::Twist>(
             std::string("cmd_vel_robot"), rclcpp::SystemDefaultsQoS()
         );
@@ -93,12 +94,14 @@ private:
 
     void vel_callback(const geometry_msgs::msg::Twist::SharedPtr rxdata)
     {
-
+        this->v[0] = rxdata->linear.x;
+        this->v[1] = rxdata->linear.y;
+        this->v[2] = rxdata->angular.z;
     }
 
     void pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
     {
-
+        this->theta = rxdata->theta;
     }
 
     void timer_callback()
