@@ -51,6 +51,12 @@ private:
             rclcpp::SystemDefaultsQoS(),
             std::bind(&TwistConverter::vel_callback, this, _1)
         );
+        robot_pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
+            std::string("odometry"),
+            rclcpp::SystemDefaultsQoS(),
+            std::bind(&TwistConverter::pose_callback, this, _1)
+        );
+
         pub_timer = this->create_wall_timer(0.001s, std::bind(&TwistConverter::timer_callback, this));
         return CallbackReturn::SUCCESS;
     }
@@ -88,6 +94,11 @@ private:
 
     }
 
+    void pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
+    {
+
+    }
+
     void timer_callback()
     {
 
@@ -95,7 +106,10 @@ private:
 
     rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr robot_twist_publisher;
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr controler_twist_subscriber;
+    rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr robot_pose_subscriber;
     rclcpp::TimerBase::SharedPtr pub_timer;
+
+
 };
 
 int main(int argc, char * argv[])
