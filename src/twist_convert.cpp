@@ -23,7 +23,7 @@ public:
     TwistConverter()
     : rclcpp_lifecycle::LifecycleNode(std::string("twist_converter"))
     {
-
+        v.resize(3);
     }
     // desconstructor
     ~TwistConverter()
@@ -34,6 +34,8 @@ public:
 private:
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
     {
+        for (size_t i = 0; i < 3; i++) v[i] = 0;
+        theta = 0;
         robot_twist_publisher = this->create_publisher<geometry_msgs::msg::Twist>(
             std::string("cmd_vel_robot"), rclcpp::SystemDefaultsQoS()
         );
@@ -109,7 +111,9 @@ private:
     rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr robot_pose_subscriber;
     rclcpp::TimerBase::SharedPtr pub_timer;
 
+    float theta;
 
+    std::vector<float> v;
 };
 
 int main(int argc, char * argv[])
