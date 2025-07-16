@@ -47,7 +47,7 @@
 
         <plugin filename="libgz-sim-velocity-control-system.so"
                 name="gz::sim::systems::VelocityControl">
-            <topic>/daisha/cmd_vel_robot</topic>
+            <topic>/daisha/cmd_vel</topic>
             <initial_linear>0 0 0</initial_linear>
             <initial_angular>0 0 0</initial_angular>
         </plugin>
