@@ -29,6 +29,21 @@ install(
   DESTINATION lib/${PROJECT_NAME}
 )
 
+# add twist converter
+add_executable(twist_converter 
+  src/twist_convert.cpp
+)
+ament_target_dependencies(twist_converter 
+  rclcpp
+  rclcpp_lifecycle
+  geometry_msgs
+)
+
+install(
+  TARGETS twist_converter 
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 # launch
 install(
   DIRECTORY launch worlds models hooks
