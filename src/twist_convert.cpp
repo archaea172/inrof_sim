@@ -8,6 +8,7 @@
 #include "rclcpp_lifecycle/lifecycle_publisher.hpp"
 
 #include "geometry_msgs/msg/twist.hpp"
+#include "geometry_msgs/msg/pose2_d.hpp"
 
 using std::placeholders::_1;
 
