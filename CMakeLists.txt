@@ -12,6 +12,9 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(joy REQUIRED)
+find_package(control_pkg REQUIRED)
+find_package(ros_gz_bridge REQUIRED)
 
 # add omni
 add_executable(omni_controler
