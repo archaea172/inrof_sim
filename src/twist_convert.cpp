@@ -114,6 +114,10 @@ private:
         txdata.linear.x = vx_robot;
         txdata.linear.y = vy_robot;
         txdata.angular.z = this->v[3];
+        if (robot_twist_publisher->is_activated())
+        {
+            robot_twist_publisher->publish(txdata);
+        }
     }
 
     rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr robot_twist_publisher;
