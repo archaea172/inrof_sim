@@ -1,7 +1,7 @@
 #include <string>
 #include <chrono>
 #include <memory>
-#include <math.h>
+#include <bits/stdc++.h>
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -60,7 +60,7 @@ private:
             std::bind(&TwistConverter::pose_callback, this, _1)
         );
 
-        pub_timer = this->create_wall_timer(0.001s, std::bind(&TwistConverter::timer_callback, this));
+        pub_timer = this->create_wall_timer(0.01s, std::bind(&TwistConverter::timer_callback, this));
         return CallbackReturn::SUCCESS;
     }
 
@@ -106,7 +106,14 @@ private:
 
     void timer_callback()
     {
+        float rotation_theta = this->theta + M_PI/4;
+        float vx_robot = this->v[0]*std::cos(rotation_theta) - this->v[1]*std::sin(rotation_theta);
+        float vy_robot = this->v[0]*std::sin(rotation_theta) + this->v[1]*std::cos(rotation_theta);
 
+        geometry_msgs::msg::Twist txdata;
+        txdata.linear.x = vx_robot;
+        txdata.linear.y = vy_robot;
+        txdata.angular.z = this->v[3];
     }
 
     rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr robot_twist_publisher;
@@ -115,7 +122,6 @@ private:
     rclcpp::TimerBase::SharedPtr pub_timer;
 
     float theta;
-
     std::vector<float> v;
 };
 
