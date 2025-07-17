@@ -12,6 +12,9 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(joy REQUIRED)
+find_package(control_pkg REQUIRED)
+find_package(ros_gz_bridge REQUIRED)
 
 # add omni
 add_executable(omni_controler
@@ -26,6 +29,21 @@ ament_target_dependencies(omni_controler
 
 install(
   TARGETS omni_controler
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# add twist converter
+add_executable(twist_converter 
+  src/twist_convert.cpp
+)
+ament_target_dependencies(twist_converter 
+  rclcpp
+  rclcpp_lifecycle
+  geometry_msgs
+)
+
+install(
+  TARGETS twist_converter 
   DESTINATION lib/${PROJECT_NAME}
 )
 
