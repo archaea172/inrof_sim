@@ -113,7 +113,7 @@ private:
         geometry_msgs::msg::Twist txdata;
         txdata.linear.x = vx_robot;
         txdata.linear.y = vy_robot;
-        txdata.angular.z = this->v[3];
+        txdata.angular.z = this->v[2];
         if (robot_twist_publisher->is_activated())
         {
             robot_twist_publisher->publish(txdata);

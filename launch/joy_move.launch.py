@@ -38,7 +38,7 @@ def generate_launch_description():
     gz_bridge_node = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
-        arguments=['/daisha/cmd_vel@geometry_msgs/msg/Twist@ignition.msgs.Twist']
+        arguments=['/daisha/cmd_vel_robot@geometry_msgs/msg/Twist@ignition.msgs.Twist']
     )
 
     ld.add_action(sim)
