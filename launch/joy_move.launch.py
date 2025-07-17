@@ -35,6 +35,13 @@ def generate_launch_description():
         namespace='daisha',
     )
 
+    twist_converter = LifecycleNode(
+        package='inrof_sim',
+        name='twist_converter',
+        executable='twist_converter',
+        namespace='daisha'
+    )
+
     gz_bridge_node = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
@@ -44,6 +51,7 @@ def generate_launch_description():
     ld.add_action(sim)
     ld.add_action(joy_node)
     ld.add_action(joy_vel_converter)
+    ld.add_action(twist_converter)
     ld.add_action(gz_bridge_node)
 
     return ld
