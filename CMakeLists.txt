@@ -61,6 +61,21 @@ install(
   DESTINATION lib/${PROJECT_NAME}
 )
 
+# add pose converter
+add_executable(pose_converter 
+  src/pose_converter.cpp
+)
+ament_target_dependencies(pose_converter 
+  rclcpp
+  rclcpp_lifecycle
+  geometry_msgs
+)
+
+install(
+  TARGETS pose_converter 
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 # launch
 install(
   DIRECTORY launch worlds models hooks
