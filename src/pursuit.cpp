@@ -40,6 +40,9 @@ private:
 
     // node function
     rclcpp::TimerBase::SharedPtr control_timer;
+    rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr vel_publisher;
+    rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr goal_subscriber;
+    rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr pose_subscriber;
 
     // lifecycle begin
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
@@ -62,25 +65,44 @@ private:
         K = 100;
         dt = 0.001; // s
         // add max
-        max_value[0] = 2;
-        max_value[1] = 2;
-        max_value[2] = 1;
+        max_value[0] = 1;
+        max_value[1] = 1;
+        max_value[2] = 0.3;
+
+        // create publisher
+        vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>(
+            std::string("cmd_vel"), rclcpp::SystemDefaultsQoS()
+        );
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_activate(const rclcpp_lifecycle::State &state)
     {
-        control_timer = this->create_wall_timer(1s, std::bind(&PursuitControler::control_callback, this));
-
+        vel_publisher->on_activate();
+        control_timer = this->create_wall_timer(0.01s, std::bind(&PursuitControler::control_callback, this));
+        goal_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
+            std::string("goal_pose"),
+            rclcpp::SystemDefaultsQoS(),
+            std::bind(&PursuitControler::goal_callback, this, _1)
+        );
+        pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
+            std::string("pose"),
+            rclcpp::SystemDefaultsQoS(),
+            std::bind(&PursuitControler::pose_callback, this, _1)
+        );
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_deactivate(const rclcpp_lifecycle::State &state)
     {
+        vel_publisher->on_deactivate();
         control_timer.reset();
+        goal_subscriber.reset();
+        pose_subscriber.reset();
 
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_cleanup(const rclcpp_lifecycle::State &state)
     {
+        vel_publisher.reset();
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_error(const rclcpp_lifecycle::State &state)
@@ -93,6 +115,19 @@ private:
         return CallbackReturn::SUCCESS;
     }
     // lifecycle end
+    // subscribe callback
+    void goal_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
+    {
+        this->goal_p[0] = rxdata->x;
+        this->goal_p[1] = rxdata->y;
+        this->goal_p[2] = rxdata->theta;
+    }
+    void pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
+    {
+        this->p[0] = rxdata->x;
+        this->p[1] = rxdata->y;
+        this->p[2] = rxdata->theta;
+    }
 
     // control timer callback
     void control_callback()
@@ -135,9 +170,15 @@ private:
         std::vector<float> input_array(3, 0);
         for (int i = 0; i < 3; i++) for (int j = 0; j < K; j++) sum_data[i] += weight[j] * all_v_array[j][0][i];
         for (int i = 0; i < 3; i++) input_array[i] = sum_data[i] / sum_weight;
-        std::cout << input_array[0] << std::endl;
-        std::cout << input_array[1] << std::endl;
-        std::cout << input_array[2] << std::endl;
+
+        if (vel_publisher->is_activated())
+        {
+            geometry_msgs::msg::Twist txdata;
+            txdata.linear.x = input_array[0];
+            txdata.linear.y = input_array[1];
+            txdata.angular.z = input_array[2];
+            vel_publisher->publish(txdata);
+        }
     }
 
     // estimate function
