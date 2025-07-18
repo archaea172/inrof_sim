@@ -41,6 +41,7 @@ private:
     // node function
     rclcpp::TimerBase::SharedPtr control_timer;
     rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr vel_publisher;
+    rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr goal_subscriber;
 
     // lifecycle begin
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
@@ -75,13 +76,18 @@ private:
     {
         vel_publisher->on_activate();
         control_timer = this->create_wall_timer(1s, std::bind(&PursuitControler::control_callback, this));
-
+        goal_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
+            std::string("goal_pose"),
+            rclcpp::SystemDefaultsQoS(),
+            std::bind(&PursuitControler::goal_callback, this, _1)
+        );
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_deactivate(const rclcpp_lifecycle::State &state)
     {
         vel_publisher->on_deactivate();
         control_timer.reset();
+        goal_subscriber.reset();
 
         return CallbackReturn::SUCCESS;
     }
@@ -100,6 +106,11 @@ private:
         return CallbackReturn::SUCCESS;
     }
     // lifecycle end
+    // goal callback
+    void goal_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
+    {
+
+    }
 
     // control timer callback
     void control_callback()
