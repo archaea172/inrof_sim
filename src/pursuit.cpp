@@ -40,6 +40,7 @@ private:
 
     // node function
     rclcpp::TimerBase::SharedPtr control_timer;
+    rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr vel_publisher;
 
     // lifecycle begin
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
@@ -65,22 +66,28 @@ private:
         max_value[0] = 2;
         max_value[1] = 2;
         max_value[2] = 1;
+
+        // create publisher
+        
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_activate(const rclcpp_lifecycle::State &state)
     {
+        vel_publisher->on_activate();
         control_timer = this->create_wall_timer(1s, std::bind(&PursuitControler::control_callback, this));
 
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_deactivate(const rclcpp_lifecycle::State &state)
     {
+        vel_publisher->on_deactivate();
         control_timer.reset();
 
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_cleanup(const rclcpp_lifecycle::State &state)
     {
+        vel_publisher.reset();
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_error(const rclcpp_lifecycle::State &state)
@@ -135,9 +142,15 @@ private:
         std::vector<float> input_array(3, 0);
         for (int i = 0; i < 3; i++) for (int j = 0; j < K; j++) sum_data[i] += weight[j] * all_v_array[j][0][i];
         for (int i = 0; i < 3; i++) input_array[i] = sum_data[i] / sum_weight;
-        std::cout << input_array[0] << std::endl;
-        std::cout << input_array[1] << std::endl;
-        std::cout << input_array[2] << std::endl;
+
+        if (vel_publisher->is_activated())
+        {
+            geometry_msgs::msg::Twist txdata;
+            txdata.linear.x = input_array[0];
+            txdata.linear.y = input_array[1];
+            txdata.angular.z = input_array[2];
+            vel_publisher->publish(txdata);
+        }
     }
 
     // estimate function
