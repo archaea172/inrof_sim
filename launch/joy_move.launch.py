@@ -42,16 +42,30 @@ def generate_launch_description():
         namespace='daisha'
     )
 
-    gz_bridge_node = Node(
+    pose_converter = LifecycleNode(
+        package='inrof_sim',
+        name='pose_converter',
+        executable='pose_converter',
+        namespace='daisha'
+        
+    )
+
+    gz_bridge_node_vel = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
         arguments=['/daisha/cmd_vel_robot@geometry_msgs/msg/Twist@ignition.msgs.Twist']
     )
 
+    gz_bridge_node_pose = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=['/world/inrof_field/pose/info@geometry_msgs/msg/PoseArray[ignition.msgs.Pose_V']
+    )
     ld.add_action(sim)
     ld.add_action(joy_node)
     ld.add_action(joy_vel_converter)
     ld.add_action(twist_converter)
-    ld.add_action(gz_bridge_node)
+    ld.add_action(gz_bridge_node_vel)
+    ld.add_action(gz_bridge_node_pose)
 
     return ld
