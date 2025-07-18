@@ -69,7 +69,9 @@ private:
         max_value[2] = 1;
 
         // create publisher
-        
+        vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>(
+            std::string("cmd_vel"), rclcpp::SystemDefaultsQoS()
+        );
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_activate(const rclcpp_lifecycle::State &state)
