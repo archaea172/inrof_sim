@@ -87,7 +87,7 @@ private:
         pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
             std::string("pose"),
             rclcpp::SystemDefaultsQoS(),
-            std::bidn(&PursuitControler::pose_callback, this, _1)
+            std::bind(&PursuitControler::pose_callback, this, _1)
         );
         return CallbackReturn::SUCCESS;
     }
@@ -124,7 +124,9 @@ private:
     }
     void pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
     {
-
+        this->p[0] = rxdata->x;
+        this->p[1] = rxdata->y;
+        this->p[2] = rxdata->theta;
     }
 
     // control timer callback
