@@ -106,7 +106,7 @@ private:
 
     void timer_callback()
     {
-        float rotation_theta = this->theta + M_PI/4;
+        float rotation_theta = -this->theta + M_PI/4;
         float vx_robot = this->v[0]*std::cos(rotation_theta) - this->v[1]*std::sin(rotation_theta);
         float vy_robot = this->v[0]*std::sin(rotation_theta) + this->v[1]*std::cos(rotation_theta);
 
