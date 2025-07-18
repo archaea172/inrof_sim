@@ -55,7 +55,7 @@ private:
             std::bind(&TwistConverter::vel_callback, this, _1)
         );
         robot_pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
-            std::string("odometry"),
+            std::string("pose"),
             rclcpp::SystemDefaultsQoS(),
             std::bind(&TwistConverter::pose_callback, this, _1)
         );
