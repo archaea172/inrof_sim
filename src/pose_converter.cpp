@@ -82,6 +82,24 @@ private:
     {
         x       = rxdata->poses[1].position.x;
         y       = rxdata->poses[1].position.y;
-        theta   = rxdata->poses[1].orientation.z;
+        theta   = rxdata->poses[1].orientation.z + M_PI/8;
+
+        if (pose_publisher -> is_activated())
+        {
+            geometry_msgs::msg::Pose2D txdata;
+            txdata.x = this->x;
+            txdata.y = this->y;
+            txdata.theta = this->theta;
+            pose_publisher->publish(txdata);
+        }
     }
 };
+
+int main(int argc, char *argv[])
+{
+    rclcpp::init(argc, argv);
+    std::shared_ptr<PoseConverter> node = std::make_shared<PoseConverter>();
+    rclcpp::spin(node->get_node_base_interface());
+    rclcpp::shutdown();
+    return 0;
+}
