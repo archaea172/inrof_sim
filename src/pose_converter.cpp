@@ -44,25 +44,17 @@ private:
     CallbackReturn on_activate(const rclcpp_lifecycle::State &state)
     {
         pose_publisher->on_activate();
-        control_timer = this->create_wall_timer(0.01s, std::bind(&PursuitControler::control_callback, this));
-        goal_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
-            std::string("goal_pose"),
+        posearray_subscriber = this->create_subscription<geometry_msgs::msg::PoseArray>(
+            std::string("/world/inrof_field/pose/info"),
             rclcpp::SystemDefaultsQoS(),
-            std::bind(&PursuitControler::goal_callback, this, _1)
-        );
-        pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
-            std::string("pose"),
-            rclcpp::SystemDefaultsQoS(),
-            std::bind(&PursuitControler::pose_callback, this, _1)
+            std::bind(&PoseConverter::posearray_callback, this, _1)
         );
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_deactivate(const rclcpp_lifecycle::State &state)
     {
         pose_publisher->on_deactivate();
-        control_timer.reset();
-        goal_subscriber.reset();
-        pose_subscriber.reset();
+        posearray_subscriber.reset();
 
         return CallbackReturn::SUCCESS;
     }
@@ -81,4 +73,9 @@ private:
         return CallbackReturn::SUCCESS;
     }
     // lifecycle end
+
+    void posearray_callback(const geometry_msgs::msg::PoseArray::SharedPtr rxdata)
+    {
+        
+    }
 };
