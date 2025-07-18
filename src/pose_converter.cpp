@@ -82,7 +82,10 @@ private:
     {
         x       = rxdata->poses[1].position.x;
         y       = rxdata->poses[1].position.y;
-        theta   = rxdata->poses[1].orientation.z + M_PI/8;
+        theta   = std::atan2(
+            2*(rxdata->poses[1].orientation.w*rxdata->poses[1].orientation.z + rxdata->poses[1].orientation.x*rxdata->poses[1].orientation.y),
+            1 - 2*(std::pow(rxdata->poses[1].orientation.y, 2) + std::pow(rxdata->poses[1].orientation.z, 2))
+        ) + M_PI/4;
 
         if (pose_publisher -> is_activated())
         {
