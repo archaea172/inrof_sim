@@ -109,7 +109,9 @@ private:
     // goal callback
     void goal_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
     {
-
+        this->goal_p[0] = rxdata->x;
+        this->goal_p[1] = rxdata->y;
+        this->goal_p[2] = rxdata->theta;
     }
 
     // control timer callback
