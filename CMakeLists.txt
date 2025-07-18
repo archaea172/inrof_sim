@@ -12,6 +12,9 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(joy REQUIRED)
+find_package(control_pkg REQUIRED)
+find_package(ros_gz_bridge REQUIRED)
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 # add omni
@@ -42,6 +45,29 @@ install(
   TARGETS pursuit_controler
   DESTINATION lib/${PROJECT_NAME}
 )
+
+# add twist converter
+add_executable(twist_converter 
+  src/twist_convert.cpp
+)
+ament_target_dependencies(twist_converter 
+  rclcpp
+  rclcpp_lifecycle
+  geometry_msgs
+)
+
+install(
+  TARGETS twist_converter 
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# launch
+install(
+  DIRECTORY launch worlds models hooks
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/hooks/${PROJECT_NAME}.dsv.in")
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
