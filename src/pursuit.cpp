@@ -65,9 +65,9 @@ private:
         K = 100;
         dt = 0.001; // s
         // add max
-        max_value[0] = 2;
-        max_value[1] = 2;
-        max_value[2] = 1;
+        max_value[0] = 1;
+        max_value[1] = 1;
+        max_value[2] = 0.3;
 
         // create publisher
         vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>(
