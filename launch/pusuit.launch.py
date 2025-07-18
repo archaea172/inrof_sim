@@ -22,7 +22,12 @@ def generate_launch_description():
             ('gz_args', world_file_path)]
     )
 
-    pursuit = 
+    pursuit = LifecycleNode(
+        package='inrof_sim',
+        name='pursuit_controler',
+        executable='pursuit_controler',
+        namespace='daisha'
+    )
 
     twist_converter = LifecycleNode(
         package='inrof_sim',
@@ -53,6 +58,8 @@ def generate_launch_description():
         arguments=['/world/inrof_field/pose/info@geometry_msgs/msg/PoseArray[ignition.msgs.Pose_V']
     )
     ld.add_action(sim)
+    ld.add_action(pursuit)
+    ld.add_action(pose_converter)
     ld.add_action(twist_converter)
     ld.add_action(gz_bridge_node_vel)
     ld.add_action(gz_bridge_node_pose)
