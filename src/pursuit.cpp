@@ -84,6 +84,11 @@ private:
             rclcpp::SystemDefaultsQoS(),
             std::bind(&PursuitControler::goal_callback, this, _1)
         );
+        pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
+            std::string("pose"),
+            rclcpp::SystemDefaultsQoS(),
+            std::bidn(&PursuitControler::pose_callback, this, _1)
+        );
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_deactivate(const rclcpp_lifecycle::State &state)
@@ -91,6 +96,7 @@ private:
         vel_publisher->on_deactivate();
         control_timer.reset();
         goal_subscriber.reset();
+        pose_subscriber.reset();
 
         return CallbackReturn::SUCCESS;
     }
@@ -118,7 +124,7 @@ private:
     }
     void pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
     {
-        
+
     }
 
     // control timer callback
