@@ -52,12 +52,14 @@ def generate_launch_description():
 
     gz_bridge_node_vel = Node(
         package='ros_gz_bridge',
+        name='bridge_vel',
         executable='parameter_bridge',
         arguments=['/daisha/cmd_vel_robot@geometry_msgs/msg/Twist@ignition.msgs.Twist']
     )
 
     gz_bridge_node_pose = Node(
         package='ros_gz_bridge',
+        name='bridge_pose',
         executable='parameter_bridge',
         arguments=['/world/inrof_field/pose/info@geometry_msgs/msg/PoseArray[ignition.msgs.Pose_V']
     )
