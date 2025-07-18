@@ -29,6 +29,10 @@ public:
     }
 
 private:
+    float x;
+    float y;
+    float theta;
+
     rclcpp::Subscription<geometry_msgs::msg::PoseArray>::SharedPtr posearray_subscriber;
     rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Pose2D>::SharedPtr pose_publisher;
 
@@ -76,6 +80,8 @@ private:
 
     void posearray_callback(const geometry_msgs::msg::PoseArray::SharedPtr rxdata)
     {
-        
+        x       = rxdata->poses[1].position.x;
+        y       = rxdata->poses[1].position.y;
+        theta   = rxdata->poses[1].orientation.z;
     }
 };
