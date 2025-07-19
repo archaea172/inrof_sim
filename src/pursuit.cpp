@@ -61,9 +61,9 @@ private:
         goal_p[0] = 0;
         goal_p[1] = 0;
         goal_p[2] = 0;
-        T = 30;
+        T = 300;
         K = 100;
-        dt = 0.001; // s
+        dt = 0.01; // s
         // add max
         max_value[0] = 1;
         max_value[1] = 1;
