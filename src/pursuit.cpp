@@ -58,7 +58,7 @@ private:
         
         // m/s
         goal_p.resize(3);
-        goal_p[0] = 0;
+        goal_p[0] = -1.2;
         goal_p[1] = 0;
         goal_p[2] = 0;
         T = 300;
@@ -168,8 +168,8 @@ private:
         // calc
         std::vector<float> sum_data(3, 0);
         std::vector<float> input_array(3, 0);
-        for (int i = 0; i < 3; i++) for (int j = 0; j < K; j++) sum_data[i] += weight[j] * all_v_array[j][0][i];
-        for (int i = 0; i < 3; i++) input_array[i] = sum_data[i] / sum_weight;
+        for (int i = 0; i < 3; i++) for (int j = 0; j < K; j++) sum_data[i] += weight_normal[j] * all_v_array[j][0][i];
+        for (int i = 0; i < 3; i++) input_array[i] = sum_data[i];
 
         if (vel_publisher->is_activated())
         {
@@ -179,6 +179,7 @@ private:
             txdata.angular.z = input_array[2];
             vel_publisher->publish(txdata);
         }
+        for (size_t i = 0; i < 3; i++) std::cout << this->p[i] << " " << std::endl;
     }
 
     // estimate function
