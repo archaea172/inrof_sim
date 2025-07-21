@@ -253,6 +253,14 @@ private:
     std::vector<float> v;
     // vel ref
     std::vector<float> v_ref;
+    
+    float k_goal_angle;
+    float k_goal_linear;
+    float k_smooth_angle;
+    float k_smooth_wheel;
+    float k_smooth_linear;
+    float k_vel_angle;
+    float k_vel_linear;
 };
 
 #endif

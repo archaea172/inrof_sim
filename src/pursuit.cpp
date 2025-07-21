@@ -5,10 +5,22 @@
 PursuitControler::PursuitControler()
 : rclcpp_lifecycle::LifecycleNode(std::string("pursuit_controler"))
 {
+    /*parameter declare begin*/
+    this->declare_parameter<double>("weight_goal_angle", 0);
+    this->declare_parameter<double>("weight_goal_linear", 0);
+    this->declare_parameter<double>("weight_smooth_angle", 0);
+    this->declare_parameter<double>("weight_smooth_wheel", 0);
+    this->declare_parameter<double>("weight_smooth_linear", 0);
+    this->declare_parameter<double>("weight_vel_angle", 0);
+    this->declare_parameter<double>("weight_vel_linear", 0);
+    /*parameter declare end*/
+
+    /*sizing begin*/
     p.resize(3);
     v.resize(3);
     v_ref.resize(2);
     max_value.resize(3);
+    /*sizing end*/
 }
 
 PursuitControler::~PursuitControler()
@@ -113,13 +125,6 @@ void PursuitControler::pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr
 /*control timer callback begin*/
 void PursuitControler::control_callback()
 {
-    float k_goal_angle = 1;
-    float k_goal_linear = 1;
-    float k_smooth_angle = 1;
-    float k_smooth_wheel = 1;
-    float k_smooth_linear = 1;
-    float k_vel_angle = 1;
-    float k_vel_linear = 1;
     std::vector<std::vector<std::vector<float>>> all_v_array(K, std::vector<std::vector<float>>(T, std::vector<float>(3, 0)));
     std::vector<float> S_array(K, 0);
     // sampling
