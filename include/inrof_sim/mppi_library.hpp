@@ -1,3 +1,6 @@
+#ifndef MPPI_LIBRARY_HPP
+#define MPPI_LIBRARY_HPP
+
 class MppiControl
 {
 public:
@@ -7,3 +10,5 @@ public:
 private:
     float estimate();
 };
+
+#endif
