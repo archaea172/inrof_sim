@@ -7,3 +7,4 @@ pursuit_controler:
     weight_smooth_wheel: 1.0
     weight_vel_angle: 1.0
     weight_vel_linear: 1.0
+    iota: 1.0

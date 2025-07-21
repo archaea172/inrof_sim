@@ -267,6 +267,8 @@ private:
     float k_smooth_linear;
     float k_vel_angle;
     float k_vel_linear;
+    
+    float iota;
 };
 
 #endif

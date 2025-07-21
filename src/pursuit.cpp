@@ -13,8 +13,9 @@ PursuitControler::PursuitControler()
     this->declare_parameter<double>("weight_smooth_linear", 0);
     this->declare_parameter<double>("weight_vel_angle", 0);
     this->declare_parameter<double>("weight_vel_linear", 0);
+    this->declare_parameter<double>("iota", 0);
     /*parameter declare end*/
-    
+
     /*parameter set begin*/
     k_goal_angle = this->get_parameter("weight_goal_angle").as_double();
     k_goal_linear = this->get_parameter("weight_goal_linear").as_double();
@@ -23,6 +24,7 @@ PursuitControler::PursuitControler()
     k_smooth_linear = this->get_parameter("weight_smooth_linear").as_double();
     k_vel_angle = this->get_parameter("weight_vel_angle").as_double();
     k_vel_linear = this->get_parameter("weight_vel_linear").as_double();
+    iota = this->get_parameter("iota").as_double();
     /*parameter set end*/
 
     /*sizing begin*/
@@ -166,7 +168,6 @@ void PursuitControler::control_callback()
         S_array[i] = S;
     }
     // calc weight
-    float iota = 1;
     std::vector<float> weight(K);
     float S_ref = *std::min_element(S_array.begin(), S_array.end());
     for (int i = 0; i < K; i++)
