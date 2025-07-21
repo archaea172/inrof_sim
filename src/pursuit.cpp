@@ -14,6 +14,8 @@ PursuitControler::PursuitControler()
     this->declare_parameter<double>("weight_vel_angle", 0);
     this->declare_parameter<double>("weight_vel_linear", 0);
     /*parameter declare end*/
+    
+    /*parameter set begin*/
     k_goal_angle = this->get_parameter("weight_goal_angle").as_double();
     k_goal_linear = this->get_parameter("weight_goal_linear").as_double();
     k_smooth_angle = this->get_parameter("weight_smooth_angle").as_double();
@@ -21,6 +23,7 @@ PursuitControler::PursuitControler()
     k_smooth_linear = this->get_parameter("weight_smooth_linear").as_double();
     k_vel_angle = this->get_parameter("weight_vel_angle").as_double();
     k_vel_linear = this->get_parameter("weight_vel_linear").as_double();
+    /*parameter set end*/
 
     /*sizing begin*/
     p.resize(3);
@@ -138,8 +141,12 @@ rcl_interfaces::msg::SetParametersResult PursuitControler::parameters_callback(
     const std::vector<rclcpp::Parameter> &parameters
 )
 {
-
+    rcl_interfaces::msg::SetParametersResult result;
+    result.successful = true;
+    result.reason = "success";
+    return result;
 }
+/*parameter callback end*/
 
 /*control timer callback begin*/
 void PursuitControler::control_callback()
