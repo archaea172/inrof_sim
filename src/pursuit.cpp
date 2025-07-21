@@ -39,9 +39,9 @@ PursuitControler::PursuitControler()
     /*parameter set end*/
 
     /*sizing begin*/
-    p.resize(3);
+    float input_dim = 3;
+    p.resize(input_dim);
     v_ref.resize(2);
-    max_value.resize(3);
     /*sizing end*/
 
     parameter_callback_hanle_ = this->add_on_set_parameters_callback(
