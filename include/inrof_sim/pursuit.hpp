@@ -25,19 +25,11 @@ public:
     using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
     // constructor
-    PursuitControler()
-    : rclcpp_lifecycle::LifecycleNode(std::string("pursuit_controler"))
-    {
-        p.resize(3);
-        v.resize(3);
-        v_ref.resize(2);
-        max_value.resize(3);
-    }
+    PursuitControler();
     //desconstructor
     ~PursuitControler();
 
 private:
-
     // node function
     rclcpp::TimerBase::SharedPtr control_timer;
     rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr vel_publisher;

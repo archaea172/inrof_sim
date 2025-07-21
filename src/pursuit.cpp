@@ -2,9 +2,18 @@
 #include "rclcpp/rclcpp.hpp"
 
 /*class define begin*/
+PursuitControler::PursuitControler()
+: rclcpp_lifecycle::LifecycleNode(std::string("pursuit_controler"))
+{
+    p.resize(3);
+    v.resize(3);
+    v_ref.resize(2);
+    max_value.resize(3);
+}
+
 PursuitControler::~PursuitControler()
 {
-    
+
 }
 /*class define end*/
 
