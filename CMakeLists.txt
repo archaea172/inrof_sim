@@ -34,6 +34,7 @@ install(
 # add pursuit
 add_executable(pursuit_controler
   src/pursuit.cpp
+  include/${PROJECT_NAME}/pursuit.hpp
 )
 ament_target_dependencies(pursuit_controler
   rclcpp
@@ -44,6 +45,9 @@ target_link_libraries(pursuit_controler Eigen3::Eigen )
 install(
   TARGETS pursuit_controler
   DESTINATION lib/${PROJECT_NAME}
+)
+target_include_directories(pursuit_controler
+  PRIVATE include/${PROJECT_NAME}
 )
 
 # add twist converter
