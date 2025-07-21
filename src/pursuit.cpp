@@ -1,6 +1,8 @@
 #include "pursuit.hpp"
 #include "rclcpp/rclcpp.hpp"
 
+
+/*life cycle callback begin*/
 PursuitControler::CallbackReturn PursuitControler::on_configure(const rclcpp_lifecycle::State &state)
 {
     for (int i = 0; i < 3; i++)
@@ -75,6 +77,7 @@ PursuitControler::CallbackReturn PursuitControler::on_shutdown(const rclcpp_life
 {
     return CallbackReturn::SUCCESS;
 }
+/*life cycle callback end*/
 
 int main(int argc, char *argv[])
 {
