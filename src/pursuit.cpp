@@ -28,6 +28,10 @@ PursuitControler::PursuitControler()
     v_ref.resize(2);
     max_value.resize(3);
     /*sizing end*/
+
+    parameter_callback_hanle_ = this->add_on_set_parameters_callback(
+        std::bind(&PursuitControler::parameters_callback, this, _1)
+    );
 }
 
 PursuitControler::~PursuitControler()
@@ -128,6 +132,14 @@ void PursuitControler::pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr
     this->p[2] = rxdata->theta;
 }
 /*subscribe callback end*/
+
+/*parameter callback begin*/
+rcl_interfaces::msg::SetParametersResult PursuitControler::parameters_callback(
+    const std::vector<rclcpp::Parameter> &parameters
+)
+{
+
+}
 
 /*control timer callback begin*/
 void PursuitControler::control_callback()

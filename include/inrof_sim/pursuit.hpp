@@ -35,6 +35,7 @@ private:
     rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr vel_publisher;
     rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr goal_subscriber;
     rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr pose_subscriber;
+    OnSetParametersCallbackHandle::SharedPtr parameter_callback_hanle_;
 
     // lifecycle begin
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state);
@@ -48,6 +49,11 @@ private:
     // subscribe callback
     void goal_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata);
     void pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata);
+
+    /*parameter callback*/
+    rcl_interfaces::msg::SetParametersResult parameters_callback(
+        const std::vector<rclcpp::Parameter> &parameters
+    );
 
     // control timer callback
     void control_callback();
