@@ -30,33 +30,37 @@ public:
     ~PursuitControler();
 
 private:
-    // node function
+    /*node function begin*/
     rclcpp::TimerBase::SharedPtr control_timer;
     rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr vel_publisher;
     rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr goal_subscriber;
     rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr pose_subscriber;
     OnSetParametersCallbackHandle::SharedPtr parameter_callback_hanle_;
+    /*node function end*/
 
-    // lifecycle begin
+    /*lifecycle callback begin*/
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state);
     CallbackReturn on_activate(const rclcpp_lifecycle::State &state);
     CallbackReturn on_deactivate(const rclcpp_lifecycle::State &state);
     CallbackReturn on_cleanup(const rclcpp_lifecycle::State &state);
     CallbackReturn on_error(const rclcpp_lifecycle::State &state);
     CallbackReturn on_shutdown(const rclcpp_lifecycle::State &state);
-    // lifecycle end
+    /*lifecycle callback end*/
 
-    // subscribe callback
+    /*subscribe callback begin*/
     void goal_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata);
     void pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata);
+    /*subscribe callback end*/
 
-    /*parameter callback*/
+    /*parameter callback begin*/
     rcl_interfaces::msg::SetParametersResult parameters_callback(
         const std::vector<rclcpp::Parameter> &parameters
     );
+    /*parameter callback end*/
 
-    // control timer callback
+    /*control timer callback begin*/
     void control_callback();
+    /*control timer callback end*/
 
     // estimate function
     float estimate_vel(std::vector<std::vector<float>> V_array)

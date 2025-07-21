@@ -70,7 +70,7 @@ PursuitControler::CallbackReturn PursuitControler::on_configure(const rclcpp_lif
     max_value[1] = 1;
     max_value[2] = 0.3;
 
-    // create publisher
+    /*create publisher*/
     vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>(
         std::string("cmd_vel"), rclcpp::SystemDefaultsQoS()
     );
