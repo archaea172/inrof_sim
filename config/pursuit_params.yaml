@@ -11,3 +11,4 @@ pursuit_controler:
     predict_horizon: 300
     sampling_number: 10
     control_cycle: 0.01
+    max_input_value: [1.0, 1.0, 0.3]

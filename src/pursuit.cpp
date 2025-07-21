@@ -17,6 +17,8 @@ PursuitControler::PursuitControler()
     this->declare_parameter<int>("predict_horizon", 300);
     this->declare_parameter<int>("sampling_number", 100);
     this->declare_parameter<double>("control_cycle", 0.01);
+    std::vector<double> max_vector(3, 1.0);
+    this->declare_parameter("max_input_value", max_vector);
     /*parameter declare end*/
 
     /*parameter set begin*/
@@ -31,6 +33,9 @@ PursuitControler::PursuitControler()
     T = this->get_parameter("predict_horizon").as_int();
     K = this->get_parameter("sampling_number").as_int();
     dt = this->get_parameter("control_cycle").as_double();
+    std::vector<double> max_value_d = this->get_parameter("max_input_value").as_double_array();
+    std::transform(max_value_d.begin(), max_value_d.end(), std::back_inserter(max_value),
+    [](double d){ return static_cast<float>(d);});
     /*parameter set end*/
 
     /*sizing begin*/
@@ -68,10 +73,6 @@ PursuitControler::CallbackReturn PursuitControler::on_configure(const rclcpp_lif
     goal_p[0] = -1.2;
     goal_p[1] = 0;
     goal_p[2] = 0;
-    // add max
-    max_value[0] = 1;
-    max_value[1] = 1;
-    max_value[2] = 0.3;
 
     /*create publisher*/
     vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>(
