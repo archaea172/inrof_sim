@@ -40,7 +40,6 @@ PursuitControler::PursuitControler()
 
     /*sizing begin*/
     p.resize(3);
-    v.resize(3);
     v_ref.resize(2);
     max_value.resize(3);
     /*sizing end*/
@@ -59,11 +58,7 @@ PursuitControler::~PursuitControler()
 /*lifecycle callback begin*/
 PursuitControler::CallbackReturn PursuitControler::on_configure(const rclcpp_lifecycle::State &state)
 {
-    for (int i = 0; i < 3; i++)
-    {
-        p[i] = 0;
-        v[i] = 0;
-    }
+    for (int i = 0; i < 3; i++) p[i] = 0;
     
     v_ref[0] = 1;
     v_ref[1] = 0.4;

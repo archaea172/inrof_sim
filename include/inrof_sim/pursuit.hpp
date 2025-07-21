@@ -260,7 +260,6 @@ private:
     std::vector<float> goal_p;
     // current value
     std::vector<float> p;
-    std::vector<float> v;
     // vel ref
     std::vector<float> v_ref;
     
