@@ -1,6 +1,13 @@
 #include "pursuit.hpp"
 #include "rclcpp/rclcpp.hpp"
 
+/*class define begin*/
+PursuitControler::~PursuitControler()
+{
+    
+}
+/*class define end*/
+
 /*lifecycle callback begin*/
 PursuitControler::CallbackReturn PursuitControler::on_configure(const rclcpp_lifecycle::State &state)
 {

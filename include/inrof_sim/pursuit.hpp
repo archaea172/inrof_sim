@@ -1,3 +1,6 @@
+#ifndef PURSUIT_HPP
+#define PURSUIT_HPP
+
 #include <string>
 #include <chrono>
 #include <memory>
@@ -259,3 +262,5 @@ private:
     // vel ref
     std::vector<float> v_ref;
 };
+
+#endif
