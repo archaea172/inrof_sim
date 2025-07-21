@@ -82,7 +82,7 @@ install(
 
 # launch
 install(
-  DIRECTORY launch worlds models hooks
+  DIRECTORY launch worlds models hooks config
   DESTINATION share/${PROJECT_NAME}/
 )
 

@@ -1,0 +1,9 @@
+pursuit_controler:
+  ros__parameters:
+    weight_goal_angle: 1.0
+    weight_goal_linear: 1.0
+    weight_smooth_angle: 1.0
+    weight_smooth_linear: 1.0
+    weight_smooth_wheel: 1.0
+    weight_vel_angle: 1.0
+    weight_vel_linear: 1.0
