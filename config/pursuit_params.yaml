@@ -8,3 +8,6 @@ pursuit_controler:
     weight_vel_angle: 1.0
     weight_vel_linear: 1.0
     iota: 1.0
+    predict_horizon: 300
+    sampling_number: 10
+    control_cycle: 0.01

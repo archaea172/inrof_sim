@@ -14,6 +14,9 @@ PursuitControler::PursuitControler()
     this->declare_parameter<double>("weight_vel_angle", 0);
     this->declare_parameter<double>("weight_vel_linear", 0);
     this->declare_parameter<double>("iota", 0);
+    this->declare_parameter<int>("predict_horizon", 300);
+    this->declare_parameter<int>("sampling_number", 100);
+    this->declare_parameter<double>("control_cycle", 0.01);
     /*parameter declare end*/
 
     /*parameter set begin*/
@@ -25,6 +28,9 @@ PursuitControler::PursuitControler()
     k_vel_angle = this->get_parameter("weight_vel_angle").as_double();
     k_vel_linear = this->get_parameter("weight_vel_linear").as_double();
     iota = this->get_parameter("iota").as_double();
+    T = this->get_parameter("predict_horizon").as_int();
+    K = this->get_parameter("sampling_number").as_int();
+    dt = this->get_parameter("control_cycle").as_double();
     /*parameter set end*/
 
     /*sizing begin*/
@@ -62,9 +68,6 @@ PursuitControler::CallbackReturn PursuitControler::on_configure(const rclcpp_lif
     goal_p[0] = -1.2;
     goal_p[1] = 0;
     goal_p[2] = 0;
-    T = 300;
-    K = 100;
-    dt = 0.01; // s
     // add max
     max_value[0] = 1;
     max_value[1] = 1;

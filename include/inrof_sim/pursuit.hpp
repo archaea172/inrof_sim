@@ -249,9 +249,9 @@ private:
     }
 
     // predict horizon
-    float T;
+    int T;
     // sample
-    float K;
+    int K;
     // control cycle
     float dt;
     // max value
