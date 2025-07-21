@@ -2,7 +2,7 @@
 #include "rclcpp/rclcpp.hpp"
 
 
-/*life cycle callback begin*/
+/*lifecycle callback begin*/
 PursuitControler::CallbackReturn PursuitControler::on_configure(const rclcpp_lifecycle::State &state)
 {
     for (int i = 0; i < 3; i++)
@@ -77,7 +77,23 @@ PursuitControler::CallbackReturn PursuitControler::on_shutdown(const rclcpp_life
 {
     return CallbackReturn::SUCCESS;
 }
-/*life cycle callback end*/
+/*lifecycle callback end*/
+
+/*subscribe callback begin*/
+void PursuitControler::goal_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
+{
+    this->goal_p[0] = rxdata->x;
+    this->goal_p[1] = rxdata->y;
+    this->goal_p[2] = rxdata->theta;
+}
+
+void PursuitControler::pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
+{
+    this->p[0] = rxdata->x;
+    this->p[1] = rxdata->y;
+    this->p[2] = rxdata->theta;
+}
+/*subscribe callback end*/
 
 int main(int argc, char *argv[])
 {

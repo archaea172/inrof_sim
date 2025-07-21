@@ -51,21 +51,11 @@ private:
     CallbackReturn on_cleanup(const rclcpp_lifecycle::State &state);
     CallbackReturn on_error(const rclcpp_lifecycle::State &state);
     CallbackReturn on_shutdown(const rclcpp_lifecycle::State &state);
-    
     // lifecycle end
+
     // subscribe callback
-    void goal_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
-    {
-        this->goal_p[0] = rxdata->x;
-        this->goal_p[1] = rxdata->y;
-        this->goal_p[2] = rxdata->theta;
-    }
-    void pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
-    {
-        this->p[0] = rxdata->x;
-        this->p[1] = rxdata->y;
-        this->p[2] = rxdata->theta;
-    }
+    void goal_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata);
+    void pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata);
 
     // control timer callback
     void control_callback()
