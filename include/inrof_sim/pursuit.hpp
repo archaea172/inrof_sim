@@ -31,10 +31,7 @@ public:
         max_value.resize(3);
     }
     //desconstructor
-    ~PursuitControler()
-    {
-
-    }
+    ~PursuitControler();
 
 private:
 
