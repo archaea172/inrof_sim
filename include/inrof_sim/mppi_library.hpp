@@ -10,6 +10,7 @@ public:
 private:
     double estimate_ref();
     double estimate_smooth();
+    
 };
 
 #endif
