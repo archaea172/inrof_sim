@@ -32,8 +32,8 @@ private:
     /*estimate func end*/
 
     /*generate state begin*/
-    Eigen::MatrixXd generate_model_state(Eigen::MatrixXd &input_array, Eigen::VectorXd &init_state);
-    Eigen::VectorXd model(Eigen::VectorXd &input, Eigen::VectorXd &pre_state);
+    Eigen::MatrixXd generate_model_state(const Eigen::MatrixXd &input_array, const Eigen::VectorXd &init_state);
+    Eigen::VectorXd model(const Eigen::VectorXd &input, const Eigen::VectorXd &pre_state);
     /*generate state end*/
 
     /*util function begin*/

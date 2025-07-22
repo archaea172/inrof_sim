@@ -28,6 +28,7 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, Eigen::Vec
             input_array[i],
             init_state_eigen
         );
+
         S_array(i) = calc_evaluation();
     }
     double S_ref = S_array.minCoeff();
@@ -64,13 +65,17 @@ double MppiControl::evaluate_smooth()
 /*estimate func end*/
 
 /*generate state begin*/
-Eigen::MatrixXd MppiControl::generate_model_state(Eigen::MatrixXd &input_array, Eigen::VectorXd &init_state)
+Eigen::MatrixXd MppiControl::generate_model_state(const Eigen::MatrixXd &input_array, const Eigen::VectorXd &init_state)
 {
+    Eigen::MatrixXd state_array(this->predict_horizon_, this->input_dim_);
+    state_array.row(0) = init_state;
+    for (size_t i = 1; i < predict_horizon_; i++) state_array.row(i) = this->model(input_array.row(i), state_array.row(i-1));
 
+    return state_array;
 }
-Eigen::VectorXd MppiControl::model(Eigen::VectorXd &input, Eigen::VectorXd &pre_state)
+Eigen::VectorXd MppiControl::model(const Eigen::VectorXd &input, const Eigen::VectorXd &pre_state)
 {
-    
+    Eigen::VectorXd post_state(this->input_dim_);
 }
 /*generate state end*/
 
