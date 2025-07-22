@@ -5,8 +5,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-set(CMAKE_PREFIX_PATH libtorch)
-
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -18,7 +16,6 @@ find_package(joy REQUIRED)
 find_package(control_pkg REQUIRED)
 find_package(ros_gz_bridge REQUIRED)
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
-find_package(Torch REQUIRED)
 
 # add omni
 add_executable(omni_controler
