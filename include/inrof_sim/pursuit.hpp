@@ -211,12 +211,6 @@ private:
         }
         return v_matrix;
     }
-    // clamp
-    float clamp(const float V, const float max_Value)
-    {
-        float clamp_number = std::min(std::max(V, -1*max_Value), max_Value);
-        return clamp_number;
-    }
 
     //control function
     std::vector<std::vector<float>> predict_position_array(const std::vector<float> &p_value, const std::vector<std::vector<float>> &v_array)
