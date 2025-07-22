@@ -50,11 +50,12 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, Eigen::Vec
 }
 /*main progress end*/
 
-/*estimate func begin*/
-double MppiControl::calc_evaluation()
+void MppiControl::set_calc_evaluation(const std::function<double()>& new_evaluation)
 {
-
+    this->calc_evaluation = new_evaluation;
 }
+
+/*estimate func begin*/
 double MppiControl::evaluate_ref(const Eigen::MatrixXd &value, const Eigen::MatrixXd &value_ref)
 {
 

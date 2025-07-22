@@ -17,6 +17,7 @@ public:
     ~MppiControl();
 
     std::vector<double> run(std::vector<double> &init_state, Eigen::VectorXd mu, Eigen::MatrixXd sigma);
+    void set_calc_evaluation(const std::function<double()>& new_evaluation);
 
 private:
     /*declare value begin*/
@@ -28,7 +29,7 @@ private:
     /*declare value end*/
 
     /*estimate func begin*/
-    double calc_evaluation();
+    std::function<double()> calc_evaluation;
     double evaluate_ref(const Eigen::MatrixXd &value, const Eigen::MatrixXd &value_ref);
     double evaluate_smooth(const Eigen::VectorXd &value);
     /*estimate func end*/
