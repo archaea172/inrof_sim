@@ -44,8 +44,7 @@ private:
 
     Eigen::MatrixXd
     generate_input_array(
-        const int dim,
-        const std::vector<float> Max_value
+        
     );
     /*generate input end*/
 };
