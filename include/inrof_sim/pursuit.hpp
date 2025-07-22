@@ -16,6 +16,8 @@
 #include "geometry_msgs/msg/pose2_d.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 
+#include "mppi_library.hpp"
+
 using std::placeholders::_1;
 using namespace std::chrono_literals;
 
@@ -62,107 +64,6 @@ private:
     void control_callback();
     /*control timer callback end*/
 
-    // estimate function
-    float estimate_vel(std::vector<std::vector<float>> V_array)
-    {
-        std::vector<float> vel_difference;
-        vel_difference.resize(T);
-        for (int i = 0; i < T; i++)
-        {
-            vel_difference[i] = std::pow(V_array[i][0], 2) + std::pow(V_array[i][1], 2) - std::pow(v_ref[0], 2);
-        }
-        float difference_sum = 0;
-        for (size_t i = 0; i < T; i++) difference_sum += vel_difference[i];
-        return difference_sum;
-    }
-    float estimate_vel_rotate(std::vector<std::vector<float>> V_array)
-    {
-        std::vector<float> vel_difference;
-        vel_difference.resize(T);
-        for (int i = 0; i < T; i++)
-        {
-            vel_difference[i] = std::pow(V_array[i][2] - v_ref[1], 2);
-        }
-        float difference_sum = 0;
-        for (size_t i = 0; i < T; i++) difference_sum += vel_difference[i];
-        return difference_sum;
-
-    }
-    float estimate_smooth_vel(std::vector<std::vector<float>> V_array)
-    {
-        std::vector<float> smooth_vel_difference(T);
-        for (size_t i = 0; i < T - 1; i++)
-        {
-            float v_ab_sq = std::pow(V_array[i][0], 2) + std::pow(V_array[i][1], 2);
-            float v_ab_sq_post = std::pow(V_array[i+1][0], 2) + std::pow(V_array[i+1][1], 2);
-            smooth_vel_difference[i] = std::pow(v_ab_sq_post - v_ab_sq, 2);
-        }
-        float difference_sum_vel = 0;
-        for (size_t i = 0; i < T; i++)
-        {
-            difference_sum_vel += smooth_vel_difference[i];
-        }
-        return difference_sum_vel;
-    }
-    float estimate_smooth_rotate(std::vector<std::vector<float>> V_array)
-    {
-        std::vector<float> smooth_vel_difference(T);
-        for (size_t i = 0; i < T - 1; i++)
-        {
-            smooth_vel_difference[i] += std::pow(V_array[i+1][2] - V_array[i][2], 2);
-        }
-        float difference_sum_vel = 0;
-        for (size_t i = 0; i < T; i++)
-        {
-            difference_sum_vel += smooth_vel_difference[i];
-        }
-        return difference_sum_vel;
-    }
-    float estimate_smooth_wheel(std::vector<std::vector<float>> X_array, std::vector<std::vector<float>> V_array)
-    {
-        std::vector<float> smooth_wheel_difference(T);
-        std::vector<std::vector<float>> wheel_array(T, std::vector<float>(4, 0));
-        for (size_t i = 0; i < T; i++)
-        {
-            float w[4] = {};
-            omni_calc(X_array[i][2], V_array[i][0], V_array[i][1], V_array[i][2], &w[0], &w[1], &w[2], &w[3]);
-            for (size_t j = 0; j < 4; j++) wheel_array[i][j] = w[j];
-        }
-        for (size_t i = 0; i < T - 1; i++)
-        {
-            smooth_wheel_difference[i] = 0;
-            for (size_t j = 0; j < 4; j++) smooth_wheel_difference[i] += std::pow(wheel_array[i+1][j] - wheel_array[i][j], 2);
-        }
-        float difference_sum_wheel = 0;
-        for (size_t i = 0; i < T; i++)
-        {
-            difference_sum_wheel += smooth_wheel_difference[i];
-        }
-        return difference_sum_wheel;
-    }
-    float estimate_goal_linear(std::vector<std::vector<float>> X_array)
-    {
-        std::vector<float> differential_goal(T);
-        for (size_t i = 0; i < T; i++)
-        {
-            differential_goal[i] = std::pow(goal_p[0] - X_array[i][0], 2) + std::pow(goal_p[1] - X_array[i][1], 2) + std::pow(goal_p[2] - X_array[i][2], 2);
-        }
-        float difference_sum = 0;
-        for (size_t i = 0; i < T; i++) difference_sum += differential_goal[i];
-        return difference_sum;
-    }
-    float estimate_goal_angle(std::vector<std::vector<float>> X_array)
-    {
-        std::vector<float> differential_goal(T);
-        for (size_t i = 0; i < T; i++)
-        {
-            differential_goal[i] = std::pow(goal_p[2] - X_array[i][2], 2);
-        }
-        float difference_sum = 0;
-        for (size_t i = 0; i < T; i++) difference_sum += differential_goal[i];
-        return difference_sum;
-    }
-
     // omni_simulate
     void omni_calc(float theta,float vx,float vy,float omega,float *w0,float *w1,float *w2,float *w3){
         const float a0 = M_PI/180*45;
@@ -186,25 +87,6 @@ private:
         *w2 = (arr[2][0] * v[0] + arr[2][1] * v[1] + arr[2][2] * v[2]) / r;
         *w3 = (arr[3][0] * v[0] + arr[3][1] * v[1] + arr[3][2] * v[2]) / r;
     }
-
-    //control function
-    std::vector<std::vector<float>> predict_position_array(const std::vector<float> &p_value, const std::vector<std::vector<float>> &v_array)
-    {
-        std::vector<std::vector<float>> p_matrix(T, std::vector<float>(3, 0));
-        p_matrix[0] = p_value;
-        for (size_t i = 1; i < T; i++) p_matrix[i] = predict_position(p_matrix[i-1], v_array[i]);
-        return p_matrix;
-    }
-
-    std::vector<float> predict_position(const std::vector<float> &pre_p, const std::vector<float> &current_v)
-    {
-        std::vector<float> post_p(3);
-        for (size_t i = 0; i < 3; i++) post_p[i] = pre_p[i] + dt*current_v[i];
-        return post_p;
-    }
-
-    // probability function
-
 
     // predict horizon
     int T;

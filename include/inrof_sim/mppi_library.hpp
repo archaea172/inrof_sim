@@ -27,8 +27,8 @@ private:
 
     /*estimate func begin*/
     double calc_evaluation();
-    double estimate_ref();
-    double estimate_smooth();
+    double evaluate_ref();
+    double evaluate_smooth();
     /*estimate func end*/
 
     /*generate state begin*/
