@@ -15,7 +15,7 @@ public:
     );
     ~MppiControl();
 
-    std::vector<double> run(std::vector<double> init_state);
+    std::vector<double> run(std::vector<double> &init_state);
 
 private:
     /*declare value begin*/
@@ -26,6 +26,7 @@ private:
     /*declare value end*/
 
     /*estimate func begin*/
+    double calc_evaluation();
     double estimate_ref();
     double estimate_smooth();
     /*estimate func end*/

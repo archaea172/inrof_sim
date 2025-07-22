@@ -152,37 +152,6 @@ rcl_interfaces::msg::SetParametersResult PursuitControler::parameters_callback(
 /*control timer callback begin*/
 void PursuitControler::control_callback()
 {
-    std::vector<std::vector<std::vector<float>>> all_v_array(K, std::vector<std::vector<float>>(T, std::vector<float>(3, 0)));
-    std::vector<float> S_array(K, 0);
-    // sampling
-    for (size_t i = 0; i < K; i++)
-    {
-        std::vector<std::vector<float>> v_array = generate_v_array(3, max_value);
-        std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
-        float S = k_goal_angle*estimate_goal_angle(p_array)
-        + k_goal_linear*estimate_goal_linear(p_array) + k_smooth_angle*estimate_smooth_rotate(v_array) 
-        + k_smooth_wheel*estimate_smooth_wheel(p_array, v_array) + k_smooth_linear*estimate_smooth_vel(v_array) 
-        + k_vel_linear*estimate_vel(v_array) + k_vel_angle*estimate_vel_rotate(v_array);
-        all_v_array[i] = v_array;
-        S_array[i] = S;
-    }
-    // calc weight
-    std::vector<float> weight(K);
-    float S_ref = *std::min_element(S_array.begin(), S_array.end());
-    for (int i = 0; i < K; i++)
-    {
-        weight[i] = std::exp(-(S_array[i] - S_ref) / iota);
-    }
-    float sum_weight = 0;
-    for (int i = 0; i < K; i++) sum_weight += weight[i];
-    std::vector<float> weight_normal(K);
-    for (int i = 0; i < K; i++) weight_normal[i] = weight[i] / sum_weight;
-    // calc
-    std::vector<float> sum_data(3, 0);
-    std::vector<float> input_array(3, 0);
-    for (int i = 0; i < 3; i++) for (int j = 0; j < K; j++) sum_data[i] += weight_normal[j] * all_v_array[j][0][i];
-    for (int i = 0; i < 3; i++) input_array[i] = sum_data[i];
-
     if (vel_publisher->is_activated())
     {
         geometry_msgs::msg::Twist txdata;

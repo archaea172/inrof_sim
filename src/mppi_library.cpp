@@ -16,16 +16,35 @@ MppiControl::~MppiControl()
 /*class function end*/
 
 /*main progress begin*/
-std::vector<double> MppiControl::run(std::vector<double> init_state)
+std::vector<double> MppiControl::run(std::vector<double> &init_state)
 {
     std::vector<Eigen::MatrixXd> input_array(sampling_number_);
     std::vector<Eigen::MatrixXd> state_array(sampling_number_);
-    
+    Eigen::VectorXd S_array(sampling_number_);
     for (size_t i = 0; i < this->sampling_number_; i++) {
+        Eigen::VectorXd init_state_eigen = Eigen::Map<Eigen::VectorXd>(&init_state[0], init_state.size());
         input_array[i] = this->generate_input_array();
+        state_array[i] = this->generate_model_state(
+            input_array[i],
+            init_state_eigen
+        );
+        S_array(i) = calc_evaluation();
     }
+    double S_ref = S_array.minCoeff();
 
-    
+    Eigen::VectorXd weight(sampling_number_);
+    Eigen::VectorXd weight_normal(sampling_number_);
+    double iota;
+    weight = (-(S_array - Eigen::VectorXd::Ones(sampling_number_)*S_ref) / iota).exp();
+    double weight_sum = weight.sum();
+    weight_normal = weight / weight_sum;
+
+    Eigen::VectorXd input(input_dim_);
+    input.setZero();
+    for (size_t i = 0; i < sampling_number_; i++) input += weight_normal(i) * input_array[i].col(0);
+
+    std::vector<double> return_input(input.data(), input.data() + input.size());
+    return return_input;
 }
 /*main progress end*/
 
