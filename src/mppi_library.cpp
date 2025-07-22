@@ -26,14 +26,14 @@ void omni_calc(float theta,float vx,float vy,float omega,float *w0,float *w1,flo
 }
 
 /*class function begin*/
-MppiControl::MppiControl(const int input_dim, const int sampling_number, const int predict_horizon, const std::vector<double> &max_input_value, const double dt)
+MppiControl::MppiControl(const int input_dim, const int sampling_number, const int predict_horizon, const std::vector<double> &max_input_value, const double dt, std::vector<double> gain_list)
     : input_dim_(input_dim),
     sampling_number_(sampling_number),
     predict_horizon_(predict_horizon),
     max_input_value_(max_input_value),
     control_cycle_(dt)
 {
-    
+    gain_vector = Eigen::Map<Eigen::VectorXd>(&gain_list[0], gain_list.size());
 }
 MppiControl::~MppiControl()
 {

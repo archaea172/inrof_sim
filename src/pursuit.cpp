@@ -40,7 +40,7 @@ PursuitControler::PursuitControler()
     max_value = this->get_parameter("max_input_value").as_double_array();
 
     std::vector<double> mu_stdvector = this->get_parameter("mu").as_double_array();
-    input_mu = Eigen::Map<Eigen::Vector3d>(&mu_stdvector[0], mu_stdvector.size());
+    input_mu = Eigen::Map<Eigen::VectorXd>(&mu_stdvector[0], mu_stdvector.size());
 
     std::vector<double> sigma_stdvector = this->get_parameter("sigma").as_double_array();
     input_sigma << 
