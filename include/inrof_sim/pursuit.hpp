@@ -93,7 +93,7 @@ private:
     // sample
     int K;
     // control cycle
-    float dt;
+    double dt;
     // max value
     std::vector<double> max_value;
     // goal pose

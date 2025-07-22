@@ -1,11 +1,12 @@
 #include "mppi_library.hpp"
 
 /*class function begin*/
-MppiControl::MppiControl(const int input_dim, const int sampling_number, const int predict_horizon, const std::vector<double> &max_input_value)
+MppiControl::MppiControl(const int input_dim, const int sampling_number, const int predict_horizon, const std::vector<double> &max_input_value, const double dt)
     : input_dim_(input_dim),
     sampling_number_(sampling_number),
     predict_horizon_(predict_horizon),
-    max_input_value_(max_input_value)
+    max_input_value_(max_input_value),
+    control_cycle_(dt)
 {
     
 }

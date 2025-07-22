@@ -11,7 +11,8 @@ public:
         const int input_dim, 
         const int sampling_number, 
         const int predict_horizon,
-        const std::vector<double> &max_input_value
+        const std::vector<double> &max_input_value,
+        const double dt
     );
     ~MppiControl();
 
@@ -23,6 +24,7 @@ private:
     const int sampling_number_;
     const int predict_horizon_;
     std::vector<double> max_input_value_;
+    const double control_cycle_;
     /*declare value end*/
 
     /*estimate func begin*/

@@ -55,7 +55,13 @@ PursuitControler::PursuitControler()
     v_ref.resize(2);
     /*sizing end*/
     
-    mppi_controler = std::make_unique<MppiControl>(input_dim, this->K, this->T, this->max_value);
+    mppi_controler = std::make_unique<MppiControl>(
+        input_dim,
+        this->K,
+        this->T,
+        this->max_value,
+        this->dt
+    );
 
     parameter_callback_hanle_ = this->add_on_set_parameters_callback(
         std::bind(&PursuitControler::parameters_callback, this, _1)
