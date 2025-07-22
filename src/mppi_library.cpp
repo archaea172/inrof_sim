@@ -42,12 +42,15 @@ MppiControl::~MppiControl()
 /*class function end*/
 
 /*main progress begin*/
-std::vector<double> MppiControl::run(std::vector<double> &init_state, Eigen::VectorXd &mu, Eigen::MatrixXd &sigma)
+std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vector<double> &goal_state, Eigen::VectorXd &mu, Eigen::MatrixXd &sigma)
 {
+    Eigen::VectorXd goal_state_eig = Eigen::Map<Eigen::VectorXd>(&goal_state[0], goal_state.size());
+
     std::vector<Eigen::MatrixXd> input_array(sampling_number_);
     std::vector<Eigen::MatrixXd> state_array(sampling_number_);
     Eigen::VectorXd S_array(sampling_number_);
     Eigen::VectorXd init_state_eigen = Eigen::Map<Eigen::VectorXd>(&init_state[0], init_state.size());
+
     for (size_t i = 0; i < this->sampling_number_; i++) {
         input_array[i] = this->generate_input_array(mu, sigma);
         state_array[i] = this->generate_model_state(
@@ -55,7 +58,7 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, Eigen::Vec
             init_state_eigen
         );
 
-        S_array(i) = calc_evaluation();
+        S_array(i) = calc_evaluation(input_array[i], state_array[i], goal_state_eig);
     }
     double S_ref = S_array.minCoeff();
 
@@ -76,10 +79,16 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, Eigen::Vec
 /*main progress end*/
 
 /*estimate func begin*/
-double MppiControl::calc_evaluation()
+double MppiControl::calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose)
 {
     Eigen::VectorXd S_list;
-    
+    S_list(0) = this->evaluate_ref(InputList.col(1), Eigen::VectorXd::Ones(this->predict_horizon_)*GoalPose(2));
+    S_list(1);
+    S_list(2);
+    S_list(3);
+    S_list(4);
+    S_list(5);
+    S_list(6);
 
     double S = S_list.dot(this->gain_vector);
     return S;
