@@ -78,9 +78,10 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, Eigen::Vec
 /*estimate func begin*/
 double MppiControl::calc_evaluation()
 {
+    Eigen::VectorXd S_list;
+    
 
-
-    double S = 0;
+    double S = S_list.dot(this->gain_vector);
     return S;
 }
 double MppiControl::evaluate_ref(const Eigen::VectorXd &value, const Eigen::VectorXd &value_ref)

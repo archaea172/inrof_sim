@@ -55,12 +55,18 @@ PursuitControler::PursuitControler()
     v_ref.resize(2);
     /*sizing end*/
     
+    std::vector<double> gains = {
+        k_goal_angle, k_goal_linear, k_smooth_angle,
+        k_smooth_wheel, k_smooth_linear, k_vel_angle,
+        k_vel_linear
+    };
     mppi_controler = std::make_unique<MppiControl>(
         input_dim,
         this->K,
         this->T,
         this->max_value,
-        this->dt
+        this->dt,
+        gains
     );
 
     parameter_callback_hanle_ = this->add_on_set_parameters_callback(
