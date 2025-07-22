@@ -35,13 +35,13 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state)
     Eigen::VectorXd weight(sampling_number_);
     Eigen::VectorXd weight_normal(sampling_number_);
     double iota;
-    weight = (-(S_array - Eigen::VectorXd::Ones(sampling_number_)*S_ref) / iota).exp();
+    weight = (-(S_array - Eigen::VectorXd::Ones(sampling_number_)*S_ref) / iota).array().exp();
     double weight_sum = weight.sum();
     weight_normal = weight / weight_sum;
 
     Eigen::VectorXd input(input_dim_);
     input.setZero();
-    for (size_t i = 0; i < sampling_number_; i++) input += weight_normal(i) * input_array[i].col(0);
+    for (size_t i = 0; i < sampling_number_; i++) input += weight_normal(i) * input_array[i].row(0).transpose();
 
     std::vector<double> return_input(input.data(), input.data() + input.size());
     return return_input;
