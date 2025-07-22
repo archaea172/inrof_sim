@@ -15,7 +15,7 @@ public:
     );
     ~MppiControl();
 
-    std::vector<double> run(std::vector<double> &init_state);
+    std::vector<double> run(std::vector<double> &init_state, Eigen::VectorXd mu, Eigen::MatrixXd sigma);
 
 private:
     /*declare value begin*/
@@ -48,7 +48,8 @@ private:
     );
 
     Eigen::MatrixXd generate_input_array(
-        
+        Eigen::VectorXd mu,
+        Eigen::MatrixXd sigma
     );
     /*generate input end*/
 };

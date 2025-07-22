@@ -19,6 +19,10 @@ PursuitControler::PursuitControler()
     this->declare_parameter<double>("control_cycle", 0.01);
     std::vector<double> max_vector(3, 1.0);
     this->declare_parameter("max_input_value", max_vector);
+    std::vector<double> mu(3, 1.0);
+    this->declare_parameter("mu", mu);
+    std::vector<double> sigma(9, 1);
+    this->declare_parameter("sigma", sigma);
     /*parameter declare end*/
 
     /*parameter set begin*/
@@ -34,6 +38,15 @@ PursuitControler::PursuitControler()
     K = this->get_parameter("sampling_number").as_int();
     dt = this->get_parameter("control_cycle").as_double();
     max_value = this->get_parameter("max_input_value").as_double_array();
+
+    std::vector<double> mu_stdvector = this->get_parameter("mu").as_double_array();
+    input_mu = Eigen::Map<Eigen::Vector3d>(&mu_stdvector[0], mu_stdvector.size());
+
+    std::vector<double> sigma_stdvector = this->get_parameter("sigma").as_double_array();
+    input_sigma << 
+    sigma_stdvector[0], sigma_stdvector[1], sigma_stdvector[2],
+    sigma_stdvector[3], sigma_stdvector[4], sigma_stdvector[5],
+    sigma_stdvector[6], sigma_stdvector[7], sigma_stdvector[8];
     /*parameter set end*/
 
     /*sizing begin*/
@@ -154,7 +167,7 @@ rcl_interfaces::msg::SetParametersResult PursuitControler::parameters_callback(
 void PursuitControler::control_callback()
 {
     std::vector<double> input_array(3);
-    this->mppi_controler->run(this->p);
+    this->mppi_controler->run(this->p, this->input_mu, this->input_sigma);
 
     if (vel_publisher->is_activated())
     {

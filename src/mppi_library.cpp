@@ -16,14 +16,14 @@ MppiControl::~MppiControl()
 /*class function end*/
 
 /*main progress begin*/
-std::vector<double> MppiControl::run(std::vector<double> &init_state)
+std::vector<double> MppiControl::run(std::vector<double> &init_state, Eigen::VectorXd mu, Eigen::MatrixXd sigma)
 {
     std::vector<Eigen::MatrixXd> input_array(sampling_number_);
     std::vector<Eigen::MatrixXd> state_array(sampling_number_);
     Eigen::VectorXd S_array(sampling_number_);
     for (size_t i = 0; i < this->sampling_number_; i++) {
         Eigen::VectorXd init_state_eigen = Eigen::Map<Eigen::VectorXd>(&init_state[0], init_state.size());
-        input_array[i] = this->generate_input_array();
+        input_array[i] = this->generate_input_array(mu, sigma);
         state_array[i] = this->generate_model_state(
             input_array[i],
             init_state_eigen
@@ -96,18 +96,9 @@ Eigen::VectorXd MppiControl::sample_multivariate_normal(
     return mean + L*z;
 }
 
-Eigen::MatrixXd MppiControl::generate_input_array()
+Eigen::MatrixXd MppiControl::generate_input_array(Eigen::VectorXd mu, Eigen::MatrixXd sigma)
 {
     Eigen::MatrixXd input_array(this->predict_horizon_, this->input_dim_);
-
-    Eigen::VectorXd mu(this->input_dim_);
-    mu << 1.0, 1.0, 0.5;
-
-    Eigen::MatrixXd sigma(this->input_dim_, this->input_dim_);
-    sigma << 
-    1.0, 0.5, 0.2,
-    0.5, 1.0, 0.3,
-    0.2, 0.3, 1.0;
 
     std::random_device rd;
     std::mt19937 gen(rd());

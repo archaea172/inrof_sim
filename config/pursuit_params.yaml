@@ -12,3 +12,5 @@ pursuit_controler:
     sampling_number: 10
     control_cycle: 0.01
     max_input_value: [1.0, 1.0, 0.3]
+    mu: [1.0, 1.0, 1.0]
+    sigma: [1.0, 0.5, 0.2, 0.5, 1.0, 0.3, 0.2, 0.3, 1.0]

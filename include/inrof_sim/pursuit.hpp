@@ -114,6 +114,9 @@ private:
     float iota;
 
     std::unique_ptr<MppiControl> mppi_controler;
+    
+    Eigen::Vector3d input_mu;
+    Eigen::Matrix3d input_sigma;
 };
 
 #endif
