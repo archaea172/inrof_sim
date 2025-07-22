@@ -15,6 +15,20 @@ MppiControl::~MppiControl()
 }
 /*class function end*/
 
+/*main progress begin*/
+std::vector<double> MppiControl::run(std::vector<double> init_state)
+{
+    std::vector<Eigen::MatrixXd> input_array(sampling_number_);
+    std::vector<Eigen::MatrixXd> state_array(sampling_number_);
+    
+    for (size_t i = 0; i < this->sampling_number_; i++) {
+        input_array[i] = this->generate_input_array();
+    }
+
+    
+}
+/*main progress end*/
+
 /*util function begin*/
 double MppiControl::clamp(const double value, const double max_value, const double min_value)
 {

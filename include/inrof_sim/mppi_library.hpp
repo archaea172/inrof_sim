@@ -15,6 +15,8 @@ public:
     );
     ~MppiControl();
 
+    std::vector<double> run(std::vector<double> init_state);
+
 private:
     /*declare value begin*/
     const int input_dim_;
