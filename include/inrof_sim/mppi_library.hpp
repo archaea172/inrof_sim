@@ -44,8 +44,7 @@ private:
         std::mt19937 &gen
     );
 
-    Eigen::MatrixXd
-    generate_input_array(
+    Eigen::MatrixXd generate_input_array(
         
     );
     /*generate input end*/
