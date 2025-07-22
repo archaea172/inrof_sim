@@ -42,13 +42,13 @@ MppiControl::~MppiControl()
 /*class function end*/
 
 /*main progress begin*/
-std::vector<double> MppiControl::run(std::vector<double> &init_state, Eigen::VectorXd mu, Eigen::MatrixXd sigma)
+std::vector<double> MppiControl::run(std::vector<double> &init_state, Eigen::VectorXd &mu, Eigen::MatrixXd &sigma)
 {
     std::vector<Eigen::MatrixXd> input_array(sampling_number_);
     std::vector<Eigen::MatrixXd> state_array(sampling_number_);
     Eigen::VectorXd S_array(sampling_number_);
+    Eigen::VectorXd init_state_eigen = Eigen::Map<Eigen::VectorXd>(&init_state[0], init_state.size());
     for (size_t i = 0; i < this->sampling_number_; i++) {
-        Eigen::VectorXd init_state_eigen = Eigen::Map<Eigen::VectorXd>(&init_state[0], init_state.size());
         input_array[i] = this->generate_input_array(mu, sigma);
         state_array[i] = this->generate_model_state(
             input_array[i],
@@ -75,15 +75,19 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, Eigen::Vec
 }
 /*main progress end*/
 
-void MppiControl::set_calc_evaluation(const std::function<double()>& new_evaluation)
-{
-    this->calc_evaluation = new_evaluation;
-}
-
 /*estimate func begin*/
-double MppiControl::evaluate_ref(const Eigen::MatrixXd &value, const Eigen::MatrixXd &value_ref)
+double MppiControl::calc_evaluation()
 {
 
+
+    double S = 0;
+    return S;
+}
+double MppiControl::evaluate_ref(const Eigen::VectorXd &value, const Eigen::VectorXd &value_ref)
+{
+    double sum_diff = 0;
+    sum_diff += (value - value).array().cwiseAbs2().sum();
+    return sum_diff;
 }
 double MppiControl::evaluate_smooth(const Eigen::VectorXd &value)
 {
