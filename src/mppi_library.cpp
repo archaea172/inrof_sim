@@ -33,4 +33,28 @@ Eigen::VectorXd MppiControl::sample_multivariate_normal(
     Eigen::MatrixXd L = cov.llt().matrixL();
     return mean + L*z;
 }
+
+Eigen::MatrixXd
+MppiControl::generate_input_array(const int dim, const std::vector<float> Max_value)
+{
+    Eigen::MatrixXd input_array;
+
+    Eigen::VectorXd mu(dim);
+    mu << 1.0, 1.0, 0.5;
+
+    Eigen::MatrixXd sigma(dim, dim);
+    sigma << 
+    1.0, 0.5, 0.2,
+    0.5, 1.0, 0.3,
+    0.2, 0.3, 1.0;
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    for (size_t i = 0; i < T; i++)
+    {
+        Eigen::VectorXd v_eigen = this->sample_multivariate_normal(mu, sigma, gen);
+        for (size_t j = 0; j < 3; j++) v_matrix[i][j] = clamp(v_eigen[j], Max_value[j]);
+    }
+    return v_matrix;
+}
 /*generate input end*/

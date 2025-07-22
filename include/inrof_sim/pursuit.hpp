@@ -187,31 +187,6 @@ private:
         *w3 = (arr[3][0] * v[0] + arr[3][1] * v[1] + arr[3][2] * v[2]) / r;
     }
 
-    // probability
-    std::vector<std::vector<float>>
-    generate_v_array(const int dim, const std::vector<float> Max_value)
-    {
-        std::vector<std::vector<float>> v_matrix(T, std::vector<float>(3));
-
-        Eigen::VectorXd mu(dim);
-        mu << 1.0, 1.0, 0.5;
-
-        Eigen::MatrixXd sigma(dim, dim);
-        sigma << 
-        1.0, 0.5, 0.2,
-        0.5, 1.0, 0.3,
-        0.2, 0.3, 1.0;
-
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        for (size_t i = 0; i < T; i++)
-        {
-            Eigen::VectorXd v_eigen = sample_multivariate_normal(mu, sigma, gen);
-            for (size_t j = 0; j < 3; j++) v_matrix[i][j] = clamp(v_eigen[j], Max_value[j]);
-        }
-        return v_matrix;
-    }
-
     //control function
     std::vector<std::vector<float>> predict_position_array(const std::vector<float> &p_value, const std::vector<std::vector<float>> &v_array)
     {

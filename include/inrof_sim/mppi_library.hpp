@@ -7,7 +7,11 @@
 class MppiControl
 {
 public:
-    MppiControl(const int input_dim, const int sampling_number, const int predict_horizon);
+    MppiControl(
+        const int input_dim, 
+        const int sampling_number, 
+        const int predict_horizon
+    );
     ~MppiControl();
 
 private:
@@ -36,6 +40,12 @@ private:
         const Eigen::VectorXd &mean,
         const Eigen::MatrixXd &cov,
         std::mt19937 &gen
+    );
+
+    Eigen::MatrixXd
+    generate_input_array(
+        const int dim,
+        const std::vector<float> Max_value
     );
     /*generate input end*/
 };
