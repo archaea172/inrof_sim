@@ -2,6 +2,7 @@
 #define MPPI_LIBRARY_HPP
 
 #include <Eigen/Dense>
+#include <random>
 
 class MppiControl
 {
@@ -20,9 +21,23 @@ private:
     double estimate_ref();
     double estimate_smooth();
     /*estimate func end*/
-    Eigen::VectorXd model(Eigen::MatrixXd input_array, Eigen::VectorXd init_state);
 
+    /*generate state begin*/
+    Eigen::MatrixXd generate_model_state(Eigen::MatrixXd input_array, Eigen::VectorXd init_state);
+    Eigen::VectorXd model(Eigen::VectorXd input, Eigen::VectorXd pre_state);
+    /*generate state end*/
+
+    /*util function begin*/
     double clamp(const double value, const double max_value, const double min_value);
+    /*util function end*/
+
+    /*generate input begin*/
+    Eigen::VectorXd sample_multivariate_normal(
+        const Eigen::VectorXd &mean,
+        const Eigen::MatrixXd &cov,
+        std::mt19937 &gen
+    );
+    /*generate input end*/
 };
 
 #endif
