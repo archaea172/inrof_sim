@@ -71,7 +71,6 @@ Eigen::MatrixXd MppiControl::generate_model_state(const Eigen::MatrixXd &input_a
     Eigen::MatrixXd state_array(this->predict_horizon_, this->input_dim_);
     state_array.row(0) = init_state;
     for (size_t i = 1; i < predict_horizon_; i++) state_array.row(i) = this->model(input_array.row(i), state_array.row(i-1));
-
     return state_array;
 }
 Eigen::VectorXd MppiControl::model(const Eigen::VectorXd &input, const Eigen::VectorXd &pre_state)
@@ -110,8 +109,11 @@ Eigen::MatrixXd MppiControl::generate_input_array(Eigen::VectorXd mu, Eigen::Mat
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    for (size_t i = 0; i < this->predict_horizon_; i++) input_array.row(i) = this->sample_multivariate_normal(mu, sigma, gen);
-    
+    for (size_t i = 0; i < this->predict_horizon_; i++)
+    {
+        input_array.row(i) = this->sample_multivariate_normal(mu, sigma, gen);
+        for (size_t j = 0; j < this->input_dim_; j++) input_array(i, j) = this->clamp(input_array(i, j), max_input_value_[j], -max_input_value_[j]);
+    }
     return input_array;
 }
 /*generate input end*/
