@@ -55,11 +55,11 @@ double MppiControl::calc_evaluation()
 {
 
 }
-double MppiControl::evaluate_ref()
+double MppiControl::evaluate_ref(const Eigen::VectorXd &value, const Eigen::VectorXd &value_ref)
 {
 
 }
-double MppiControl::evaluate_smooth()
+double MppiControl::evaluate_smooth(const Eigen::VectorXd &value)
 {
 
 }

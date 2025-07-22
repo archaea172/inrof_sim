@@ -29,8 +29,8 @@ private:
 
     /*estimate func begin*/
     double calc_evaluation();
-    double evaluate_ref();
-    double evaluate_smooth();
+    double evaluate_ref(const Eigen::VectorXd &value, const Eigen::VectorXd &value_ref);
+    double evaluate_smooth(const Eigen::VectorXd &value);
     /*estimate func end*/
 
     /*generate state begin*/
