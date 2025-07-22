@@ -55,13 +55,15 @@ double MppiControl::calc_evaluation()
 {
 
 }
-double MppiControl::evaluate_ref(const Eigen::VectorXd &value, const Eigen::VectorXd &value_ref)
+double MppiControl::evaluate_ref(const Eigen::MatrixXd &value, const Eigen::MatrixXd &value_ref)
 {
 
 }
 double MppiControl::evaluate_smooth(const Eigen::VectorXd &value)
 {
-
+    double sum_diff = 0;
+    for (size_t i = 1; i < (size_t)value.size(); i++) sum_diff += std::pow(value(i) - value(i-1), 2);
+    return sum_diff;
 }
 /*estimate func end*/
 
