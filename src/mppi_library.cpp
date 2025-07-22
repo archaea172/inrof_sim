@@ -52,7 +52,7 @@ Eigen::MatrixXd MppiControl::generate_input_array()
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    for (size_t i = 0; i < this->predict_horizon_; i++) for(size_t j = 0; j < this->input_dim_; j++) input_array(i, j) = this->sample_multivariate_normal(mu, sigma, gen)(j);
+    for (size_t i = 0; i < this->predict_horizon_; i++) input_array.row(i) = this->sample_multivariate_normal(mu, sigma, gen);
     
     return input_array;
 }
