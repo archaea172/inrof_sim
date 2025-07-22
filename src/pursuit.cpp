@@ -33,9 +33,7 @@ PursuitControler::PursuitControler()
     T = this->get_parameter("predict_horizon").as_int();
     K = this->get_parameter("sampling_number").as_int();
     dt = this->get_parameter("control_cycle").as_double();
-    std::vector<double> max_value_d = this->get_parameter("max_input_value").as_double_array();
-    std::transform(max_value_d.begin(), max_value_d.end(), std::back_inserter(max_value),
-    [](double d){ return static_cast<float>(d);});
+    max_value = this->get_parameter("max_input_value").as_double_array();
     /*parameter set end*/
 
     /*sizing begin*/
@@ -43,6 +41,8 @@ PursuitControler::PursuitControler()
     p.resize(input_dim);
     v_ref.resize(2);
     /*sizing end*/
+    
+    mppi_controler = std::make_unique<MppiControl>(input_dim, this->K, this->T, this->max_value);
 
     parameter_callback_hanle_ = this->add_on_set_parameters_callback(
         std::bind(&PursuitControler::parameters_callback, this, _1)
@@ -73,6 +73,7 @@ PursuitControler::CallbackReturn PursuitControler::on_configure(const rclcpp_lif
     vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>(
         std::string("cmd_vel"), rclcpp::SystemDefaultsQoS()
     );
+
     return CallbackReturn::SUCCESS;
 }
 
@@ -152,6 +153,9 @@ rcl_interfaces::msg::SetParametersResult PursuitControler::parameters_callback(
 /*control timer callback begin*/
 void PursuitControler::control_callback()
 {
+    std::vector<double> input_array(3);
+    this->mppi_controler->run(this->p);
+
     if (vel_publisher->is_activated())
     {
         geometry_msgs::msg::Twist txdata;

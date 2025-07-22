@@ -95,13 +95,13 @@ private:
     // control cycle
     float dt;
     // max value
-    std::vector<float> max_value;
+    std::vector<double> max_value;
     // goal pose
-    std::vector<float> goal_p;
+    std::vector<double> goal_p;
     // current value
-    std::vector<float> p;
+    std::vector<double> p;
     // vel ref
-    std::vector<float> v_ref;
+    std::vector<double> v_ref;
     
     float k_goal_angle;
     float k_goal_linear;
@@ -112,6 +112,8 @@ private:
     float k_vel_linear;
     
     float iota;
+
+    std::unique_ptr<MppiControl> mppi_controler;
 };
 
 #endif
