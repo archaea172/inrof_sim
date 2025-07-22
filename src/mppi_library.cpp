@@ -48,6 +48,32 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state)
 }
 /*main progress end*/
 
+/*estimate func begin*/
+double MppiControl::calc_evaluation()
+{
+
+}
+double MppiControl::evaluate_ref()
+{
+
+}
+double MppiControl::evaluate_smooth()
+{
+
+}
+/*estimate func end*/
+
+/*generate state begin*/
+Eigen::MatrixXd MppiControl::generate_model_state(Eigen::MatrixXd &input_array, Eigen::VectorXd &init_state)
+{
+
+}
+Eigen::VectorXd MppiControl::model(Eigen::VectorXd &input, Eigen::VectorXd &pre_state)
+{
+    
+}
+/*generate state end*/
+
 /*util function begin*/
 double MppiControl::clamp(const double value, const double max_value, const double min_value)
 {
