@@ -36,7 +36,7 @@ add_library(mppi_library SHARED
   src/mppi_library.cpp
 )
 target_include_directories(mppi_library PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}>
   $<INSTALL_INTERFACE:include>
   ${EIGEN3_INCLUDE_DIRS}
 )
@@ -53,7 +53,6 @@ ament_target_dependencies(pursuit_controler
   rclcpp
   rclcpp_lifecycle
   geometry_msgs
-  mppi_library
 )
 install(
   DIRECTORY include/
@@ -66,7 +65,10 @@ install(
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
 )
-target_link_libraries(pursuit_controler Eigen3::Eigen )
+target_link_libraries(pursuit_controler 
+  mppi_library
+  Eigen3::Eigen
+)
 install(
   TARGETS pursuit_controler
   DESTINATION lib/${PROJECT_NAME}
