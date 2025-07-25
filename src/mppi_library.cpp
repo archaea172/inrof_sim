@@ -98,7 +98,7 @@ double MppiControl::calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd S
 double MppiControl::evaluate_ref(const Eigen::VectorXd &value, const Eigen::VectorXd &value_ref)
 {
     double sum_diff = 0;
-    sum_diff += (value - value).array().cwiseAbs2().sum();
+    sum_diff += (value - value_ref).array().cwiseAbs2().sum();
     return sum_diff;
 }
 double MppiControl::evaluate_smooth(const Eigen::VectorXd &value)
