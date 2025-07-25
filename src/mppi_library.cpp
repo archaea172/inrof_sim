@@ -81,14 +81,16 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vecto
 /*estimate func begin*/
 double MppiControl::calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose)
 {
-    Eigen::VectorXd S_list;
-    S_list(0) = this->evaluate_ref(InputList.col(1), Eigen::VectorXd::Ones(this->predict_horizon_)*GoalPose(2));
-    S_list(1);
-    S_list(2);
-    S_list(3);
-    S_list(4);
-    S_list(5);
-    S_list(6);
+    Eigen::MatrixXd w_list(this->sampling_number_, 4);
+    for (size_t i = 0; i < w_list.rows(); i++) omni_calc(StateList(i, 2), InputList(i, 0), InputList(i, 1), InputList(i, 2), (float *)&w_list(i, 0), (float *)&w_list(i, 1), (float *)&w_list(i, 2), (float *)&w_list(i, 3));
+
+    Eigen::VectorXd S_list(5);
+    S_list(0) = this->evaluate_ref(StateList.col(2), Eigen::VectorXd::Ones(this->predict_horizon_)*GoalPose(2));
+    S_list(1) = this->evaluate_ref(StateList.col(0), Eigen::VectorXd::Ones(this->predict_horizon_)*GoalPose(0)) + this->evaluate_ref(StateList.col(1), Eigen::VectorXd::Ones(this->predict_horizon_)*GoalPose(1));
+    S_list(2) = this->evaluate_smooth(InputList.col(2));
+    S_list(3) = 0;
+    for (size_t i = 0; i < 4; i++) S_list(3) += this->evaluate_smooth(w_list.col(i));
+    S_list(4) = this->evaluate_smooth(InputList.col(0)) + this->evaluate_smooth(InputList.col(1));
 
     double S = S_list.dot(this->gain_vector);
     return S;
