@@ -17,7 +17,7 @@ public:
     );
     ~MppiControl();
 
-    std::vector<double> run(std::vector<double> &init_state, std::vector<double> &goal_state, Eigen::VectorXd &mu, Eigen::MatrixXd &sigma);
+    std::vector<double> run(std::vector<double> &init_state, std::vector<double> &goal_state, Eigen::VectorXd &mu, Eigen::MatrixXd &sigma, double iota);
 
 private:
     /*declare value begin*/

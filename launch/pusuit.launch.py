@@ -3,6 +3,7 @@ from launch_ros.actions import Node
 from launch_ros.actions import LifecycleNode
 from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 import os
@@ -26,7 +27,8 @@ def generate_launch_description():
         package='inrof_sim',
         name='pursuit_controler',
         executable='pursuit_controler',
-        namespace='daisha'
+        namespace='daisha',
+        parameters=[PathJoinSubstitution([FindPackageShare('inrof_sim'), 'config', 'pursuit_params.yaml'])]
     )
 
     twist_converter = LifecycleNode(
@@ -40,8 +42,7 @@ def generate_launch_description():
         package='inrof_sim',
         name='pose_converter',
         executable='pose_converter',
-        namespace='daisha'
-        
+        namespace='daisha' 
     )
 
     gz_bridge_node_vel = Node(

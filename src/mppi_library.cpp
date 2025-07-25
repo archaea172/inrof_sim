@@ -42,7 +42,7 @@ MppiControl::~MppiControl()
 /*class function end*/
 
 /*main progress begin*/
-std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vector<double> &goal_state, Eigen::VectorXd &mu, Eigen::MatrixXd &sigma)
+std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vector<double> &goal_state, Eigen::VectorXd &mu, Eigen::MatrixXd &sigma, double iota)
 {
     Eigen::VectorXd goal_state_eig = Eigen::Map<Eigen::VectorXd>(&goal_state[0], goal_state.size());
 
@@ -64,7 +64,7 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vecto
 
     Eigen::VectorXd weight(sampling_number_);
     Eigen::VectorXd weight_normal(sampling_number_);
-    double iota;
+    
     weight = (-(S_array - Eigen::VectorXd::Ones(sampling_number_)*S_ref) / iota).array().exp();
     double weight_sum = weight.sum();
     weight_normal = weight / weight_sum;
@@ -81,8 +81,8 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vecto
 /*estimate func begin*/
 double MppiControl::calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose)
 {
-    Eigen::MatrixXd w_list(this->sampling_number_, 4);
-    for (size_t i = 0; i < w_list.rows(); i++) omni_calc(StateList(i, 2), InputList(i, 0), InputList(i, 1), InputList(i, 2), (float *)&w_list(i, 0), (float *)&w_list(i, 1), (float *)&w_list(i, 2), (float *)&w_list(i, 3));
+    Eigen::MatrixXf w_list(this->sampling_number_, 4);
+    for (size_t i = 0; i < w_list.rows(); i++) omni_calc(StateList(i, 2), InputList(i, 0), InputList(i, 1), InputList(i, 2), &w_list(i, 0), &w_list(i, 1), &w_list(i, 2), &w_list(i, 3));
 
     Eigen::VectorXd S_list(5);
     S_list(0) = this->evaluate_ref(StateList.col(2), Eigen::VectorXd::Ones(this->predict_horizon_)*GoalPose(2));

@@ -178,7 +178,7 @@ rcl_interfaces::msg::SetParametersResult PursuitControler::parameters_callback(
 void PursuitControler::control_callback()
 {
     std::vector<double> input_array(3);
-    this->mppi_controler->run(this->p, this->goal_p, this->input_mu, this->input_sigma);
+    this->mppi_controler->run(this->p, this->goal_p, this->input_mu, this->input_sigma, this->iota);
 
     if (vel_publisher->is_activated())
     {
