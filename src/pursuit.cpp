@@ -1,389 +1,195 @@
-#include <string>
-#include <chrono>
-#include <memory>
-#include <iostream>
-#include <random>
-#include <Eigen/Dense>
-#include <math.h>
-
+#include "pursuit.hpp"
 #include "rclcpp/rclcpp.hpp"
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
-#include "rclcpp_lifecycle/lifecycle_publisher.hpp"
 
-#include "geometry_msgs/msg/pose2_d.hpp"
-#include "geometry_msgs/msg/twist.hpp"
-
-using std::placeholders::_1;
-using namespace std::chrono_literals;
-
-class PursuitControler : public rclcpp_lifecycle::LifecycleNode
+/*class define begin*/
+PursuitControler::PursuitControler()
+: rclcpp_lifecycle::LifecycleNode(std::string("pursuit_controler"))
 {
-public:
-    using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
+    /*parameter declare begin*/
+    this->declare_parameter<double>("weight_goal_angle", 0);
+    this->declare_parameter<double>("weight_goal_linear", 0);
+    this->declare_parameter<double>("weight_smooth_angle", 0);
+    this->declare_parameter<double>("weight_smooth_wheel", 0);
+    this->declare_parameter<double>("weight_smooth_linear", 0);
+    this->declare_parameter<double>("weight_vel_angle", 0);
+    this->declare_parameter<double>("weight_vel_linear", 0);
+    this->declare_parameter<double>("iota", 0);
+    this->declare_parameter<int>("predict_horizon", 300);
+    this->declare_parameter<int>("sampling_number", 100);
+    this->declare_parameter<double>("control_cycle", 0.01);
+    std::vector<double> max_vector(3, 1.0);
+    this->declare_parameter("max_input_value", max_vector);
+    std::vector<double> mu(3, 1.0);
+    this->declare_parameter("mu", mu);
+    std::vector<double> sigma(9, 1);
+    this->declare_parameter("sigma", sigma);
+    /*parameter declare end*/
 
-    // constructor
-    PursuitControler()
-    : rclcpp_lifecycle::LifecycleNode(std::string("pursuit_controler"))
-    {
-        p.resize(3);
-        v.resize(3);
-        v_ref.resize(2);
-        max_value.resize(3);
-    }
-    //desconstructor
-    ~PursuitControler()
-    {
+    /*parameter set begin*/
+    k_goal_angle = this->get_parameter("weight_goal_angle").as_double();
+    k_goal_linear = this->get_parameter("weight_goal_linear").as_double();
+    k_smooth_angle = this->get_parameter("weight_smooth_angle").as_double();
+    k_smooth_wheel = this->get_parameter("weight_smooth_wheel").as_double();
+    k_smooth_linear = this->get_parameter("weight_smooth_linear").as_double();
+    k_vel_angle = this->get_parameter("weight_vel_angle").as_double();
+    k_vel_linear = this->get_parameter("weight_vel_linear").as_double();
+    iota = this->get_parameter("iota").as_double();
+    T = this->get_parameter("predict_horizon").as_int();
+    K = this->get_parameter("sampling_number").as_int();
+    dt = this->get_parameter("control_cycle").as_double();
+    max_value = this->get_parameter("max_input_value").as_double_array();
 
-    }
+    std::vector<double> mu_stdvector = this->get_parameter("mu").as_double_array();
+    input_mu = Eigen::Map<Eigen::VectorXd>(&mu_stdvector[0], mu_stdvector.size());
 
-private:
+    std::vector<double> sigma_stdvector = this->get_parameter("sigma").as_double_array();
+    input_sigma << 
+    sigma_stdvector[0], sigma_stdvector[1], sigma_stdvector[2],
+    sigma_stdvector[3], sigma_stdvector[4], sigma_stdvector[5],
+    sigma_stdvector[6], sigma_stdvector[7], sigma_stdvector[8];
+    /*parameter set end*/
 
-    // node function
-    rclcpp::TimerBase::SharedPtr control_timer;
-    rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr vel_publisher;
-    rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr goal_subscriber;
-    rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr pose_subscriber;
+    /*sizing begin*/
+    float input_dim = 3;
+    p.resize(input_dim);
+    v_ref.resize(2);
+    /*sizing end*/
+    
+    std::vector<double> gains = {
+        k_goal_angle, k_goal_linear, k_smooth_angle,
+        k_smooth_wheel, k_smooth_linear
+    };
+    mppi_controler = std::make_unique<MppiControl>(
+        input_dim,
+        this->K,
+        this->T,
+        this->max_value,
+        this->dt,
+        gains
+    );
 
-    // lifecycle begin
-    CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            p[i] = 0;
-            v[i] = 0;
-        }
-        
-        v_ref[0] = 1;
-        v_ref[1] = 0.4;
-        
-        // m/s
-        goal_p.resize(3);
-        goal_p[0] = -1.2;
-        goal_p[1] = 0;
-        goal_p[2] = 0;
-        T = 300;
-        K = 100;
-        dt = 0.01; // s
-        // add max
-        max_value[0] = 1;
-        max_value[1] = 1;
-        max_value[2] = 0.3;
+    parameter_callback_hanle_ = this->add_on_set_parameters_callback(
+        std::bind(&PursuitControler::parameters_callback, this, _1)
+    );
+}
 
-        // create publisher
-        vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>(
-            std::string("cmd_vel"), rclcpp::SystemDefaultsQoS()
-        );
-        return CallbackReturn::SUCCESS;
-    }
-    CallbackReturn on_activate(const rclcpp_lifecycle::State &state)
-    {
-        vel_publisher->on_activate();
-        control_timer = this->create_wall_timer(0.01s, std::bind(&PursuitControler::control_callback, this));
-        goal_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
-            std::string("goal_pose"),
-            rclcpp::SystemDefaultsQoS(),
-            std::bind(&PursuitControler::goal_callback, this, _1)
-        );
-        pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
-            std::string("pose"),
-            rclcpp::SystemDefaultsQoS(),
-            std::bind(&PursuitControler::pose_callback, this, _1)
-        );
-        return CallbackReturn::SUCCESS;
-    }
-    CallbackReturn on_deactivate(const rclcpp_lifecycle::State &state)
-    {
-        vel_publisher->on_deactivate();
-        control_timer.reset();
-        goal_subscriber.reset();
-        pose_subscriber.reset();
+PursuitControler::~PursuitControler()
+{
 
-        return CallbackReturn::SUCCESS;
-    }
-    CallbackReturn on_cleanup(const rclcpp_lifecycle::State &state)
-    {
-        vel_publisher.reset();
-        return CallbackReturn::SUCCESS;
-    }
-    CallbackReturn on_error(const rclcpp_lifecycle::State &state)
-    {
-        RCLCPP_INFO(this->get_logger(), "on error!");
-        return CallbackReturn::SUCCESS;
-    }
-    CallbackReturn on_shutdown(const rclcpp_lifecycle::State &state)
-    {
-        return CallbackReturn::SUCCESS;
-    }
-    // lifecycle end
-    // subscribe callback
-    void goal_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
-    {
-        this->goal_p[0] = rxdata->x;
-        this->goal_p[1] = rxdata->y;
-        this->goal_p[2] = rxdata->theta;
-    }
-    void pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
-    {
-        this->p[0] = rxdata->x;
-        this->p[1] = rxdata->y;
-        this->p[2] = rxdata->theta;
-    }
+}
+/*class define end*/
 
-    // control timer callback
-    void control_callback()
+/*lifecycle callback begin*/
+PursuitControler::CallbackReturn PursuitControler::on_configure(const rclcpp_lifecycle::State &state)
+{
+    for (int i = 0; i < 3; i++) p[i] = 0;
+    
+    v_ref[0] = 1;
+    v_ref[1] = 0.4;
+    
+    // m/s
+    goal_p.resize(3);
+    goal_p[0] = -1.2;
+    goal_p[1] = 0;
+    goal_p[2] = 0;
+
+    /*create publisher*/
+    vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>(
+        std::string("cmd_vel"), rclcpp::SystemDefaultsQoS()
+    );
+
+    return CallbackReturn::SUCCESS;
+}
+
+PursuitControler::CallbackReturn PursuitControler::on_activate(const rclcpp_lifecycle::State &state)
+{
+    vel_publisher->on_activate();
+    control_timer = this->create_wall_timer(0.01s, std::bind(&PursuitControler::control_callback, this));
+    goal_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
+        std::string("goal_pose"),
+        rclcpp::SystemDefaultsQoS(),
+        std::bind(&PursuitControler::goal_callback, this, _1)
+    );
+    pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
+        std::string("pose"),
+        rclcpp::SystemDefaultsQoS(),
+        std::bind(&PursuitControler::pose_callback, this, _1)
+    );
+    return CallbackReturn::SUCCESS;
+}
+
+PursuitControler::CallbackReturn PursuitControler::on_deactivate(const rclcpp_lifecycle::State &state)
+{
+    vel_publisher->on_deactivate();
+    control_timer.reset();
+    goal_subscriber.reset();
+    pose_subscriber.reset();
+
+    return CallbackReturn::SUCCESS;
+}
+
+PursuitControler::CallbackReturn PursuitControler::on_cleanup(const rclcpp_lifecycle::State &state)
+{
+    vel_publisher.reset();
+    return CallbackReturn::SUCCESS;
+}
+
+PursuitControler::CallbackReturn PursuitControler::on_error(const rclcpp_lifecycle::State &state)
+{
+    RCLCPP_INFO(this->get_logger(), "on error!");
+    return CallbackReturn::SUCCESS;
+}
+
+PursuitControler::CallbackReturn PursuitControler::on_shutdown(const rclcpp_lifecycle::State &state)
+{
+    return CallbackReturn::SUCCESS;
+}
+/*lifecycle callback end*/
+
+/*subscribe callback begin*/
+void PursuitControler::goal_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
+{
+    this->goal_p[0] = rxdata->x;
+    this->goal_p[1] = rxdata->y;
+    this->goal_p[2] = rxdata->theta;
+}
+
+void PursuitControler::pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
+{
+    this->p[0] = rxdata->x;
+    this->p[1] = rxdata->y;
+    this->p[2] = rxdata->theta;
+}
+/*subscribe callback end*/
+
+/*parameter callback begin*/
+rcl_interfaces::msg::SetParametersResult PursuitControler::parameters_callback(
+    const std::vector<rclcpp::Parameter> &parameters
+)
+{
+    rcl_interfaces::msg::SetParametersResult result;
+    result.successful = true;
+    result.reason = "success";
+    return result;
+}
+/*parameter callback end*/
+
+/*control timer callback begin*/
+void PursuitControler::control_callback()
+{
+    std::vector<double> input_array(3);
+    this->mppi_controler->run(this->p, this->goal_p, this->input_mu, this->input_sigma);
+
+    if (vel_publisher->is_activated())
     {
-        float k_goal_angle = 1;
-        float k_goal_linear = 1;
-        float k_smooth_angle = 1;
-        float k_smooth_wheel = 1;
-        float k_smooth_linear = 1;
-        float k_vel_angle = 1;
-        float k_vel_linear = 1;
-        std::vector<std::vector<std::vector<float>>> all_v_array(K, std::vector<std::vector<float>>(T, std::vector<float>(3, 0)));
-        std::vector<float> S_array(K, 0);
-        // sampling
-        for (size_t i = 0; i < K; i++)
-        {
-            std::vector<std::vector<float>> v_array = generate_v_array(3, max_value);
-            std::vector<std::vector<float>> p_array = predict_position_array(this->p, v_array);
-            float S = k_goal_angle*estimate_goal_angle(p_array)
-            + k_goal_linear*estimate_goal_linear(p_array) + k_smooth_angle*estimate_smooth_rotate(v_array) 
-            + k_smooth_wheel*estimate_smooth_wheel(p_array, v_array) + k_smooth_linear*estimate_smooth_vel(v_array) 
-            + k_vel_linear*estimate_vel(v_array) + k_vel_angle*estimate_vel_rotate(v_array);
-            all_v_array[i] = v_array;
-            S_array[i] = S;
-        }
-        // calc weight
-        float iota = 1;
-        std::vector<float> weight(K);
-        float S_ref = *std::min_element(S_array.begin(), S_array.end());
-        for (int i = 0; i < K; i++)
-        {
-            weight[i] = std::exp(-(S_array[i] - S_ref) / iota);
-        }
-        float sum_weight = 0;
-        for (int i = 0; i < K; i++) sum_weight += weight[i];
-        std::vector<float> weight_normal(K);
-        for (int i = 0; i < K; i++) weight_normal[i] = weight[i] / sum_weight;
-        // calc
-        std::vector<float> sum_data(3, 0);
-        std::vector<float> input_array(3, 0);
-        for (int i = 0; i < 3; i++) for (int j = 0; j < K; j++) sum_data[i] += weight_normal[j] * all_v_array[j][0][i];
-        for (int i = 0; i < 3; i++) input_array[i] = sum_data[i];
-
-        if (vel_publisher->is_activated())
-        {
-            geometry_msgs::msg::Twist txdata;
-            txdata.linear.x = input_array[0];
-            txdata.linear.y = input_array[1];
-            txdata.angular.z = input_array[2];
-            vel_publisher->publish(txdata);
-        }
-        for (size_t i = 0; i < 3; i++) std::cout << this->p[i] << " " << std::endl;
+        geometry_msgs::msg::Twist txdata;
+        txdata.linear.x = input_array[0];
+        txdata.linear.y = input_array[1];
+        txdata.angular.z = input_array[2];
+        vel_publisher->publish(txdata);
     }
-
-    // estimate function
-    float estimate_vel(std::vector<std::vector<float>> V_array)
-    {
-        std::vector<float> vel_difference;
-        vel_difference.resize(T);
-        for (int i = 0; i < T; i++)
-        {
-            vel_difference[i] = std::pow(V_array[i][0], 2) + std::pow(V_array[i][1], 2) - std::pow(v_ref[0], 2);
-        }
-        float difference_sum = 0;
-        for (size_t i = 0; i < T; i++) difference_sum += vel_difference[i];
-        return difference_sum;
-    }
-    float estimate_vel_rotate(std::vector<std::vector<float>> V_array)
-    {
-        std::vector<float> vel_difference;
-        vel_difference.resize(T);
-        for (int i = 0; i < T; i++)
-        {
-            vel_difference[i] = std::pow(V_array[i][2] - v_ref[1], 2);
-        }
-        float difference_sum = 0;
-        for (size_t i = 0; i < T; i++) difference_sum += vel_difference[i];
-        return difference_sum;
-
-    }
-    float estimate_smooth_vel(std::vector<std::vector<float>> V_array)
-    {
-        std::vector<float> smooth_vel_difference(T);
-        for (size_t i = 0; i < T - 1; i++)
-        {
-            float v_ab_sq = std::pow(V_array[i][0], 2) + std::pow(V_array[i][1], 2);
-            float v_ab_sq_post = std::pow(V_array[i+1][0], 2) + std::pow(V_array[i+1][1], 2);
-            smooth_vel_difference[i] = std::pow(v_ab_sq_post - v_ab_sq, 2);
-        }
-        float difference_sum_vel = 0;
-        for (size_t i = 0; i < T; i++)
-        {
-            difference_sum_vel += smooth_vel_difference[i];
-        }
-        return difference_sum_vel;
-    }
-    float estimate_smooth_rotate(std::vector<std::vector<float>> V_array)
-    {
-        std::vector<float> smooth_vel_difference(T);
-        for (size_t i = 0; i < T - 1; i++)
-        {
-            smooth_vel_difference[i] += std::pow(V_array[i+1][2] - V_array[i][2], 2);
-        }
-        float difference_sum_vel = 0;
-        for (size_t i = 0; i < T; i++)
-        {
-            difference_sum_vel += smooth_vel_difference[i];
-        }
-        return difference_sum_vel;
-    }
-    float estimate_smooth_wheel(std::vector<std::vector<float>> X_array, std::vector<std::vector<float>> V_array)
-    {
-        std::vector<float> smooth_wheel_difference(T);
-        std::vector<std::vector<float>> wheel_array(T, std::vector<float>(4, 0));
-        for (size_t i = 0; i < T; i++)
-        {
-            float w[4] = {};
-            omni_calc(X_array[i][2], V_array[i][0], V_array[i][1], V_array[i][2], &w[0], &w[1], &w[2], &w[3]);
-            for (size_t j = 0; j < 4; j++) wheel_array[i][j] = w[j];
-        }
-        for (size_t i = 0; i < T - 1; i++)
-        {
-            smooth_wheel_difference[i] = 0;
-            for (size_t j = 0; j < 4; j++) smooth_wheel_difference[i] += std::pow(wheel_array[i+1][j] - wheel_array[i][j], 2);
-        }
-        float difference_sum_wheel = 0;
-        for (size_t i = 0; i < T; i++)
-        {
-            difference_sum_wheel += smooth_wheel_difference[i];
-        }
-        return difference_sum_wheel;
-    }
-    float estimate_goal_linear(std::vector<std::vector<float>> X_array)
-    {
-        std::vector<float> differential_goal(T);
-        for (size_t i = 0; i < T; i++)
-        {
-            differential_goal[i] = std::pow(goal_p[0] - X_array[i][0], 2) + std::pow(goal_p[1] - X_array[i][1], 2) + std::pow(goal_p[2] - X_array[i][2], 2);
-        }
-        float difference_sum = 0;
-        for (size_t i = 0; i < T; i++) difference_sum += differential_goal[i];
-        return difference_sum;
-    }
-    float estimate_goal_angle(std::vector<std::vector<float>> X_array)
-    {
-        std::vector<float> differential_goal(T);
-        for (size_t i = 0; i < T; i++)
-        {
-            differential_goal[i] = std::pow(goal_p[2] - X_array[i][2], 2);
-        }
-        float difference_sum = 0;
-        for (size_t i = 0; i < T; i++) difference_sum += differential_goal[i];
-        return difference_sum;
-    }
-
-    // omni_simulate
-    void omni_calc(float theta,float vx,float vy,float omega,float *w0,float *w1,float *w2,float *w3){
-        const float a0 = M_PI/180*45;
-        const float a1 = M_PI/180*135;
-        const float a2 = M_PI/180*225;
-        const float a3 = M_PI/180*315;
-        const float r = 0.03;//m
-        const float R = 0.144;//m
-        float v[3] = {vx, vy, omega};
-        float sint = sin(theta);
-        float cost = cos(theta);
-
-        float arr[4][3] =
-        {{-cos(a0)*sint-sin(a0)*cost, cos(a0)*cost-sin(a0)*sint, R},
-        {-cos(a1)*sint-sin(a1)*cost, cos(a1)*cost-sin(a1)*sint, R},
-        {-cos(a2)*sint-sin(a2)*cost, cos(a2)*cost-sin(a2)*sint, R},
-        {-cos(a3)*sint-sin(a3)*cost, cos(a3)*cost-sin(a3)*sint, R}};
-
-        *w0 = (arr[0][0] * v[0] + arr[0][1] * v[1] + arr[0][2] * v[2]) / r;
-        *w1 = (arr[1][0] * v[0] + arr[1][1] * v[1] + arr[1][2] * v[2]) / r;
-        *w2 = (arr[2][0] * v[0] + arr[2][1] * v[1] + arr[2][2] * v[2]) / r;
-        *w3 = (arr[3][0] * v[0] + arr[3][1] * v[1] + arr[3][2] * v[2]) / r;
-    }
-
-    // probability
-    std::vector<std::vector<float>>
-    generate_v_array(const int dim, const std::vector<float> Max_value)
-    {
-        std::vector<std::vector<float>> v_matrix(T, std::vector<float>(3));
-
-        Eigen::VectorXd mu(dim);
-        mu << 1.0, 1.0, 0.5;
-
-        Eigen::MatrixXd sigma(dim, dim);
-        sigma << 
-        1.0, 0.5, 0.2,
-        0.5, 1.0, 0.3,
-        0.2, 0.3, 1.0;
-
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        for (size_t i = 0; i < T; i++)
-        {
-            Eigen::VectorXd v_eigen = sample_multivariate_normal(mu, sigma, gen);
-            for (size_t j = 0; j < 3; j++) v_matrix[i][j] = clamp(v_eigen[j], Max_value[j]);
-        }
-        return v_matrix;
-    }
-    // clamp
-    float clamp(const float V, const float max_Value)
-    {
-        float clamp_number = std::min(std::max(V, -1*max_Value), max_Value);
-        return clamp_number;
-    }
-
-    //control function
-    std::vector<std::vector<float>> predict_position_array(const std::vector<float> &p_value, const std::vector<std::vector<float>> &v_array)
-    {
-        std::vector<std::vector<float>> p_matrix(T, std::vector<float>(3, 0));
-        p_matrix[0] = p_value;
-        for (size_t i = 1; i < T; i++) p_matrix[i] = predict_position(p_matrix[i-1], v_array[i]);
-        return p_matrix;
-    }
-
-    std::vector<float> predict_position(const std::vector<float> &pre_p, const std::vector<float> &current_v)
-    {
-        std::vector<float> post_p(3);
-        for (size_t i = 0; i < 3; i++) post_p[i] = pre_p[i] + dt*current_v[i];
-        return post_p;
-    }
-
-    // probability function
-    Eigen::VectorXd sample_multivariate_normal(
-        const Eigen::VectorXd &mean,
-        const Eigen::MatrixXd &cov,
-        std::mt19937 &gen
-    )
-    {
-        std::normal_distribution<> dist(0.0, 1.0);
-        Eigen::VectorXd z(mean.size());
-        for (int i = 0; i < mean.size(); ++i) z(i) = dist(gen);
-        Eigen::MatrixXd L = cov.llt().matrixL();
-        return mean + L*z;
-    }
-
-    // predict horizon
-    float T;
-    // sample
-    float K;
-    // control cycle
-    float dt;
-    // max value
-    std::vector<float> max_value;
-    // goal pose
-    std::vector<float> goal_p;
-    // current value
-    std::vector<float> p;
-    std::vector<float> v;
-    // vel ref
-    std::vector<float> v_ref;
-};
+}
+/*control timer callback end*/
 
 int main(int argc, char *argv[])
 {
