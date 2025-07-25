@@ -31,7 +31,8 @@ MppiControl::MppiControl(const int input_dim, const int sampling_number, const i
     sampling_number_(sampling_number),
     predict_horizon_(predict_horizon),
     max_input_value_(max_input_value),
-    control_cycle_(dt)
+    control_cycle_(dt),
+    gen_(std::random_device()())
 {
     gain_vector = Eigen::Map<Eigen::VectorXd>(&gain_list[0], gain_list.size());
 }
@@ -151,8 +152,6 @@ Eigen::MatrixXd MppiControl::generate_input_array(Eigen::VectorXd mu, Eigen::Mat
 {
     Eigen::MatrixXd input_array(this->predict_horizon_, this->input_dim_);
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
     for (size_t i = 0; i < (size_t)this->predict_horizon_; i++)
     {
         input_array.row(i) = this->sample_multivariate_normal(mu, sigma, gen);

@@ -27,6 +27,7 @@ private:
     std::vector<double> max_input_value_;
     const double control_cycle_;
     Eigen::VectorXd gain_vector;
+    std::mt19937 gen_;
     /*declare value end*/
 
     /*estimate func begin*/

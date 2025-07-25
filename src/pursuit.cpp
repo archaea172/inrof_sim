@@ -50,7 +50,7 @@ PursuitControler::PursuitControler()
     /*parameter set end*/
 
     /*sizing begin*/
-    float input_dim = 3;
+    int input_dim = 3;
     p.resize(input_dim);
     v_ref.resize(2);
     /*sizing end*/
@@ -178,7 +178,7 @@ rcl_interfaces::msg::SetParametersResult PursuitControler::parameters_callback(
 void PursuitControler::control_callback()
 {
     std::vector<double> input_array(3);
-    this->mppi_controler->run(this->p, this->goal_p, this->input_mu, this->input_sigma, this->iota);
+    input_array = this->mppi_controler->run(this->p, this->goal_p, this->input_mu, this->input_sigma, this->iota);
 
     if (vel_publisher->is_activated())
     {
