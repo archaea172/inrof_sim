@@ -7,6 +7,7 @@
 class MppiControl
 {
 public:
+    /*class func begin*/
     MppiControl(
         const int input_dim, 
         const int sampling_number, 
@@ -16,9 +17,12 @@ public:
         std::vector<double> gain_list
     );
     ~MppiControl();
+    /*class func end*/
 
+    /*main progress begin*/
     std::vector<double> run(std::vector<double> &init_state, std::vector<double> &goal_state, Eigen::VectorXd &mu, Eigen::MatrixXd &sigma, double iota);
-
+    /*main progress end*/
+    
 private:
     /*declare value begin*/
     const int input_dim_;

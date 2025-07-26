@@ -1,7 +1,7 @@
 #include "mppi_library.hpp"
 #include <math.h>
 
-// omni_simulate
+/*omni_simulate begin*/
 void omni_calc(float theta,float vx,float vy,float omega,float *w0,float *w1,float *w2,float *w3){
     const float a0 = M_PI/180*45;
     const float a1 = M_PI/180*135;
@@ -24,6 +24,7 @@ void omni_calc(float theta,float vx,float vy,float omega,float *w0,float *w1,flo
     *w2 = (arr[2][0] * v[0] + arr[2][1] * v[1] + arr[2][2] * v[2]) / r;
     *w3 = (arr[3][0] * v[0] + arr[3][1] * v[1] + arr[3][2] * v[2]) / r;
 }
+/*omni_simulate end*/
 
 /*class function begin*/
 MppiControl::MppiControl(const int input_dim, const int sampling_number, const int predict_horizon, const std::vector<double> &max_input_value, const double dt, std::vector<double> gain_list)

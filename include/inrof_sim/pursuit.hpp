@@ -24,12 +24,14 @@ using namespace std::chrono_literals;
 class PursuitControler : public rclcpp_lifecycle::LifecycleNode
 {
 public:
+    /*type define begin*/
     using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
+    /*type define end*/
 
-    // constructor
+    /*class func begin*/
     PursuitControler();
-    //desconstructor
     ~PursuitControler();
+    /*class func end*/
 
 private:
     /*node function begin*/
@@ -64,21 +66,20 @@ private:
     void control_callback();
     /*control timer callback end*/
 
-    // predict horizon
-    int T;
-    // sample
-    int K;
-    // control cycle
-    double dt;
-    // max value
-    std::vector<double> max_value;
-    // goal pose
-    std::vector<double> goal_p;
-    // current value
-    std::vector<double> p;
-    // vel ref
-    std::vector<double> v_ref;
+    /*mppi parameter begin*/
+    int T; // predict horizon
+    int K; // sample number
+    double dt; // control cycle
+    std::vector<double> max_value; // max value
+    std::vector<double> goal_p; // goal pose
+    std::vector<double> p; // current value
+    std::vector<double> v_ref; // vel ref
+    double iota;
+    std::unique_ptr<MppiControl> mppi_controler;
+    Eigen::VectorXd input_mu;
+    Eigen::MatrixXd input_sigma;
     
+    /*weight begin*/
     float k_goal_angle;
     float k_goal_linear;
     float k_smooth_angle;
@@ -86,13 +87,9 @@ private:
     float k_smooth_linear;
     float k_vel_angle;
     float k_vel_linear;
+    /*weight end*/
     
-    float iota;
-
-    std::unique_ptr<MppiControl> mppi_controler;
-    
-    Eigen::VectorXd input_mu;
-    Eigen::MatrixXd input_sigma;
+    /*mppi parameter end*/
 };
 
 #endif
