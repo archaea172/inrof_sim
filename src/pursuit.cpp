@@ -43,6 +43,7 @@ PursuitControler::PursuitControler()
     input_mu = Eigen::Map<Eigen::VectorXd>(&mu_stdvector[0], mu_stdvector.size());
 
     std::vector<double> sigma_stdvector = this->get_parameter("sigma").as_double_array();
+    input_sigma.resize(3, 3);
     input_sigma << 
     sigma_stdvector[0], sigma_stdvector[1], sigma_stdvector[2],
     sigma_stdvector[3], sigma_stdvector[4], sigma_stdvector[5],
