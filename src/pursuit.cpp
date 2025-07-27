@@ -40,10 +40,13 @@ PursuitControler::PursuitControler()
     max_value = this->get_parameter("max_input_value").as_double_array();
 
     std::vector<double> mu_stdvector = this->get_parameter("mu").as_double_array();
+    input_mu.resize(3);
+    input_mu.setZero();
     input_mu = Eigen::Map<Eigen::VectorXd>(&mu_stdvector[0], mu_stdvector.size());
 
     std::vector<double> sigma_stdvector = this->get_parameter("sigma").as_double_array();
     input_sigma.resize(3, 3);
+    input_sigma.setIdentity();
     input_sigma << 
     sigma_stdvector[0], sigma_stdvector[1], sigma_stdvector[2],
     sigma_stdvector[3], sigma_stdvector[4], sigma_stdvector[5],
@@ -105,7 +108,7 @@ PursuitControler::CallbackReturn PursuitControler::on_configure(const rclcpp_lif
 PursuitControler::CallbackReturn PursuitControler::on_activate(const rclcpp_lifecycle::State &state)
 {
     vel_publisher->on_activate();
-    control_timer = this->create_wall_timer(0.01s, std::bind(&PursuitControler::control_callback, this));
+    control_timer = this->create_wall_timer(0.1s, std::bind(&PursuitControler::control_callback, this));
     goal_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
         std::string("goal_pose"),
         rclcpp::SystemDefaultsQoS(),
@@ -180,7 +183,7 @@ void PursuitControler::control_callback()
 {
     std::vector<double> input_array(3);
     input_array = this->mppi_controler->run(this->p, this->goal_p, this->input_mu, this->input_sigma, this->iota);
-
+    
     if (vel_publisher->is_activated())
     {
         geometry_msgs::msg::Twist txdata;
