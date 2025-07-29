@@ -358,8 +358,16 @@
         </axis>
         </joint>
 
-        <plugin name="ignition::gazebo::systems::JointController" filename="libignition-gazebo6-joint-controller-system.so">
+        <plugin name="ignition::gazebo::systems::JointPositionController" filename="libignition-gazebo6-joint-position-controller-system.so">
             <joint_name>stare0_joint</joint_name>
+            <topic>/swerve/cmd_pos</topic>
+        </plugin>
+        <plugin name="ignition::gazebo::systems::JointPositionController" filename="libignition-gazebo6-joint-position-controller-system.so">
+            <joint_name>stare1_joint</joint_name>
+            <topic>/swerve/cmd_pos</topic>
+        </plugin>
+        <plugin name="ignition::gazebo::systems::JointPositionController" filename="libignition-gazebo6-joint-position-controller-system.so">
+            <joint_name>stare2_joint</joint_name>
             <topic>/swerve/cmd_pos</topic>
         </plugin>
 
