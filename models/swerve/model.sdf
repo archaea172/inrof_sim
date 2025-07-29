@@ -310,9 +310,6 @@
         </visual>
         </link>
 
-    
-
-
         <joint name='stare0_joint' type='revolute'>
         <parent>base_link</parent>
         <child>stare0</child>
@@ -360,6 +357,11 @@
             <xyz>0 1 0</xyz>
         </axis>
         </joint>
+
+        <plugin name="ignition::gazebo::systems::JointController" filename="libignition-gazebo6-joint-controller-system.so">
+            <joint_name>stare0_joint</joint_name>
+            <topic>/swerve/cmd_pos</topic>
+        </plugin>
 
     </model>
 </sdf>
