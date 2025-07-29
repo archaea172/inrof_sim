@@ -55,7 +55,7 @@ private:
             std::bind(&TwistConverter::vel_callback, this, _1)
         );
         robot_pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
-            std::string("odometry"),
+            std::string("pose"),
             rclcpp::SystemDefaultsQoS(),
             std::bind(&TwistConverter::pose_callback, this, _1)
         );
@@ -106,7 +106,7 @@ private:
 
     void timer_callback()
     {
-        float rotation_theta = this->theta + M_PI/4;
+        float rotation_theta = -this->theta + M_PI/4;
         float vx_robot = this->v[0]*std::cos(rotation_theta) - this->v[1]*std::sin(rotation_theta);
         float vy_robot = this->v[0]*std::sin(rotation_theta) + this->v[1]*std::cos(rotation_theta);
 

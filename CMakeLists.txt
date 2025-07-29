@@ -15,6 +15,7 @@ find_package(std_msgs REQUIRED)
 find_package(joy REQUIRED)
 find_package(control_pkg REQUIRED)
 find_package(ros_gz_bridge REQUIRED)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
 # add omni
 add_executable(omni_controler
@@ -26,11 +27,58 @@ ament_target_dependencies(omni_controler
   geometry_msgs
   std_msgs
 )
-
 install(
   TARGETS omni_controler
   DESTINATION lib/${PROJECT_NAME}
 )
+# create mppi libray
+add_library(mppi_library SHARED
+  src/mppi_library.cpp
+)
+target_include_directories(mppi_library PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}>
+  $<INSTALL_INTERFACE:include>
+  ${EIGEN3_INCLUDE_DIRS}
+)
+target_link_libraries(mppi_library PUBLIC
+  ${EIGEN3_LIBRARIES}
+)
+
+# add pursuit
+add_executable(pursuit_controler
+  src/pursuit.cpp
+  include/${PROJECT_NAME}/pursuit.hpp
+)
+ament_target_dependencies(pursuit_controler
+  rclcpp
+  rclcpp_lifecycle
+  geometry_msgs
+)
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+install(
+  TARGETS mppi_library
+  EXPORT export_mppi_library
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+target_link_libraries(pursuit_controler 
+  mppi_library
+  Eigen3::Eigen
+)
+install(
+  TARGETS pursuit_controler
+  DESTINATION lib/${PROJECT_NAME}
+)
+target_include_directories(pursuit_controler
+  PRIVATE include/${PROJECT_NAME}
+)
+ament_export_dependencies(rclcpp rclcpp_lifecycle geometry_msgs Eigen3)
+ament_export_targets(export_mppi_library HAS_LIBRARY_TARGET)
+
 
 # add twist converter
 add_executable(twist_converter 
@@ -47,9 +95,24 @@ install(
   DESTINATION lib/${PROJECT_NAME}
 )
 
+# add pose converter
+add_executable(pose_converter 
+  src/pose_converter.cpp
+)
+ament_target_dependencies(pose_converter 
+  rclcpp
+  rclcpp_lifecycle
+  geometry_msgs
+)
+
+install(
+  TARGETS pose_converter 
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 # launch
 install(
-  DIRECTORY launch worlds models hooks
+  DIRECTORY launch worlds models hooks config
   DESTINATION share/${PROJECT_NAME}/
 )
 
