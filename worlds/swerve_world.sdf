@@ -179,5 +179,9 @@
       </link>
     </model>
 
+    <include>
+        <uri>package://inrof_sim/models/swerve</uri>
+    </include>
+
     </world>
 </sdf>
