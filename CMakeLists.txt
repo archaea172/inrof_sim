@@ -78,6 +78,11 @@ target_include_directories(pursuit_controler
 )
 ament_export_dependencies(rclcpp rclcpp_lifecycle geometry_msgs Eigen3)
 ament_export_targets(export_mppi_library HAS_LIBRARY_TARGET)
+target_compile_options(pursuit_controler PRIVATE
+    -O3           # 最適化レベル3
+    -march=native # 実行するマシンのCPUに最適化
+    -fopenmp
+)
 
 
 # add twist converter
