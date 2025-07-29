@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<sdf version="1.6>
+<sdf version="1.6">
     <model name="swerve">
         <link name="base_link">
         <inertial>
@@ -19,7 +19,7 @@
         <geometry>
         <mesh>
             <scale>1 1 1</scale>
-            <uri>package://inrof_sim/models/daisha/meshs/swerve_base.stl</uri>
+            <uri>package://inrof_sim/models/swerve/meshs/swerve_base.stl</uri>
         </mesh>
         </geometry>
         <surface>
@@ -36,7 +36,7 @@
         <geometry>
         <mesh>
             <scale>1 1 1</scale>
-            <uri>package://inrof_sim/models/daisha/meshs/swerve_base.stl</uri>
+            <uri>package://inrof_sim/models/swerve/meshs/swerve_base.stl</uri>
         </mesh>
         </geometry>
         <material>
