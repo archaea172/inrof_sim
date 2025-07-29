@@ -108,7 +108,7 @@ PursuitControler::CallbackReturn PursuitControler::on_configure(const rclcpp_lif
 PursuitControler::CallbackReturn PursuitControler::on_activate(const rclcpp_lifecycle::State &state)
 {
     vel_publisher->on_activate();
-    control_timer = this->create_wall_timer(0.1s, std::bind(&PursuitControler::control_callback, this));
+    control_timer = this->create_wall_timer(0.05s, std::bind(&PursuitControler::control_callback, this));
     goal_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
         std::string("goal_pose"),
         rclcpp::SystemDefaultsQoS(),
