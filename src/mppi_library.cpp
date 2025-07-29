@@ -83,7 +83,7 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vecto
 /*estimate func begin*/
 double MppiControl::calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose)
 {
-    Eigen::MatrixXf w_list(this->sampling_number_, 4);
+    Eigen::MatrixXf w_list(this->predict_horizon_, 4);
     for (size_t i = 0; i < (size_t)w_list.rows(); i++) omni_calc(StateList(i, 2), InputList(i, 0), InputList(i, 1), InputList(i, 2), &w_list(i, 0), &w_list(i, 1), &w_list(i, 2), &w_list(i, 3));
 
     Eigen::VectorXd S_list(5);
