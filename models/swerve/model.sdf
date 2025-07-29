@@ -315,7 +315,7 @@
 
         <joint name='stare0_joint' type='revolute'>
         <parent>base_link</parent>
-        <child>wheel0</child>
+        <child>stare0</child>
         <axis>
             <xyz>0 0 1</xyz>
         </axis>
@@ -323,7 +323,7 @@
 
         <joint name='stare1_joint' type='revolute'>
         <parent>base_link</parent>
-        <child>wheel1</child>
+        <child>stare1</child>
         <axis>
             <xyz>0 0 1</xyz>
         </axis>
@@ -331,7 +331,7 @@
 
         <joint name='stare2_joint' type='revolute'>
         <parent>base_link</parent>
-        <child>wheel2</child>
+        <child>stare2</child>
         <axis>
             <xyz>0 0 1</xyz>
         </axis>
