@@ -181,7 +181,7 @@
 
     <include>
         <uri>package://inrof_sim/models/swerve</uri>
-        <pose>0 0 1 0 0 0</pose>
+        <pose>0 0 1 0 1.5 0</pose>
     </include>
 
     </world>
