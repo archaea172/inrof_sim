@@ -107,8 +107,8 @@ double MppiControl::evaluate_ref(const Eigen::VectorXd &value, const Eigen::Vect
 }
 double MppiControl::evaluate_smooth(const Eigen::VectorXd &value)
 {
-    double sum_diff = 0;
-    for (size_t i = 1; i < (size_t)value.size(); i++) sum_diff += std::pow(value(i) - value(i-1), 2);
+    if (value.size() < 2) return 0.0;
+    double sum_diff = (value.tail(value.size() - 1) - value.head(value.size() - 1)).squaredNorm();
     return sum_diff;
 }
 /*estimate func end*/
