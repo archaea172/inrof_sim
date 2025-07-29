@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 
 <sdf version="1.6">
-    <world name="inrof_field">
+    <world name="swerve_sim">
 
     <gui fullscreen="0">
 
@@ -181,7 +181,7 @@
 
     <include>
         <uri>package://inrof_sim/models/swerve</uri>
-        <pose>0 0 1 0 1.5 0</pose>
+        <pose>0 0 0 0 0.3 0</pose>
     </include>
 
     </world>
