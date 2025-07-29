@@ -54,6 +54,7 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vecto
     Eigen::VectorXd init_state_eigen = Eigen::Map<Eigen::VectorXd>(&init_state[0], init_state.size());
 
     Eigen::MatrixXd L = sigma.llt().matrixL();
+    Eigen::MatrixXd first_input_matrix(this->input_dim_, this->sampling_number_);
 
     for (size_t i = 0; i < (size_t)this->sampling_number_; i++) {
         input_array[i] = this->generate_input_array(mu, L);
@@ -63,6 +64,8 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vecto
         );
 
         S_array(i) = calc_evaluation(input_array[i], state_array[i], goal_state_eig);
+
+        first_input_matrix.col(i) = input_array[i].row(0).transpose();
     }
     double S_ref = S_array.minCoeff();
 
@@ -73,9 +76,7 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vecto
     double weight_sum = weight.sum();
     weight_normal = weight / weight_sum;
 
-    Eigen::VectorXd input(input_dim_);
-    input.setZero();
-    for (size_t i = 0; i < (size_t)sampling_number_; i++) input += weight_normal(i) * input_array[i].row(0).transpose();
+    Eigen::VectorXd input = first_input_matrix * weight_normal;
 
     std::vector<double> return_input(input.data(), input.data() + input.size());
     return return_input;
