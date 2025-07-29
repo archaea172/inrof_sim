@@ -53,8 +53,10 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vecto
     Eigen::VectorXd S_array(sampling_number_);
     Eigen::VectorXd init_state_eigen = Eigen::Map<Eigen::VectorXd>(&init_state[0], init_state.size());
 
+    Eigen::MatrixXd L = sigma.llt().matrixL();
+
     for (size_t i = 0; i < (size_t)this->sampling_number_; i++) {
-        input_array[i] = this->generate_input_array(mu, sigma);
+        input_array[i] = this->generate_input_array(mu, L);
         state_array[i] = this->generate_model_state(
             input_array[i],
             init_state_eigen
@@ -138,24 +140,23 @@ double MppiControl::clamp(const double value, const double max_value, const doub
 /*generate input begin*/
 Eigen::VectorXd MppiControl::sample_multivariate_normal(
     const Eigen::VectorXd &mean,
-    const Eigen::MatrixXd &cov,
+    const Eigen::MatrixXd &L,
     std::mt19937 &gen
 )
 {
     std::normal_distribution<> dist(0.0, 1.0);
     Eigen::VectorXd z(mean.size());
     for (int i = 0; i < mean.size(); ++i) z(i) = dist(gen);
-    Eigen::MatrixXd L = cov.llt().matrixL();
     return mean + L*z;
 }
 
-Eigen::MatrixXd MppiControl::generate_input_array(Eigen::VectorXd mu, Eigen::MatrixXd sigma)
+Eigen::MatrixXd MppiControl::generate_input_array(Eigen::VectorXd &mu, Eigen::MatrixXd &L)
 {
     Eigen::MatrixXd input_array(this->predict_horizon_, this->input_dim_);
 
     for (size_t i = 0; i < (size_t)this->predict_horizon_; i++)
     {
-        input_array.row(i) = this->sample_multivariate_normal(mu, sigma, gen_);
+        input_array.row(i) = this->sample_multivariate_normal(mu, L, gen_);
         for (size_t j = 0; j < (size_t)this->input_dim_; j++) input_array(i, j) = this->clamp(input_array(i, j), max_input_value_[j], -max_input_value_[j]);
     }
     return input_array;
