@@ -90,17 +90,6 @@
         </visual>
         </link>
 
-        <joint name='wheel0_joint' type='revolute'>
-        <parent>base_link</parent>
-        <child>wheel0</child>
-        <axis>
-            <xyz>0 0 1</xyz>
-        </axis>
-        <axis2>
-            <xyz>1 0 0</xyz>
-        </axis2>
-        </joint>
-
         <link name="wheel1">
         <pose>-0.27 0.155885 0 0 0 0</pose>
         <inertial>
@@ -144,17 +133,6 @@
         </material>
         </visual>
         </link>
-
-        <joint name='wheel1_joint' type='revolute'>
-        <parent>base_link</parent>
-        <child>wheel1</child>
-        <axis>
-            <xyz>0 0 1</xyz>
-        </axis>
-        <axis2>
-            <xyz>1 0 0</xyz>
-        </axis2>
-        </joint>
         
         <link name="wheel2">
         <pose>0 -0.311 0 0 0 0</pose>
@@ -200,6 +178,29 @@
         </visual>
         </link>
 
+
+        <joint name='wheel0_joint' type='revolute'>
+        <parent>base_link</parent>
+        <child>wheel0</child>
+        <axis>
+            <xyz>0 0 1</xyz>
+        </axis>
+        <axis2>
+            <xyz>1 0 0</xyz>
+        </axis2>
+        </joint>
+
+        <joint name='wheel1_joint' type='revolute'>
+        <parent>base_link</parent>
+        <child>wheel1</child>
+        <axis>
+            <xyz>0 0 1</xyz>
+        </axis>
+        <axis2>
+            <xyz>1 0 0</xyz>
+        </axis2>
+        </joint>
+        
         <joint name='wheel2_joint' type='revolute'>
         <parent>base_link</parent>
         <child>wheel2</child>
