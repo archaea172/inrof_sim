@@ -102,5 +102,61 @@
 
         </joint>
 
+        <link name="wheel1">
+        <pose>-0.27 0.155885 0 0 0 0</pose>
+        <inertial>
+            <inertia>
+                <ixx>1</ixx>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyy>1</iyy>
+                <iyz>0</iyz>
+                <izz>1</izz>
+            </inertia>
+            <mass>1.0</mass>
+        </inertial>
+
+        <collision name="collision">
+        <geometry>
+        <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://inrof_sim/models/swerve/meshs/swerve_wheel.stl</uri>
+        </mesh>
+        </geometry>
+        <surface>
+            <friction>
+                <ode>
+                    <mu>0.3</mu>
+                    <mu2>0.3</mu2>
+                </ode>
+            </friction>
+        </surface>
+        </collision>
+
+        <visual name="visual">
+        <geometry>
+        <mesh>
+            <scale>1 1 1</scale>
+            <uri>package://inrof_sim/models/swerve/meshs/swerve_wheel.stl</uri>
+        </mesh>
+        </geometry>
+        <material>
+            <ambient>0.0 0.0 1.0 1.0</ambient>   <diffuse>0.0 0.0 1.0 1.0</diffuse>   <specular>0.1 0.1 0.1 1.0</specular> <emissive>0.0 0.0 0.0 0.0</emissive>
+        </material>
+        </visual>
+        </link>
+
+        <joint name='wheel1_joint' type='revolute2'>
+        <parent>base_link</parent>
+        <child>wheel1</child>
+        <axis>
+            <xyz>0 0 1</xyz>
+        </axis>
+        <axis2>
+            <xyz>1 0 0</xyz>
+        </axis2>
+
+        </joint>
+
     </model>
 </sdf>
