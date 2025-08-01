@@ -74,6 +74,11 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_activate(const rclcpp_
     );
     cal_timer = this->create_wall_timer(0.001s, std::bind(&SwerveVelConverter::cal_callback, this));
     /*subscriber and timer end*/
+
+    /*value initialize begin*/
+    this->theta = 0;
+    this->v.resize(3);
+    /*value initialize begin*/
     RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
     return CallbackReturn::SUCCESS;
 }
@@ -140,7 +145,7 @@ void SwerveVelConverter::vel_callback(const geometry_msgs::msg::Twist::SharedPtr
 void SwerveVelConverter::cal_callback()
 {
     std::vector<std::vector<double>> swerve = this->swerve_cal(this->theta, this->v);
-    std::vector<std::vector<std_msgs::msg::Float64>> txdata;
+    std::vector<std::vector<std_msgs::msg::Float64>> txdata(2, std::vector<std_msgs::msg::Float64>(3));
     if(wheel0_vel->is_activated() && wheel1_vel->is_activated() && wheel2_vel->is_activated() && swerve0_pos->is_activated() && swerve1_pos->is_activated() && swerve2_pos->is_activated())
     {
         for (size_t i = 0; i < 2; i++) for (size_t j = 0; j < 3; j++) txdata[i][j].data = swerve[i][j];
@@ -157,8 +162,8 @@ void SwerveVelConverter::cal_callback()
 /*swerve drive cal begin*/
 std::vector<std::vector<double>> SwerveVelConverter::swerve_cal(const double Theta, const std::vector<double> &V)
 {
-    std::vector<std::vector<double>> velocity;
-    std::vector<std::vector<double>> wheelandstare;
+    std::vector<std::vector<double>> velocity(3, std::vector<double>(2, 0));
+    std::vector<std::vector<double>> wheelandstare(2, std::vector<double>(3, 0));
 
     const float a[3] = {M_PI/6, 5*M_PI/6, 3*M_PI/2};
 
