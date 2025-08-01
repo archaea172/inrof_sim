@@ -36,7 +36,7 @@ SwerveVelConverter::SwerveVelConverter()
         std::string("swerve_pos2"), rclcpp::SystemDefaultsQoS()
     );
     /*publisher create end*/
-    
+
     this->parameter_callback_handle_ = this->add_on_set_parameters_callback(
         std::bind(&SwerveVelConverter::parameters_callback, this, _1)
     );
@@ -51,6 +51,7 @@ SwerveVelConverter::~SwerveVelConverter()
 /*lifecycle callback begin*/
 SwerveVelConverter::CallbackReturn SwerveVelConverter::on_configure(const rclcpp_lifecycle::State &state)
 {
+
     return CallbackReturn::SUCCESS;
 }
 
@@ -89,6 +90,11 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_deactivate(const rclcp
     vel_subscriber.reset();
     cal_timer.reset();
     /*node func reset begin*/
+    return CallbackReturn::SUCCESS;
+}
+
+SwerveVelConverter::CallbackReturn SwerveVelConverter::on_cleanup(const rclcpp_lifecycle::State &state)
+{
     return CallbackReturn::SUCCESS;
 }
 /*lifecycle callback end*/
