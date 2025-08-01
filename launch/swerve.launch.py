@@ -43,8 +43,32 @@ def generate_launch_description():
         arguments=['/swerve/wheel_vel2@std_msgs/msg/Float64@ignition.msgs.Double']
     )
 
+    gz_bridge_node_stare0 = Node(
+        package='ros_gz_bridge',
+        name='bridge_vel',
+        executable='parameter_bridge',
+        arguments=['/swerve/swerve_pos0@std_msgs/msg/Float64@ignition.msgs.Double']
+    )
+
+    gz_bridge_node_stare1 = Node(
+        package='ros_gz_bridge',
+        name='bridge_vel',
+        executable='parameter_bridge',
+        arguments=['/swerve/swerve_pos1@std_msgs/msg/Float64@ignition.msgs.Double']
+    )
+
+    gz_bridge_node_stare2 = Node(
+        package='ros_gz_bridge',
+        name='bridge_vel',
+        executable='parameter_bridge',
+        arguments=['/swerve/swerve_pos2@std_msgs/msg/Float64@ignition.msgs.Double']
+    )
+
     ld.add_action(sim)
     ld.add_action(gz_bridge_node_wheel0)
     ld.add_action(gz_bridge_node_wheel1)
     ld.add_action(gz_bridge_node_wheel2)
+    ld.add_action(gz_bridge_node_stare0)
+    ld.add_action(gz_bridge_node_stare1)
+    ld.add_action(gz_bridge_node_stare2)
     return ld
