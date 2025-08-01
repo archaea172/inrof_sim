@@ -24,5 +24,11 @@ SwerveVelConverter::~SwerveVelConverter()
 {
 
 }
-
 /*class func end*/
+
+/*lifecycle callback begin*/
+SwerveVelConverter::CallbackReturn SwerveVelConverter::on_configure(const rclcpp_lifecycle::State &state)
+{
+    return CallbackReturn::SUCCESS;
+}
+/*lifecycle callback end*/
