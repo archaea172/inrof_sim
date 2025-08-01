@@ -139,13 +139,13 @@ void SwerveVelConverter::vel_callback(const geometry_msgs::msg::Twist::SharedPtr
 /*cal timer callback begin*/
 void SwerveVelConverter::cal_callback()
 {
-    std::vector<double> swerve(6, 0);
-
+    std::vector<std::vector<double>> swerve = this->swerve_cal(this->theta, this->v);
+    
 }
 /*cal timer callback end*/
 
 /*swerve drive cal begin*/
-std::vector<double> SwerveVelConverter::swerve_cal(const double Theta, const std::vector<double> &V)
+std::vector<std::vector<double>> SwerveVelConverter::swerve_cal(const double Theta, const std::vector<double> &V)
 {
     std::vector<std::vector<double>> velocity;
     std::vector<std::vector<double>> wheelandstare;
@@ -165,5 +165,7 @@ std::vector<double> SwerveVelConverter::swerve_cal(const double Theta, const std
     wheelandstare[1][0] = atan2(velocity[0][1], velocity[0][0]);
     wheelandstare[1][1] = atan2(velocity[1][1], velocity[1][0]);
     wheelandstare[1][2] = atan2(velocity[2][1], velocity[2][0]);
+
+    return wheelandstare;
 }
 /*swerve drive cal end*/
