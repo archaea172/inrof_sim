@@ -128,8 +128,10 @@ rcl_interfaces::msg::SetParametersResult SwerveVelConverter::parameters_callback
 /*parameter callback end*/
 
 /*subscribe callback begin*/
-void SwerveVelConverter::vel_callback(const geometry_msgs::msg::Twist rxdata)
+void SwerveVelConverter::vel_callback(const geometry_msgs::msg::Twist::SharedPtr rxdata)
 {
-    
+    this->v[0] = rxdata->linear.x;
+    this->v[1] = rxdata->linear.y;
+    this->v[2] = rxdata->angular.z;
 }
 /*subscribe callback end*/

@@ -50,7 +50,7 @@ private:
     /*lifecycle callback end*/
 
     /*subscribe callback begin*/
-    void vel_callback(const geometry_msgs::msg::Twist rxdata);
+    void vel_callback(const geometry_msgs::msg::Twist::SharedPtr rxdata);
     /*subscribe callback end*/
 
     /*parameter callback begin*/
@@ -64,7 +64,7 @@ private:
     /*cal timer callback end*/
 
     /*swerve drive cal begin*/
-    std::vector<double> swerve_cal(const double theta, const std::vector<double> v);
+    std::vector<double> swerve_cal(const double theta, const std::vector<double> &v);
     /*swerve drive cal end*/
 
     /*value declare begin*/
