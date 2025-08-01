@@ -62,6 +62,10 @@ private:
     /*cal timer callback begin*/
     void cal_callback();
     /*cal timer callback end*/
+
+    /*swerve drive cal begin*/
+    std::vector<double> swerve_cal(const double theta, const std::vector<double> v);
+    /*swerve drive cal end*/
 };
 
 #endif
