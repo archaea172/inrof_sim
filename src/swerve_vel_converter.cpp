@@ -53,6 +53,6 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_configure(const rclcpp
 
 SwerveVelConverter::CallbackReturn SwerveVelConverter::on_activate(const rclcpp_lifecycle::State &state)
 {
-
+    return CallbackReturn::SUCCESS;
 }
 /*lifecycle callback end*/
