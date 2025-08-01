@@ -51,7 +51,7 @@ SwerveVelConverter::~SwerveVelConverter()
 /*lifecycle callback begin*/
 SwerveVelConverter::CallbackReturn SwerveVelConverter::on_configure(const rclcpp_lifecycle::State &state)
 {
-
+    RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
     return CallbackReturn::SUCCESS;
 }
 
@@ -74,6 +74,7 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_activate(const rclcpp_
     );
     cal_timer = this->create_wall_timer(0.001s, std::bind(&SwerveVelConverter::cal_callback, this));
     /*subscriber and timer end*/
+    RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
     return CallbackReturn::SUCCESS;
 }
 
@@ -90,23 +91,26 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_deactivate(const rclcp
     vel_subscriber.reset();
     cal_timer.reset();
     /*node func reset begin*/
+    RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
     return CallbackReturn::SUCCESS;
 }
 
 SwerveVelConverter::CallbackReturn SwerveVelConverter::on_cleanup(const rclcpp_lifecycle::State &state)
 {
+    RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
     return CallbackReturn::SUCCESS;
 }
 
 SwerveVelConverter::CallbackReturn SwerveVelConverter::on_error(const rclcpp_lifecycle::State &state)
 {
+    RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
     RCLCPP_INFO(this->get_logger(), "on error!");
     return CallbackReturn::SUCCESS;
 }
 
 SwerveVelConverter::CallbackReturn SwerveVelConverter::on_shutdown(const rclcpp_lifecycle::State &state)
 {
-    RCLCPP_INFO(this->get_logger(), "on_shutdown() from [%s]", state.label().c_str());
+    RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
     return CallbackReturn::SUCCESS;
 }
 /*lifecycle callback end*/
