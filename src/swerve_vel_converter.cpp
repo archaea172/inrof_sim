@@ -55,12 +55,14 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_configure(const rclcpp
 
 SwerveVelConverter::CallbackReturn SwerveVelConverter::on_activate(const rclcpp_lifecycle::State &state)
 {
+    /*publisher on activate beign*/
     wheel0_vel->on_activate();
     wheel1_vel->on_activate();
     wheel2_vel->on_activate();
     swerve0_pos->on_activate();
     swerve1_pos->on_activate();
     swerve2_pos->on_activate();
+    /*publisher on activate end*/
 
     
     return CallbackReturn::SUCCESS;
