@@ -114,3 +114,15 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_shutdown(const rclcpp_
     return CallbackReturn::SUCCESS;
 }
 /*lifecycle callback end*/
+
+/*parameter callback begin*/
+rcl_interfaces::msg::SetParametersResult SwerveVelConverter::parameters_callback(
+    const std::vector<rclcpp::Parameter> &parameters
+)
+{
+    rcl_interfaces::msg::SetParametersResult result;
+    result.successful = true;
+    result.reason = "success";
+    return result;
+}
+/*parameter callback end*/
