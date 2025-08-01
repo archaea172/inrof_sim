@@ -70,6 +70,8 @@ private:
     /*value declare begin*/
     double R; // robot radius
     double r; // wheel radius
+    std::vector<double> v;
+    double theta;
     /*value declare end*/
 };
 
