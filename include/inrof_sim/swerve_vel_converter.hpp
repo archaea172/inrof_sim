@@ -52,6 +52,12 @@ private:
     /*subscribe callback begin*/
     void vel_callback(const geometry_msgs::msg::Twist rxdata);
     /*subscribe callback end*/
+
+    /*parameter callback begin*/
+    rcl_interfaces::msg::SetParametersResult parameters_callback(
+        const std::vector<rclcpp::Parameter> &parameters
+    );
+    /*parameter callback end*/
 };
 
 #endif
