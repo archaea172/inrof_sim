@@ -74,4 +74,9 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_activate(const rclcpp_
     /*subscriber and timer end*/
     return CallbackReturn::SUCCESS;
 }
+
+SwerveVelConverter::CallbackReturn SwerveVelConverter::on_deactivate(const rclcpp_lifecycle::State &state)
+{
+    return CallbackReturn::SUCCESS;
+}
 /*lifecycle callback end*/
