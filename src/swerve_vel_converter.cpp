@@ -15,20 +15,6 @@ SwerveVelConverter::SwerveVelConverter()
     this->r = this->get_parameter("wheel_radius").as_double();
     /*parameter set end*/
     
-    this->parameter_callback_handle_ = this->add_on_set_parameters_callback(
-        std::bind(&SwerveVelConverter::parameters_callback, this, _1)
-    );
-}
-
-SwerveVelConverter::~SwerveVelConverter()
-{
-
-}
-/*class func end*/
-
-/*lifecycle callback begin*/
-SwerveVelConverter::CallbackReturn SwerveVelConverter::on_configure(const rclcpp_lifecycle::State &state)
-{
     /*publisher create begin*/
     wheel0_vel = this->create_publisher<std_msgs::msg::Float64>(
         std::string("wheel_vel0"), rclcpp::SystemDefaultsQoS()
@@ -50,6 +36,21 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_configure(const rclcpp
         std::string("swerve_pos2"), rclcpp::SystemDefaultsQoS()
     );
     /*publisher create end*/
+    
+    this->parameter_callback_handle_ = this->add_on_set_parameters_callback(
+        std::bind(&SwerveVelConverter::parameters_callback, this, _1)
+    );
+}
+
+SwerveVelConverter::~SwerveVelConverter()
+{
+
+}
+/*class func end*/
+
+/*lifecycle callback begin*/
+SwerveVelConverter::CallbackReturn SwerveVelConverter::on_configure(const rclcpp_lifecycle::State &state)
+{
     return CallbackReturn::SUCCESS;
 }
 
@@ -77,6 +78,17 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_activate(const rclcpp_
 
 SwerveVelConverter::CallbackReturn SwerveVelConverter::on_deactivate(const rclcpp_lifecycle::State &state)
 {
+    /*node func reset begin*/
+    wheel0_vel->on_deactivate();
+    wheel1_vel->on_deactivate();
+    wheel2_vel->on_deactivate();
+    swerve0_pos->on_deactivate();
+    swerve1_pos->on_deactivate();
+    swerve2_pos->on_deactivate();
+
+    vel_subscriber.reset();
+    cal_timer.reset();
+    /*node func reset begin*/
     return CallbackReturn::SUCCESS;
 }
 /*lifecycle callback end*/
