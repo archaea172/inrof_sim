@@ -38,6 +38,21 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_configure(const rclcpp
     wheel2_vel = this->create_publisher<std_msgs::msg::Float64>(
         std::string("wheel_vel2"), rclcpp::SystemDefaultsQoS()
     );
+
+    swerve0_pos = this->create_publisher<std_msgs::msg::Float64>(
+        std::string("swerve_pos0"), rclcpp::SystemDefaultsQoS()
+    );
+    swerve1_pos = this->create_publisher<std_msgs::msg::Float64>(
+        std::string("swerve_pos1"), rclcpp::SystemDefaultsQoS()
+    );
+    swerve2_pos = this->create_publisher<std_msgs::msg::Float64>(
+        std::string("swerve_pos2"), rclcpp::SystemDefaultsQoS()
+    );
     return CallbackReturn::SUCCESS;
+}
+
+SwerveVelConverter::CallbackReturn SwerveVelConverter::on_activate(const rclcpp_lifecycle::State &state)
+{
+
 }
 /*lifecycle callback end*/
