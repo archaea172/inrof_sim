@@ -135,3 +135,10 @@ void SwerveVelConverter::vel_callback(const geometry_msgs::msg::Twist::SharedPtr
     this->v[2] = rxdata->angular.z;
 }
 /*subscribe callback end*/
+
+/*cal timer callback begin*/
+void SwerveVelConverter::cal_callback()
+{
+    
+}
+/*cal timer callback end*/
