@@ -6,6 +6,7 @@
 #include "rclcpp_lifecycle/lifecycle_publisher.hpp"
 
 #include "std_msgs/msg/float64.hpp"
+#include "geometry_msgs/msg/twist.hpp"
 
 using std::placeholders::_1;
 using namespace std::chrono_literals;
@@ -25,7 +26,7 @@ public:
 private:
     /*node value define begin*/
     rclcpp::TimerBase::SharedPtr cal_timer;
-    
+
     rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr wheel0_vel;
     rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr wheel1_vel;
     rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr wheel2_vel;
@@ -33,6 +34,8 @@ private:
     rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr swerve0_pos;
     rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr swerve1_pos;
     rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr swerve2_pos;
+
+    rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr vel_subscriber;
     /*node value define end*/
 };
 
