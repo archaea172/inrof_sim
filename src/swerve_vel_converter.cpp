@@ -139,6 +139,14 @@ void SwerveVelConverter::vel_callback(const geometry_msgs::msg::Twist::SharedPtr
 /*cal timer callback begin*/
 void SwerveVelConverter::cal_callback()
 {
-    
+    std::vector<double> swerve(6, 0);
+
 }
 /*cal timer callback end*/
+
+/*swerve drive cal begin*/
+std::vector<double> swerve_cal(const double theta, const std::vector<double> &v)
+{
+    
+}
+/*swerve drive cal end*/
