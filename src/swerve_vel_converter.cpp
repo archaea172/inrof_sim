@@ -126,3 +126,10 @@ rcl_interfaces::msg::SetParametersResult SwerveVelConverter::parameters_callback
     return result;
 }
 /*parameter callback end*/
+
+/*subscribe callback begin*/
+void SwerveVelConverter::vel_callback(const geometry_msgs::msg::Twist rxdata)
+{
+    
+}
+/*subscribe callback end*/
