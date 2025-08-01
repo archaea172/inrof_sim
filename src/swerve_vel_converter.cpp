@@ -64,11 +64,14 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_activate(const rclcpp_
     swerve2_pos->on_activate();
     /*publisher on activate end*/
 
+    /*subscriber and timer begin*/
     vel_subscriber = this->create_subscription<geometry_msgs::msg::Twist>(
         std::string("cmd_vel"),
         rclcpp::SystemDefaultsQoS(),
         std::bind(&SwerveVelConverter::vel_callback, this, _1)
     );
+    cal_timer = this->create_wall_timer(0.001s, std::bind(&SwerveVelConverter::cal_callback, this));
+    /*subscriber and timer end*/
     return CallbackReturn::SUCCESS;
 }
 /*lifecycle callback end*/
