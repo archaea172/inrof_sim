@@ -66,6 +66,11 @@ private:
     /*swerve drive cal begin*/
     std::vector<double> swerve_cal(const double theta, const std::vector<double> v);
     /*swerve drive cal end*/
+
+    /*value declare begin*/
+    const double R; // robot radius
+    const double r; // wheel radius
+    /*value declare end*/
 };
 
 #endif
