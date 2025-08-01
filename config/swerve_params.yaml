@@ -1,0 +1,4 @@
+/swerve/swerve_vel_converter:
+  ros__parameters:
+    robot_radius: 0.311769145
+    wheel_radius: 0.06617
