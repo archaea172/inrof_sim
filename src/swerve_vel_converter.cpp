@@ -13,4 +13,8 @@ SwerveVelConverter::SwerveVelConverter()
     this->R = this->get_parameter("robot_radius").as_double();
     this->r = this->get_parameter("wheel_radius").as_double();
     /*parameter set end*/
+    
+    this->parameter_callback_handle_ = this->add_on_set_parameters_callback(
+        std::bind(&SwerveVelConverter::parameters_callback, this, _1)
+    );
 }
