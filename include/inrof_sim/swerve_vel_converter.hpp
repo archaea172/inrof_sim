@@ -48,6 +48,10 @@ private:
     CallbackReturn on_error(const rclcpp_lifecycle::State &state);
     CallbackReturn on_shutdown(const rclcpp_lifecycle::State &state);
     /*lifecycle callback end*/
+
+    /*subscribe callback begin*/
+    void vel_callback(const geometry_msgs::msg::Twist rxdata);
+    /*subscribe callback end*/
 };
 
 #endif
