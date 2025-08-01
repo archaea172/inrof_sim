@@ -145,8 +145,25 @@ void SwerveVelConverter::cal_callback()
 /*cal timer callback end*/
 
 /*swerve drive cal begin*/
-std::vector<double> swerve_cal(const double theta, const std::vector<double> &v)
+std::vector<double> SwerveVelConverter::swerve_cal(const double Theta, const std::vector<double> &V)
 {
-    
+    std::vector<std::vector<double>> velocity;
+    std::vector<std::vector<double>> wheelandstare;
+
+    const float a[3] = {M_PI/6, 5*M_PI/6, 3*M_PI/2};
+
+    for (int i = 0; i < 3; i++){
+        velocity[i][0] = V[0] - V[2]*this->R*sin(Theta + a[i]);
+        velocity[i][1] = V[1] + V[2]*this->R*cos(Theta + a[i]);
+    }
+
+    wheelandstare[0][0] = sqrt(pow(velocity[0][0], 2.0) + pow(velocity[0][1], 2.0));
+    wheelandstare[0][1] = sqrt(pow(velocity[1][0], 2.0) + pow(velocity[1][1], 2.0));
+    wheelandstare[0][2] = sqrt(pow(velocity[2][0], 2.0) + pow(velocity[2][1], 2.0));
+
+
+    wheelandstare[1][0] = atan2(velocity[0][1], velocity[0][0]);
+    wheelandstare[1][1] = atan2(velocity[1][1], velocity[1][0]);
+    wheelandstare[1][2] = atan2(velocity[2][1], velocity[2][0]);
 }
 /*swerve drive cal end*/
