@@ -1,6 +1,7 @@
 #include "swerve_vel_converter.hpp"
 #include "rclcpp/rclcpp.hpp"
 
+/*class func begin*/
 SwerveVelConverter::SwerveVelConverter()
 : rclcpp_lifecycle::LifecycleNode(std::string("swerve_vel_converter"))
 {
@@ -18,3 +19,10 @@ SwerveVelConverter::SwerveVelConverter()
         std::bind(&SwerveVelConverter::parameters_callback, this, _1)
     );
 }
+
+SwerveVelConverter::~SwerveVelConverter()
+{
+
+}
+
+/*class func end*/
