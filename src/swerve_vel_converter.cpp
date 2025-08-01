@@ -151,7 +151,6 @@ void SwerveVelConverter::cal_callback()
         swerve1_pos->publish(txdata[1][1]);
         swerve2_pos->publish(txdata[1][2]);
     }
-
 }
 /*cal timer callback end*/
 
@@ -180,3 +179,12 @@ std::vector<std::vector<double>> SwerveVelConverter::swerve_cal(const double The
     return wheelandstare;
 }
 /*swerve drive cal end*/
+
+int main(int argc, char *argv[])
+{
+    rclcpp::init(argc, argv);
+    std::shared_ptr<SwerveVelConverter> node = std::make_shared<SwerveVelConverter>();
+    rclcpp::spin(node->get_node_base_interface());
+    rclcpp::shutdown();
+    return 0;
+}
