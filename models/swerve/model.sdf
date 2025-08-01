@@ -360,34 +360,34 @@
 
         <plugin name="ignition::gazebo::systems::JointPositionController" filename="libignition-gazebo6-joint-position-controller-system.so">
             <joint_name>stare0_joint</joint_name>
-            <topic>/swerve/cmd_pos0</topic>
+            <topic>/swerve/swerve_pos0</topic>
             <p_gain>10</p_gain>
             <d_gain>5</d_gain>
         </plugin>
         <plugin name="ignition::gazebo::systems::JointPositionController" filename="libignition-gazebo6-joint-position-controller-system.so">
             <joint_name>stare1_joint</joint_name>
-            <topic>/swerve/cmd_pos1</topic>
+            <topic>/swerve/swerve_pos1</topic>
             <p_gain>10</p_gain>
             <d_gain>5</d_gain>
         </plugin>
         <plugin name="ignition::gazebo::systems::JointPositionController" filename="libignition-gazebo6-joint-position-controller-system.so">
             <joint_name>stare2_joint</joint_name>
-            <topic>/swerve/cmd_pos2</topic>
+            <topic>/swerve/swerve_pos2</topic>
             <p_gain>10</p_gain>
             <d_gain>5</d_gain>
         </plugin>
         
         <plugin name="ignition::gazebo::systems::JointController" filename="libignition-gazebo6-joint-controller-system.so">
             <joint_name>wheel0_joint</joint_name>
-            <topic>/swerve/cmd_vel0</topic>
+            <topic>/swerve/wheel_vel0</topic>
         </plugin>
         <plugin name="ignition::gazebo::systems::JointController" filename="libignition-gazebo6-joint-controller-system.so">
             <joint_name>wheel1_joint</joint_name>
-            <topic>/swerve/cmd_vel1</topic>
+            <topic>/swerve/wheel_vel1</topic>
         </plugin>
         <plugin name="ignition::gazebo::systems::JointController" filename="libignition-gazebo6-joint-controller-system.so">
             <joint_name>wheel2_joint</joint_name>
-            <topic>/swerve/cmd_vel2</topic>
+            <topic>/swerve/wheel_vel2</topic>
         </plugin>
 
     </model>
