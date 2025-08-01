@@ -97,4 +97,16 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_cleanup(const rclcpp_l
 {
     return CallbackReturn::SUCCESS;
 }
+
+SwerveVelConverter::CallbackReturn SwerveVelConverter::on_error(const rclcpp_lifecycle::State &state)
+{
+    RCLCPP_INFO(this->get_logger(), "on error!");
+    return CallbackReturn::SUCCESS;
+}
+
+SwerveVelConverter::CallbackReturn SwerveVelConverter::on_shutdown(const rclcpp_lifecycle::State &state)
+{
+    RCLCPP_INFO(this->get_logger(), "on_shutdown() from [%s]", state.label().c_str());
+    return CallbackReturn::SUCCESS;
+}
 /*lifecycle callback end*/
