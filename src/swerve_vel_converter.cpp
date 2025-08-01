@@ -140,7 +140,18 @@ void SwerveVelConverter::vel_callback(const geometry_msgs::msg::Twist::SharedPtr
 void SwerveVelConverter::cal_callback()
 {
     std::vector<std::vector<double>> swerve = this->swerve_cal(this->theta, this->v);
-    
+    std::vector<std::vector<std_msgs::msg::Float64>> txdata;
+    if(wheel0_vel->is_activated() && wheel1_vel->is_activated() && wheel2_vel->is_activated() && swerve0_pos->is_activated() && swerve1_pos->is_activated() && swerve2_pos->is_activated())
+    {
+        for (size_t i = 0; i < 2; i++) for (size_t j = 0; j < 3; j++) txdata[i][j].data = swerve[i][j];
+        wheel0_vel->publish(txdata[0][0]);
+        wheel1_vel->publish(txdata[0][1]);
+        wheel2_vel->publish(txdata[0][2]);
+        swerve0_pos->publish(txdata[1][0]);
+        swerve1_pos->publish(txdata[1][1]);
+        swerve2_pos->publish(txdata[1][2]);
+    }
+
 }
 /*cal timer callback end*/
 
