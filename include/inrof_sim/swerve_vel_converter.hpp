@@ -58,6 +58,10 @@ private:
         const std::vector<rclcpp::Parameter> &parameters
     );
     /*parameter callback end*/
+
+    /*cal timer callback begin*/
+    void cal_callback();
+    /*cal timer callback end*/
 };
 
 #endif
