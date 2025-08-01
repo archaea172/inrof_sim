@@ -1,4 +1,5 @@
 from launch import LaunchDescription
+from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -21,5 +22,29 @@ def generate_launch_description():
             ('gz_args', world_file_path)]
     )
 
+    gz_bridge_node_wheel0 = Node(
+        package='ros_gz_bridge',
+        name='bridge_vel',
+        executable='parameter_bridge',
+        arguments=['/swerve/wheel_vel0@std_msgs/msg/Float64@ignition.msgs.Double']
+    )
+
+    gz_bridge_node_wheel1 = Node(
+        package='ros_gz_bridge',
+        name='bridge_vel',
+        executable='parameter_bridge',
+        arguments=['/swerve/wheel_vel1@std_msgs/msg/Float64@ignition.msgs.Double']
+    )
+
+    gz_bridge_node_wheel2 = Node(
+        package='ros_gz_bridge',
+        name='bridge_vel',
+        executable='parameter_bridge',
+        arguments=['/swerve/wheel_vel2@std_msgs/msg/Float64@ignition.msgs.Double']
+    )
+
     ld.add_action(sim)
+    ld.add_action(gz_bridge_node_wheel0)
+    ld.add_action(gz_bridge_node_wheel1)
+    ld.add_action(gz_bridge_node_wheel2)
     return ld
