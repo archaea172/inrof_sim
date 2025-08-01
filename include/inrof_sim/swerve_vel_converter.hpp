@@ -68,8 +68,8 @@ private:
     /*swerve drive cal end*/
 
     /*value declare begin*/
-    const double R; // robot radius
-    const double r; // wheel radius
+    double R; // robot radius
+    double r; // wheel radius
     /*value declare end*/
 };
 
