@@ -172,9 +172,9 @@ std::vector<std::vector<double>> SwerveVelConverter::swerve_cal(const double The
         velocity[i][1] = V[1] + V[2]*this->R*cos(Theta + a[i]);
     }
 
-    wheelandstare[0][0] = sqrt(pow(velocity[0][0], 2.0) + pow(velocity[0][1], 2.0));
-    wheelandstare[0][1] = sqrt(pow(velocity[1][0], 2.0) + pow(velocity[1][1], 2.0));
-    wheelandstare[0][2] = sqrt(pow(velocity[2][0], 2.0) + pow(velocity[2][1], 2.0));
+    wheelandstare[0][0] = sqrt(pow(velocity[0][0], 2.0) + pow(velocity[0][1], 2.0))/r;
+    wheelandstare[0][1] = sqrt(pow(velocity[1][0], 2.0) + pow(velocity[1][1], 2.0))/r;
+    wheelandstare[0][2] = sqrt(pow(velocity[2][0], 2.0) + pow(velocity[2][1], 2.0))/r;
 
 
     wheelandstare[1][0] = atan2(velocity[0][1], velocity[0][0]);
