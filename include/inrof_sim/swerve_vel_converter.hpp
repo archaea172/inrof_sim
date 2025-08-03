@@ -71,6 +71,7 @@ private:
 
     /*swerve drive cal begin*/
     std::vector<std::vector<double>> swerve_cal(const double Theta, const std::vector<double> &V);
+    std::vector<std::vector<double>> swerve_control(const std::vector<std::vector<double>> &swerve_num);
     /*swerve drive cal end*/
 
     /*value declare begin*/

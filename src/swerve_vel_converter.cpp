@@ -144,7 +144,7 @@ void SwerveVelConverter::vel_callback(const geometry_msgs::msg::Twist::SharedPtr
 /*cal timer callback begin*/
 void SwerveVelConverter::cal_callback()
 {
-    std::vector<std::vector<double>> swerve = this->swerve_cal(this->theta, this->v);
+    std::vector<std::vector<double>> swerve = this->swerve_control(this->swerve_cal(this->theta, this->v));
     std::vector<std::vector<std_msgs::msg::Float64>> txdata(2, std::vector<std_msgs::msg::Float64>(3));
     if(wheel0_vel->is_activated() && wheel1_vel->is_activated() && wheel2_vel->is_activated() && swerve0_pos->is_activated() && swerve1_pos->is_activated() && swerve2_pos->is_activated())
     {
@@ -182,6 +182,11 @@ std::vector<std::vector<double>> SwerveVelConverter::swerve_cal(const double The
     wheelandstare[1][2] = atan2(velocity[2][1], velocity[2][0]);
 
     return wheelandstare;
+}
+std::vector<std::vector<double>> SwerveVelConverter::swerve_control(const std::vector<std::vector<double>> &swerve_num)
+{
+    std::vector<std::vector<double>> post_swerve(2, std::vector<double>(3, 0));
+    return post_swerve;
 }
 /*swerve drive cal end*/
 
