@@ -6,14 +6,17 @@
         <pose> 0 0 0 0 0 0</pose>
         <inertial>
             <inertia>
-                <ixx>1</ixx>
-                <ixy>0</ixy>
+                <ixx>1.168E+5</ixx>
+                <ixy>5.029E-10</ixy>
                 <ixz>0</ixz>
-                <iyy>1</iyy>
-                <iyz>0</iyz>
-                <izz>1</izz>
+                <iyx>5.029E-10</iyx>
+                <iyy>1.082E+5</iyy>
+                <iyz>2.078E+02</iyz>
+                <izx>0</izx>
+                <izy>2.078E+02</izy>
+                <izz>2.245E+5</izz>
             </inertia>
-            <mass>25.0</mass>
+            <mass>3.911</mass>
         </inertial>
 
         <collision name="collision">
