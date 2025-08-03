@@ -39,11 +39,7 @@ private:
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state);
     CallbackReturn on_activate(const rclcpp_lifecycle::State &state);
     CallbackReturn on_deactivate(const rclcpp_lifecycle::State &state);
-    CallbackReturn on_cleanup(const rclcpp_lifecycle::State &state)
-    {
-        pose_publisher.reset();
-        return CallbackReturn::SUCCESS;
-    }
+    CallbackReturn on_cleanup(const rclcpp_lifecycle::State &state);
     CallbackReturn on_error(const rclcpp_lifecycle::State &state)
     {
         RCLCPP_INFO(this->get_logger(), "on error!");
