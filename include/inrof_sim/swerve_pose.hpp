@@ -18,15 +18,10 @@ class PoseConverter : public rclcpp_lifecycle::LifecycleNode
 public:
     using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
-    PoseConverter()
-    : rclcpp_lifecycle::LifecycleNode(std::string("pose_converter"))
-    {
-
-    }
-    ~PoseConverter()
-    {
-
-    }
+    /*class func begin*/
+    PoseConverter();
+    ~PoseConverter();
+    /*class func end*/
 
 private:
     float x;

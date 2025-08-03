@@ -1,6 +1,18 @@
 #include "rclcpp/rclcpp.hpp"
 #include "swerve_pose.hpp"
 
+/*class func begin*/
+PoseConverter::PoseConverter()
+: rclcpp_lifecycle::LifecycleNode(std::string("pose_converter"))
+{
+
+}
+
+PoseConverter::~PoseConverter()
+{
+
+}
+/*class func end*/
 
 int main(int argc, char *argv[])
 {
