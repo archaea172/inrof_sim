@@ -6,15 +6,12 @@
         <pose> 0 0 0 0 0 0</pose>
         <inertial>
             <inertia>
-                <ixx>1.168E+5</ixx>
-                <ixy>5.029E-10</ixy>
+                <ixx>0.1164</ixx>
+                <iyy>0.1080</iyy>
+                <izz>0.2243</izz>
+                <ixy>0</ixy>
                 <ixz>0</ixz>
-                <iyx>5.029E-10</iyx>
-                <iyy>1.082E+5</iyy>
-                <iyz>2.078E+02</iyz>
-                <izx>0</izx>
-                <izy>2.078E+02</izy>
-                <izz>2.245E+5</izz>
+                <iyz>0</iyz>
             </inertia>
             <mass>3.911</mass>
         </inertial>
@@ -53,14 +50,14 @@
         <pose>0.27 0.155885 0 0 0 0</pose>
         <inertial>
             <inertia>
-                <ixx>1</ixx>
+                <ixx>0.003907</ixx>
+                <iyy>0.005691</iyy>
+                <izz>0.003907</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
-                <iyy>1</iyy>
                 <iyz>0</iyz>
-                <izz>1</izz>
             </inertia>
-            <mass>1.0</mass>
+            <mass>2.599764</mass>
         </inertial>
 
         <collision name="collision">
@@ -97,14 +94,14 @@
         <pose>-0.27 0.155885 0 0 0 0</pose>
         <inertial>
             <inertia>
-                <ixx>1</ixx>
+                <ixx>0.003907</ixx>
+                <iyy>0.005691</iyy>
+                <izz>0.003907</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
-                <iyy>1</iyy>
                 <iyz>0</iyz>
-                <izz>1</izz>
             </inertia>
-            <mass>1.0</mass>
+            <mass>2.599764</mass>
         </inertial>
 
         <collision name="collision">
@@ -141,14 +138,14 @@
         <pose>0 -0.311 0 0 0 0</pose>
         <inertial>
             <inertia>
-                <ixx>1</ixx>
+                <ixx>0.003907</ixx>
+                <iyy>0.005691</iyy>
+                <izz>0.003907</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
-                <iyy>1</iyy>
                 <iyz>0</iyz>
-                <izz>1</izz>
             </inertia>
-            <mass>1.0</mass>
+            <mass>2.599764</mass>
         </inertial>
 
         <collision name="collision">
