@@ -7,6 +7,7 @@
 
 #include "std_msgs/msg/float64.hpp"
 #include "geometry_msgs/msg/twist.hpp"
+#include "geometry_msgs/msg/pose2_d.hpp"
 
 #include <string>
 #include <chrono>
@@ -58,6 +59,7 @@ private:
 
     /*subscribe callback begin*/
     void vel_callback(const geometry_msgs::msg::Twist::SharedPtr rxdata);
+    void pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata);
     /*subscribe callback end*/
 
     /*parameter callback begin*/
