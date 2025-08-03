@@ -49,6 +49,13 @@ PoseConverter::CallbackReturn PoseConverter::on_cleanup(const rclcpp_lifecycle::
     RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
     return CallbackReturn::SUCCESS;
 }
+
+PoseConverter::CallbackReturn PoseConverter::on_error(const rclcpp_lifecycle::State &state)
+{
+    RCLCPP_INFO(this->get_logger(), "on error!");
+    RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
+    return CallbackReturn::SUCCESS;
+}
 /*lifecycle callback end*/
 
 int main(int argc, char *argv[])
