@@ -36,10 +36,7 @@ private:
     /*node func end*/
 
     /*lifecycle callback begin*/
-    CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
-    {
-        return CallbackReturn::SUCCESS;
-    }
+    CallbackReturn on_configure(const rclcpp_lifecycle::State &state);
     CallbackReturn on_activate(const rclcpp_lifecycle::State &state)
     {
         pose_publisher->on_activate();
