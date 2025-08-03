@@ -13,7 +13,7 @@
                 <iyz>0</iyz>
                 <izz>1</izz>
             </inertia>
-            <mass>1.0</mass>
+            <mass>25.0</mass>
         </inertial>
 
         <collision name="collision">
@@ -114,8 +114,8 @@
         <surface>
             <friction>
                 <ode>
-                    <mu>0.3</mu>
-                    <mu2>0.3</mu2>
+                    <mu>1.07</mu>
+                    <mu2>1.07</mu2>
                 </ode>
             </friction>
         </surface>
@@ -158,8 +158,8 @@
         <surface>
             <friction>
                 <ode>
-                    <mu>0.3</mu>
-                    <mu2>0.3</mu2>
+                    <mu>1.07</mu>
+                    <mu2>1.07</mu2>
                 </ode>
             </friction>
         </surface>
