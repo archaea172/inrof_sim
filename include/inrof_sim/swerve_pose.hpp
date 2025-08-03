@@ -37,16 +37,7 @@ private:
 
     /*lifecycle callback begin*/
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state);
-    CallbackReturn on_activate(const rclcpp_lifecycle::State &state)
-    {
-        pose_publisher->on_activate();
-        posearray_subscriber = this->create_subscription<geometry_msgs::msg::PoseArray>(
-            std::string("/world/inrof_field/pose/info"),
-            rclcpp::SystemDefaultsQoS(),
-            std::bind(&PoseConverter::posearray_callback, this, _1)
-        );
-        return CallbackReturn::SUCCESS;
-    }
+    CallbackReturn on_activate(const rclcpp_lifecycle::State &state);
     CallbackReturn on_deactivate(const rclcpp_lifecycle::State &state)
     {
         pose_publisher->on_deactivate();
