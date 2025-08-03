@@ -3,7 +3,7 @@
 
 /*class func begin*/
 PoseConverter::PoseConverter()
-: rclcpp_lifecycle::LifecycleNode(std::string("pose_converter"))
+: rclcpp_lifecycle::LifecycleNode(std::string("swerve_pose"))
 {
     pose_publisher= this->create_publisher<geometry_msgs::msg::Pose2D>(
         std::string("pose"), rclcpp::SystemDefaultsQoS()
