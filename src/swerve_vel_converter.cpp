@@ -78,6 +78,11 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_activate(const rclcpp_
     /*value initialize begin*/
     this->theta = 0;
     this->v.resize(3);
+    this->P_Swerve_drive = {
+        {0, 0},
+        {0, 0},
+        {0, 0}
+    };
     /*value initialize begin*/
     RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
     return CallbackReturn::SUCCESS;
@@ -145,6 +150,7 @@ void SwerveVelConverter::vel_callback(const geometry_msgs::msg::Twist::SharedPtr
 void SwerveVelConverter::cal_callback()
 {
     std::vector<std::vector<double>> swerve = this->swerve_control(this->swerve_cal(this->theta, this->v));
+    this->P_Swerve_drive = swerve;
     std::vector<std::vector<std_msgs::msg::Float64>> txdata(2, std::vector<std_msgs::msg::Float64>(3));
     if(wheel0_vel->is_activated() && wheel1_vel->is_activated() && wheel2_vel->is_activated() && swerve0_pos->is_activated() && swerve1_pos->is_activated() && swerve2_pos->is_activated())
     {
@@ -186,6 +192,13 @@ std::vector<std::vector<double>> SwerveVelConverter::swerve_cal(const double The
 std::vector<std::vector<double>> SwerveVelConverter::swerve_control(const std::vector<std::vector<double>> &swerve_num)
 {
     std::vector<std::vector<double>> post_swerve(2, std::vector<double>(3, 0));
+    for (int i = 0; i < 3; i++) {
+    if (swerve_num[1][i] < 0) {
+        post_swerve[1][i] += M_PI;
+        post_swerve[0][i] *= -1;
+    }
+    // if (0 == swerve_num[0][i]) Swerve_drive[1][i] = this->p_Swerve_drive[1][i];
+	}
     return post_swerve;
 }
 /*swerve drive cal end*/
