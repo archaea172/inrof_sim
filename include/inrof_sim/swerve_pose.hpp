@@ -24,20 +24,20 @@ public:
     /*class func end*/
 
 private:
+    /*declare value begin*/
     float x;
     float y;
     float theta;
+    /*declare value end*/
 
+    /*node func begin*/
     rclcpp::Subscription<geometry_msgs::msg::PoseArray>::SharedPtr posearray_subscriber;
     rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Pose2D>::SharedPtr pose_publisher;
+    /*node func end*/
 
-    // lifecycle begin
+    /*lifecycle callback begin*/
     CallbackReturn on_configure(const rclcpp_lifecycle::State &state)
     {
-        // create publisher
-        pose_publisher= this->create_publisher<geometry_msgs::msg::Pose2D>(
-            std::string("pose"), rclcpp::SystemDefaultsQoS()
-        );
         return CallbackReturn::SUCCESS;
     }
     CallbackReturn on_activate(const rclcpp_lifecycle::State &state)
