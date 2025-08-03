@@ -130,6 +130,25 @@ install(
   DESTINATION lib/${PROJECT_NAME}
 )
 
+# add pose
+add_executable(swerve_pose
+  src/swerve_pose.cpp
+  include/${PROJECT_NAME}/swerve_pose.hpp
+)
+ament_target_dependencies(swerve_pose
+  rclcpp
+  rclcpp_lifecycle
+  geometry_msgs
+)
+target_include_directories(swerve_pose
+  PRIVATE include/${PROJECT_NAME}
+)
+
+install(
+  TARGETS swerve_pose
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 # launch
 install(
   DIRECTORY launch worlds models hooks config
