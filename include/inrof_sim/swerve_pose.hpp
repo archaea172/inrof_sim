@@ -44,22 +44,5 @@ private:
     CallbackReturn on_shutdown(const rclcpp_lifecycle::State &state);
     // lifecycle end
 
-    void posearray_callback(const geometry_msgs::msg::PoseArray::SharedPtr rxdata)
-    {
-        x       = rxdata->poses[1].position.x;
-        y       = rxdata->poses[1].position.y;
-        theta   = std::atan2(
-            2*(rxdata->poses[1].orientation.w*rxdata->poses[1].orientation.z + rxdata->poses[1].orientation.x*rxdata->poses[1].orientation.y),
-            1 - 2*(std::pow(rxdata->poses[1].orientation.y, 2) + std::pow(rxdata->poses[1].orientation.z, 2))
-        ) + M_PI/4;
-
-        if (pose_publisher -> is_activated())
-        {
-            geometry_msgs::msg::Pose2D txdata;
-            txdata.x = this->x;
-            txdata.y = this->y;
-            txdata.theta = this->theta;
-            pose_publisher->publish(txdata);
-        }
-    }
+    void posearray_callback(const geometry_msgs::msg::PoseArray::SharedPtr rxdata);
 };
