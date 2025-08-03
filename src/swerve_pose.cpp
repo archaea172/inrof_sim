@@ -73,7 +73,7 @@ void PoseConverter::posearray_callback(const geometry_msgs::msg::PoseArray::Shar
     theta   = std::atan2(
         2*(rxdata->poses[array_num].orientation.w*rxdata->poses[array_num].orientation.z + rxdata->poses[array_num].orientation.x*rxdata->poses[array_num].orientation.y),
         1 - 2*(std::pow(rxdata->poses[array_num].orientation.y, 2) + std::pow(rxdata->poses[array_num].orientation.z, 2))
-    ) + M_PI/4;
+    );
 
     if (pose_publisher -> is_activated())
     {
