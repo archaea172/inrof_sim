@@ -193,12 +193,15 @@ std::vector<std::vector<double>> SwerveVelConverter::swerve_control(const std::v
 {
     std::vector<std::vector<double>> post_swerve(2, std::vector<double>(3, 0));
     for (int i = 0; i < 3; i++) {
-    if (swerve_num[1][i] < 0) {
-        post_swerve[1][i] += M_PI;
-        post_swerve[0][i] *= -1;
+        if (swerve_num[1][i] < 0) {
+            post_swerve[1][i] += M_PI;
+            post_swerve[0][i] *= -1;
+        }
+        if (0 == swerve_num[0][0]) post_swerve[1][i] = M_PI/6;
+        if (0 == swerve_num[0][1]) post_swerve[1][i] = M_PI/6*5;
+        if (0 == swerve_num[0][2]) post_swerve[1][i] = M_PI;
     }
-    // if (0 == swerve_num[0][i]) Swerve_drive[1][i] = this->p_Swerve_drive[1][i];
-	}
+    
     return post_swerve;
 }
 /*swerve drive cal end*/
