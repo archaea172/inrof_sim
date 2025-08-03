@@ -144,6 +144,11 @@ void SwerveVelConverter::vel_callback(const geometry_msgs::msg::Twist::SharedPtr
     this->v[1] = rxdata->linear.y;
     this->v[2] = rxdata->angular.z;
 }
+
+void SwerveVelConverter::pose_callback(const geometry_msgs::msg::Pose2D::SharedPtr rxdata)
+{
+    this->theta = rxdata->theta;
+}
 /*subscribe callback end*/
 
 /*cal timer callback begin*/
