@@ -72,7 +72,7 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_activate(const rclcpp_
         rclcpp::SystemDefaultsQoS(),
         std::bind(&SwerveVelConverter::vel_callback, this, _1)
     );
-    cal_timer = this->create_wall_timer(0.001s, std::bind(&SwerveVelConverter::cal_callback, this));
+    cal_timer = this->create_wall_timer(0.02s, std::bind(&SwerveVelConverter::cal_callback, this));
     /*subscriber and timer end*/
 
     /*value initialize begin*/
@@ -162,6 +162,7 @@ void SwerveVelConverter::cal_callback()
         swerve1_pos->publish(txdata[1][1]);
         swerve2_pos->publish(txdata[1][2]);
     }
+    // std::cout << swerve[1][0] << std::endl;
 }
 /*cal timer callback end*/
 
@@ -191,17 +192,17 @@ std::vector<std::vector<double>> SwerveVelConverter::swerve_cal(const double The
 }
 std::vector<std::vector<double>> SwerveVelConverter::swerve_control(const std::vector<std::vector<double>> &swerve_num)
 {
-    std::vector<std::vector<double>> post_swerve(2, std::vector<double>(3, 0));
+    std::vector<std::vector<double>> post_swerve = swerve_num;
     for (int i = 0; i < 3; i++) {
-        if (swerve_num[1][i] < 0) {
+        if (post_swerve[1][i] < 0) {
             post_swerve[1][i] += M_PI;
             post_swerve[0][i] *= -1;
         }
-        if (0 == swerve_num[0][0]) post_swerve[1][i] = M_PI/6;
-        if (0 == swerve_num[0][1]) post_swerve[1][i] = M_PI/6*5;
-        if (0 == swerve_num[0][2]) post_swerve[1][i] = M_PI;
     }
-    
+    if (0 == post_swerve[0][0]) post_swerve[1][0] = M_PI/6;
+    if (0 == post_swerve[0][1]) post_swerve[1][1] = M_PI/6*5;
+    if (0 == post_swerve[0][2]) post_swerve[1][2] = M_PI/2;
+
     return post_swerve;
 }
 /*swerve drive cal end*/
