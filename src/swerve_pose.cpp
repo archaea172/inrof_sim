@@ -31,6 +31,16 @@ PoseConverter::CallbackReturn PoseConverter::on_activate(const rclcpp_lifecycle:
         rclcpp::SystemDefaultsQoS(),
         std::bind(&PoseConverter::posearray_callback, this, _1)
     );
+    RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
+    return CallbackReturn::SUCCESS;
+}
+
+PoseConverter::CallbackReturn PoseConverter::on_deactivate(const rclcpp_lifecycle::State &state)
+{
+    pose_publisher->on_deactivate();
+    posearray_subscriber.reset();
+
+    RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
     return CallbackReturn::SUCCESS;
 }
 /*lifecycle callback end*/
