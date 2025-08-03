@@ -43,7 +43,7 @@ private:
     rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Float64>::SharedPtr swerve2_pos;
 
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr vel_subscriber;
-    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr pose_subscriber;
+    rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr pose_subscriber;
 
     OnSetParametersCallbackHandle::SharedPtr parameter_callback_handle_;
     /*node value define end*/

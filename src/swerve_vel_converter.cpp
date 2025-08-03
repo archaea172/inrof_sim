@@ -72,6 +72,11 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_activate(const rclcpp_
         rclcpp::SystemDefaultsQoS(),
         std::bind(&SwerveVelConverter::vel_callback, this, _1)
     );
+    pose_subscriber = this->create_subscription<geometry_msgs::msg::Pose2D>(
+        std::string("pose"),
+        rclcpp::SystemDefaultsQoS(),
+        std::bind(&SwerveVelConverter::pose_callback, this, _1)
+    );
     cal_timer = this->create_wall_timer(0.02s, std::bind(&SwerveVelConverter::cal_callback, this));
     /*subscriber and timer end*/
 
@@ -99,6 +104,7 @@ SwerveVelConverter::CallbackReturn SwerveVelConverter::on_deactivate(const rclcp
     swerve2_pos->on_deactivate();
 
     vel_subscriber.reset();
+    pose_subscriber.reset();
     cal_timer.reset();
     /*node func reset begin*/
     RCLCPP_INFO(this->get_logger(), "from [%s]", state.label().c_str());
