@@ -53,13 +53,13 @@ private:
     /*generate input begin*/
     Eigen::VectorXd sample_multivariate_normal(
         const Eigen::VectorXd &mean,
-        const Eigen::MatrixXd &cov,
+        const Eigen::MatrixXd &L,
         std::mt19937 &gen
     );
 
     Eigen::MatrixXd generate_input_array(
-        Eigen::VectorXd mu,
-        Eigen::MatrixXd sigma
+        Eigen::VectorXd &mu,
+        Eigen::MatrixXd &L
     );
     /*generate input end*/
 };

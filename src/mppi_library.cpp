@@ -53,14 +53,19 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vecto
     Eigen::VectorXd S_array(sampling_number_);
     Eigen::VectorXd init_state_eigen = Eigen::Map<Eigen::VectorXd>(&init_state[0], init_state.size());
 
+    Eigen::MatrixXd L = sigma.llt().matrixL();
+    Eigen::MatrixXd first_input_matrix(this->input_dim_, this->sampling_number_);
+
     for (size_t i = 0; i < (size_t)this->sampling_number_; i++) {
-        input_array[i] = this->generate_input_array(mu, sigma);
+        input_array[i] = this->generate_input_array(mu, L);
         state_array[i] = this->generate_model_state(
             input_array[i],
             init_state_eigen
         );
 
         S_array(i) = calc_evaluation(input_array[i], state_array[i], goal_state_eig);
+
+        first_input_matrix.col(i) = input_array[i].row(0).transpose();
     }
     double S_ref = S_array.minCoeff();
 
@@ -71,9 +76,7 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vecto
     double weight_sum = weight.sum();
     weight_normal = weight / weight_sum;
 
-    Eigen::VectorXd input(input_dim_);
-    input.setZero();
-    for (size_t i = 0; i < (size_t)sampling_number_; i++) input += weight_normal(i) * input_array[i].row(0).transpose();
+    Eigen::VectorXd input = first_input_matrix * weight_normal;
 
     std::vector<double> return_input(input.data(), input.data() + input.size());
     return return_input;
@@ -83,7 +86,7 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vecto
 /*estimate func begin*/
 double MppiControl::calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose)
 {
-    Eigen::MatrixXf w_list(this->sampling_number_, 4);
+    Eigen::MatrixXf w_list(this->predict_horizon_, 4);
     for (size_t i = 0; i < (size_t)w_list.rows(); i++) omni_calc(StateList(i, 2), InputList(i, 0), InputList(i, 1), InputList(i, 2), &w_list(i, 0), &w_list(i, 1), &w_list(i, 2), &w_list(i, 3));
 
     Eigen::VectorXd S_list(5);
@@ -105,8 +108,8 @@ double MppiControl::evaluate_ref(const Eigen::VectorXd &value, const Eigen::Vect
 }
 double MppiControl::evaluate_smooth(const Eigen::VectorXd &value)
 {
-    double sum_diff = 0;
-    for (size_t i = 1; i < (size_t)value.size(); i++) sum_diff += std::pow(value(i) - value(i-1), 2);
+    if (value.size() < 2) return 0.0;
+    double sum_diff = (value.tail(value.size() - 1) - value.head(value.size() - 1)).squaredNorm();
     return sum_diff;
 }
 /*estimate func end*/
@@ -138,24 +141,23 @@ double MppiControl::clamp(const double value, const double max_value, const doub
 /*generate input begin*/
 Eigen::VectorXd MppiControl::sample_multivariate_normal(
     const Eigen::VectorXd &mean,
-    const Eigen::MatrixXd &cov,
+    const Eigen::MatrixXd &L,
     std::mt19937 &gen
 )
 {
     std::normal_distribution<> dist(0.0, 1.0);
     Eigen::VectorXd z(mean.size());
     for (int i = 0; i < mean.size(); ++i) z(i) = dist(gen);
-    Eigen::MatrixXd L = cov.llt().matrixL();
     return mean + L*z;
 }
 
-Eigen::MatrixXd MppiControl::generate_input_array(Eigen::VectorXd mu, Eigen::MatrixXd sigma)
+Eigen::MatrixXd MppiControl::generate_input_array(Eigen::VectorXd &mu, Eigen::MatrixXd &L)
 {
     Eigen::MatrixXd input_array(this->predict_horizon_, this->input_dim_);
 
     for (size_t i = 0; i < (size_t)this->predict_horizon_; i++)
     {
-        input_array.row(i) = this->sample_multivariate_normal(mu, sigma, gen_);
+        input_array.row(i) = this->sample_multivariate_normal(mu, L, gen_);
         for (size_t j = 0; j < (size_t)this->input_dim_; j++) input_array(i, j) = this->clamp(input_array(i, j), max_input_value_[j], -max_input_value_[j]);
     }
     return input_array;
