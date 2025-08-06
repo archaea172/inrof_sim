@@ -6,14 +6,14 @@
         <pose> 0 0 0 0 0 0</pose>
         <inertial>
             <inertia>
-                <ixx>1</ixx>
+                <ixx>0.1164</ixx>
+                <iyy>0.1080</iyy>
+                <izz>0.2243</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
-                <iyy>1</iyy>
                 <iyz>0</iyz>
-                <izz>1</izz>
             </inertia>
-            <mass>1.0</mass>
+            <mass>3.911</mass>
         </inertial>
 
         <collision name="collision">
@@ -50,14 +50,14 @@
         <pose>0.27 0.155885 0 0 0 0</pose>
         <inertial>
             <inertia>
-                <ixx>1</ixx>
+                <ixx>0.003907</ixx>
+                <iyy>0.005691</iyy>
+                <izz>0.003907</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
-                <iyy>1</iyy>
                 <iyz>0</iyz>
-                <izz>1</izz>
             </inertia>
-            <mass>1.0</mass>
+            <mass>2.599764</mass>
         </inertial>
 
         <collision name="collision">
@@ -94,14 +94,14 @@
         <pose>-0.27 0.155885 0 0 0 0</pose>
         <inertial>
             <inertia>
-                <ixx>1</ixx>
+                <ixx>0.003907</ixx>
+                <iyy>0.005691</iyy>
+                <izz>0.003907</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
-                <iyy>1</iyy>
                 <iyz>0</iyz>
-                <izz>1</izz>
             </inertia>
-            <mass>1.0</mass>
+            <mass>2.599764</mass>
         </inertial>
 
         <collision name="collision">
@@ -114,8 +114,8 @@
         <surface>
             <friction>
                 <ode>
-                    <mu>0.3</mu>
-                    <mu2>0.3</mu2>
+                    <mu>1.07</mu>
+                    <mu2>1.07</mu2>
                 </ode>
             </friction>
         </surface>
@@ -138,14 +138,14 @@
         <pose>0 -0.311 0 0 0 0</pose>
         <inertial>
             <inertia>
-                <ixx>1</ixx>
+                <ixx>0.003907</ixx>
+                <iyy>0.005691</iyy>
+                <izz>0.003907</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
-                <iyy>1</iyy>
                 <iyz>0</iyz>
-                <izz>1</izz>
             </inertia>
-            <mass>1.0</mass>
+            <mass>2.599764</mass>
         </inertial>
 
         <collision name="collision">
@@ -158,8 +158,8 @@
         <surface>
             <friction>
                 <ode>
-                    <mu>0.3</mu>
-                    <mu2>0.3</mu2>
+                    <mu>1.07</mu>
+                    <mu2>1.07</mu2>
                 </ode>
             </friction>
         </surface>
@@ -360,34 +360,43 @@
 
         <plugin name="ignition::gazebo::systems::JointPositionController" filename="libignition-gazebo6-joint-position-controller-system.so">
             <joint_name>stare0_joint</joint_name>
-            <topic>/swerve/cmd_pos0</topic>
+            <topic>/swerve/swerve_pos0</topic>
             <p_gain>10</p_gain>
             <d_gain>5</d_gain>
         </plugin>
         <plugin name="ignition::gazebo::systems::JointPositionController" filename="libignition-gazebo6-joint-position-controller-system.so">
             <joint_name>stare1_joint</joint_name>
-            <topic>/swerve/cmd_pos1</topic>
+            <topic>/swerve/swerve_pos1</topic>
             <p_gain>10</p_gain>
             <d_gain>5</d_gain>
         </plugin>
         <plugin name="ignition::gazebo::systems::JointPositionController" filename="libignition-gazebo6-joint-position-controller-system.so">
             <joint_name>stare2_joint</joint_name>
-            <topic>/swerve/cmd_pos2</topic>
+            <topic>/swerve/swerve_pos2</topic>
             <p_gain>10</p_gain>
             <d_gain>5</d_gain>
         </plugin>
         
         <plugin name="ignition::gazebo::systems::JointController" filename="libignition-gazebo6-joint-controller-system.so">
             <joint_name>wheel0_joint</joint_name>
-            <topic>/swerve/cmd_vel0</topic>
+            <topic>/swerve/wheel_vel0</topic>
+            <use_force_commands>true</use_force_commands>
+            <p_gain>0.2</p_gain>
+            <i_gain>0.01</i_gain>
         </plugin>
         <plugin name="ignition::gazebo::systems::JointController" filename="libignition-gazebo6-joint-controller-system.so">
             <joint_name>wheel1_joint</joint_name>
-            <topic>/swerve/cmd_vel1</topic>
+            <topic>/swerve/wheel_vel1</topic>
+            <use_force_commands>true</use_force_commands>
+            <p_gain>0.2</p_gain>
+            <i_gain>0.01</i_gain>
         </plugin>
         <plugin name="ignition::gazebo::systems::JointController" filename="libignition-gazebo6-joint-controller-system.so">
             <joint_name>wheel2_joint</joint_name>
-            <topic>/swerve/cmd_vel2</topic>
+            <topic>/swerve/wheel_vel2</topic>
+            <use_force_commands>true</use_force_commands>
+            <p_gain>0.2</p_gain>
+            <i_gain>0.01</i_gain>
         </plugin>
 
     </model>

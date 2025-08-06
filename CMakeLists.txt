@@ -115,6 +115,45 @@ install(
   DESTINATION lib/${PROJECT_NAME}
 )
 
+# add swerve
+add_executable(swerve_vel_converter
+  src/swerve_vel_converter.cpp
+  include/${PROJECT_NAME}/swerve_vel_converter.hpp
+)
+ament_target_dependencies(swerve_vel_converter
+  rclcpp
+  rclcpp_lifecycle
+  geometry_msgs
+  std_msgs
+)
+target_include_directories(swerve_vel_converter
+  PRIVATE include/${PROJECT_NAME}
+)
+
+install(
+  TARGETS swerve_vel_converter
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# add pose
+add_executable(swerve_pose
+  src/swerve_pose.cpp
+  include/${PROJECT_NAME}/swerve_pose.hpp
+)
+ament_target_dependencies(swerve_pose
+  rclcpp
+  rclcpp_lifecycle
+  geometry_msgs
+)
+target_include_directories(swerve_pose
+  PRIVATE include/${PROJECT_NAME}
+)
+
+install(
+  TARGETS swerve_pose
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 # launch
 install(
   DIRECTORY launch worlds models hooks config
