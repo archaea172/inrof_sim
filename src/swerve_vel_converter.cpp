@@ -173,7 +173,6 @@ void SwerveVelConverter::cal_callback()
         swerve1_pos->publish(txdata[1][1]);
         swerve2_pos->publish(txdata[1][2]);
     }
-    // std::cout << swerve[1][0] << std::endl;
 }
 /*cal timer callback end*/
 
