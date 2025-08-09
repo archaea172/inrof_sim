@@ -73,7 +73,15 @@ public:
 
 private:
     /*value declare begin*/
-    
+
+    /*weight begin*/
+    double k_goal_angle;
+    double k_goal_linear;
+    double k_smooth_angle_vel;
+    double k_smooth_linear_vel;
+    double k_smooth_wheel;
+    double k_smooth_stare;
+    /*weight end*/
     /*value declare end*/
 };
 /*node end*/
