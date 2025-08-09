@@ -45,7 +45,8 @@ private:
     /*model func end*/
 
     /*swerve drive sim begin*/
-
+    std::vector<std::vector<double>> swerve_cal(const double Theta, const std::vector<double> &V);
+    std::vector<std::vector<double>> swerve_control(const std::vector<std::vector<double>> &swerve_num);
     /*swerve drive sim end*/
 };
 /*mppi class end*/
