@@ -94,5 +94,11 @@ MPPISwerveNode::MPPISwerveNode()
     double R = this->get_parameter("robot_radius").as_double();
     double r = this->get_parameter("wheel_radius").as_double();
     /*parameter set end*/
+
+    /*publisher create begin*/
+    vel_publisher = this->create_publisher<geometry_msgs::msg::Twist>(
+        std::string("cmd_vel"), rclcpp::SystemDefaultsQoS()
+    );
+    /*publisher create end*/
 }
 /*node end*/
