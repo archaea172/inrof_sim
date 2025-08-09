@@ -72,7 +72,15 @@ def generate_launch_description():
         arguments=['/world/swerve_sim/pose/info@geometry_msgs/msg/PoseArray[ignition.msgs.Pose_V']
     )
 
+    swerve_vel = LifecycleNode(
+        package='inrof_sim',
+        name='swerve_vel_converter',
+        executable='swerve_vel_converter',
+        namespace='swerve'
+    )
+
     ld.add_action(sim)
+
     ld.add_action(gz_bridge_node_wheel0)
     ld.add_action(gz_bridge_node_wheel1)
     ld.add_action(gz_bridge_node_wheel2)
@@ -80,5 +88,7 @@ def generate_launch_description():
     ld.add_action(gz_bridge_node_stare1)
     ld.add_action(gz_bridge_node_stare2)
     ld.add_action(gz_bridge_node_pose)
+
+    ld.add_action(swerve_vel)
 
     return ld
