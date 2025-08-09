@@ -101,8 +101,8 @@ MPPISwerveNode::MPPISwerveNode()
     );
     /*publisher create end*/
     
-    this->parameter_callback_handle_ = this->add_on_set_parameters_callback(
-        std::bind(&SwerveVelConverter::parameters_callback, this, _1)
+    this->parameter_callback_hanle_ = this->add_on_set_parameters_callback(
+        std::bind(&MPPISwerveNode::parameters_callback, this, _1)
     );
 }
 /*node end*/

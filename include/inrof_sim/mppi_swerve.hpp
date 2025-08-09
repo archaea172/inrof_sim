@@ -90,8 +90,14 @@ private:
     rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr pose_subscriber;
     OnSetParametersCallbackHandle::SharedPtr parameter_callback_hanle_;
     /*node function end*/
-    
+
     /*value declare end*/
+
+    /*parameter callback begin*/
+    rcl_interfaces::msg::SetParametersResult parameters_callback(
+        const std::vector<rclcpp::Parameter> &parameters
+    );
+    /*parameter callback end*/
 };
 /*node end*/
 
