@@ -36,12 +36,12 @@ public:
 
 private:
     /*evaluation func begin*/
-    double calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose);
+    double calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose) override;
     /*evaluation func end*/
 
     /*model func begin*/
-    Eigen::VectorXd model(const Eigen::VectorXd &input, const Eigen::VectorXd &pre_state);
-    Eigen::MatrixXd generate_model_state(const Eigen::MatrixXd &input_array, const Eigen::VectorXd &init_state);
+    Eigen::VectorXd model(const Eigen::VectorXd &input, const Eigen::VectorXd &pre_state) override;
+    Eigen::MatrixXd generate_model_state(const Eigen::MatrixXd &input_array, const Eigen::VectorXd &init_state) override;
     /*model func end*/
 };
 /*mppi class end*/
