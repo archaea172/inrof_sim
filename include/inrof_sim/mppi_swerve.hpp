@@ -44,7 +44,13 @@ public:
     /*main progress end*/
 
 private:
+    /*evaluation func begin*/
+    double calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose);
+    /*evaluation func end*/
 
+    /*model func begin*/
+    Eigen::VectorXd model(const Eigen::VectorXd &input, const Eigen::VectorXd &pre_state);
+    /*model func end*/
 };
 
 #endif
