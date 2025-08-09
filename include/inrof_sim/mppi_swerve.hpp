@@ -58,5 +58,12 @@ private:
 };
 /*mppi class end*/
 
+/*node begin*/
+class MPPISwerveNode : public rclcpp_lifecycle::LifecycleNode
+{
+public:
+    
+};
+/*node end*/
 
 #endif

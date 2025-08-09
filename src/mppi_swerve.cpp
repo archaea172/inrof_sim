@@ -63,7 +63,7 @@ std::vector<std::vector<double>> MppiSwerve::swerve_control(const std::vector<st
 double MppiSwerve::calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose)
 {
     Eigen::VectorXd S_array(this->num_evaluation);
-
+    S_array[0] = this->evaluate_ref();
     double S = gain_vector.dot(S_array);
     return S;
 }
