@@ -57,6 +57,7 @@ PursuitControler::PursuitControler()
     int input_dim = 3;
     p.resize(input_dim);
     v_ref.resize(2);
+    input_array.resize(input_dim);
     /*sizing end*/
     
     std::vector<double> gains = {
@@ -181,7 +182,7 @@ rcl_interfaces::msg::SetParametersResult PursuitControler::parameters_callback(
 /*control timer callback begin*/
 void PursuitControler::control_callback()
 {
-    std::vector<double> input_array(3);
+    input_mu = Eigen::Map<Eigen::VectorXd>(&this->input_array[0], this->input_array.size());
     input_array = this->mppi_controler->run(this->p, this->goal_p, this->input_mu, this->input_sigma, this->iota);
     
     if (vel_publisher->is_activated())

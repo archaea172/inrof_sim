@@ -67,6 +67,7 @@ private:
     /*control timer callback end*/
 
     /*mppi parameter begin*/
+    std::vector<double> input_array;
     int T; // predict horizon
     int K; // sample number
     double dt; // control cycle
