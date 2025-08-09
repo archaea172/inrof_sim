@@ -79,6 +79,13 @@ def generate_launch_description():
         namespace='swerve'
     )
 
+    swerve_pose = LifecycleNode(
+        package='inrof_sim',
+        name='swerve_pose',
+        executable='swerve_pose',
+        namespace='swerve'
+    )
+
     ld.add_action(sim)
 
     ld.add_action(gz_bridge_node_wheel0)
@@ -90,5 +97,6 @@ def generate_launch_description():
     ld.add_action(gz_bridge_node_pose)
 
     ld.add_action(swerve_vel)
+    ld.add_action(swerve_pose)
 
     return ld
