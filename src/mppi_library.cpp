@@ -1,31 +1,6 @@
 #include "mppi_library.hpp"
 #include <math.h>
 
-/*omni_simulate begin*/
-void omni_calc(float theta,float vx,float vy,float omega,float *w0,float *w1,float *w2,float *w3){
-    const float a0 = M_PI/180*45;
-    const float a1 = M_PI/180*135;
-    const float a2 = M_PI/180*225;
-    const float a3 = M_PI/180*315;
-    const float r = 0.03;//m
-    const float R = 0.144;//m
-    float v[3] = {vx, vy, omega};
-    float sint = sin(theta);
-    float cost = cos(theta);
-
-    float arr[4][3] =
-    {{-cos(a0)*sint-sin(a0)*cost, cos(a0)*cost-sin(a0)*sint, R},
-    {-cos(a1)*sint-sin(a1)*cost, cos(a1)*cost-sin(a1)*sint, R},
-    {-cos(a2)*sint-sin(a2)*cost, cos(a2)*cost-sin(a2)*sint, R},
-    {-cos(a3)*sint-sin(a3)*cost, cos(a3)*cost-sin(a3)*sint, R}};
-
-    *w0 = (arr[0][0] * v[0] + arr[0][1] * v[1] + arr[0][2] * v[2]) / r;
-    *w1 = (arr[1][0] * v[0] + arr[1][1] * v[1] + arr[1][2] * v[2]) / r;
-    *w2 = (arr[2][0] * v[0] + arr[2][1] * v[1] + arr[2][2] * v[2]) / r;
-    *w3 = (arr[3][0] * v[0] + arr[3][1] * v[1] + arr[3][2] * v[2]) / r;
-}
-/*omni_simulate end*/
-
 /*class function begin*/
 MppiControl::MppiControl(const int input_dim, const int sampling_number, const int predict_horizon, const std::vector<double> &max_input_value, const double dt, std::vector<double> gain_list)
     : input_dim_(input_dim),
@@ -86,18 +61,7 @@ std::vector<double> MppiControl::run(std::vector<double> &init_state, std::vecto
 /*estimate func begin*/
 double MppiControl::calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose)
 {
-    Eigen::MatrixXf w_list(this->predict_horizon_, 4);
-    for (size_t i = 0; i < (size_t)w_list.rows(); i++) omni_calc(StateList(i, 2), InputList(i, 0), InputList(i, 1), InputList(i, 2), &w_list(i, 0), &w_list(i, 1), &w_list(i, 2), &w_list(i, 3));
-
-    Eigen::VectorXd S_list(5);
-    S_list(0) = this->evaluate_ref(StateList.col(2), Eigen::VectorXd::Ones(this->predict_horizon_)*GoalPose(2));
-    S_list(1) = this->evaluate_ref(StateList.col(0), Eigen::VectorXd::Ones(this->predict_horizon_)*GoalPose(0)) + this->evaluate_ref(StateList.col(1), Eigen::VectorXd::Ones(this->predict_horizon_)*GoalPose(1));
-    S_list(2) = this->evaluate_smooth(InputList.col(2));
-    S_list(3) = 0;
-    for (size_t i = 0; i < 4; i++) S_list(3) += this->evaluate_smooth(w_list.col(i).cast<double>());
-    S_list(4) = this->evaluate_smooth(InputList.col(0)) + this->evaluate_smooth(InputList.col(1));
-
-    double S = S_list.dot(this->gain_vector);
+    double S = 0;
     return S;
 }
 double MppiControl::evaluate_ref(const Eigen::VectorXd &value, const Eigen::VectorXd &value_ref)
