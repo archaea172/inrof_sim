@@ -21,6 +21,7 @@
 using std::placeholders::_1;
 using namespace std::chrono_literals;
 
+/*mppi class begin*/
 class MppiSwerve : public MppiControl
 {
 public:
@@ -53,5 +54,7 @@ private:
     Eigen::MatrixXd generate_model_state(const Eigen::MatrixXd &input_array, const Eigen::VectorXd &init_state);
     /*model func end*/
 };
+/*mppi class end*/
+
 
 #endif
