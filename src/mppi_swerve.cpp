@@ -58,4 +58,11 @@ std::vector<std::vector<double>> MppiSwerve::swerve_control(const std::vector<st
     return post_swerve;
 }
 /*swerve drive cal end*/
+
+/*evaluation begin*/
+double MppiSwerve::calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose)
+{
+    
+}
+/*evaluation end*/
 /*mppi end*/
