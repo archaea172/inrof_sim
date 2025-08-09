@@ -23,6 +23,16 @@ using namespace std::chrono_literals;
 
 class MppiSwerve : public MppiControl
 {
+public:
+    /*type define begin*/
+    using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
+    /*type define end*/
+
+    /*class func begin*/
+    MppiSwerve();
+    ~MppiSwerve();
+    /*class func end*/
+
 
 };
 
