@@ -43,6 +43,10 @@ private:
     Eigen::VectorXd model(const Eigen::VectorXd &input, const Eigen::VectorXd &pre_state) override;
     Eigen::MatrixXd generate_model_state(const Eigen::MatrixXd &input_array, const Eigen::VectorXd &init_state) override;
     /*model func end*/
+
+    /*swerve drive sim begin*/
+
+    /*swerve drive sim end*/
 };
 /*mppi class end*/
 
