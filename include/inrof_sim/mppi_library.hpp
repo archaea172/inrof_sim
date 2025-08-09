@@ -21,7 +21,7 @@ public:
     /*class func end*/
 
     /*main progress begin*/
-    std::vector<double> run(std::vector<double> &init_state, std::vector<double> &goal_state, Eigen::VectorXd &mu, Eigen::MatrixXd &sigma, double iota);
+    virtual std::vector<double> run(std::vector<double> &init_state, std::vector<double> &goal_state, Eigen::VectorXd &mu, Eigen::MatrixXd &sigma, double iota);
     /*main progress end*/
 
 protected:
@@ -36,14 +36,14 @@ protected:
     /*declare value end*/
 
     /*estimate func begin*/
-    double calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose);
+    virtual double calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose);
     double evaluate_ref(const Eigen::VectorXd &value, const Eigen::VectorXd &value_ref);
     double evaluate_smooth(const Eigen::VectorXd &value);
     /*estimate func end*/
 
     /*generate state begin*/
-    Eigen::MatrixXd generate_model_state(const Eigen::MatrixXd &input_array, const Eigen::VectorXd &init_state);
-    Eigen::VectorXd model(const Eigen::VectorXd &input, const Eigen::VectorXd &pre_state);
+    virtual Eigen::MatrixXd generate_model_state(const Eigen::MatrixXd &input_array, const Eigen::VectorXd &init_state);
+    virtual Eigen::VectorXd model(const Eigen::VectorXd &input, const Eigen::VectorXd &pre_state);
     /*generate state end*/
 
     /*util function begin*/
