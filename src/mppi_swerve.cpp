@@ -1,5 +1,7 @@
 #include "mppi_swerve.hpp"
 
+/*mppi begin*/
+/*model func begin*/
 Eigen::VectorXd MppiSwerve::model(const Eigen::VectorXd &input, const Eigen::VectorXd &pre_state)
 {
     Eigen::VectorXd post_state(this->input_dim_);
@@ -14,6 +16,7 @@ Eigen::MatrixXd MppiSwerve::generate_model_state(const Eigen::MatrixXd &input_ar
     for (size_t i = 1; i < (size_t)predict_horizon_; i++) state_array.row(i) = this->model(input_array.row(i), state_array.row(i-1)).transpose();
     return state_array;
 }
+/*model func end*/
 
 /*swerve drive cal begin*/
 std::vector<std::vector<double>> MppiSwerve::swerve_cal(const double Theta, const std::vector<double> &V)
@@ -55,3 +58,4 @@ std::vector<std::vector<double>> MppiSwerve::swerve_control(const std::vector<st
     return post_swerve;
 }
 /*swerve drive cal end*/
+/*mppi end*/
