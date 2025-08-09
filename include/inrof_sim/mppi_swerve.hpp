@@ -34,16 +34,6 @@ public:
     ~MppiSwerve();
     /*class func end*/
 
-    /*main progress begin*/
-    std::vector<double> run(
-        std::vector<double> &init_state,
-        std::vector<double> &goal_state,
-        Eigen::VectorXd &mu,
-        Eigen::MatrixXd &sigma,
-        double iota
-    );
-    /*main progress end*/
-
 private:
     /*evaluation func begin*/
     double calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose);
