@@ -24,7 +24,7 @@ public:
     std::vector<double> run(std::vector<double> &init_state, std::vector<double> &goal_state, Eigen::VectorXd &mu, Eigen::MatrixXd &sigma, double iota);
     /*main progress end*/
 
-private:
+protected:
     /*declare value begin*/
     const int input_dim_;
     const int sampling_number_;
