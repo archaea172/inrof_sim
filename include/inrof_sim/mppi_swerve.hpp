@@ -62,7 +62,19 @@ private:
 class MPPISwerveNode : public rclcpp_lifecycle::LifecycleNode
 {
 public:
+    /*type define begin*/
+    using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
+    /*type define end*/
+
+    /*class func begin*/
+    MPPISwerveNode();
+    ~MPPISwerveNode();
+    /*class func end*/
+
+private:
+    /*value declare begin*/
     
+    /*value declare end*/
 };
 /*node end*/
 
