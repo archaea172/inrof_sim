@@ -82,6 +82,15 @@ private:
     double k_smooth_wheel;
     double k_smooth_stare;
     /*weight end*/
+    
+    /*node function begin*/
+    rclcpp::TimerBase::SharedPtr control_timer;
+    rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr vel_publisher;
+    rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr goal_subscriber;
+    rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr pose_subscriber;
+    OnSetParametersCallbackHandle::SharedPtr parameter_callback_hanle_;
+    /*node function end*/
+    
     /*value declare end*/
 };
 /*node end*/
