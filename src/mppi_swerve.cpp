@@ -100,5 +100,9 @@ MPPISwerveNode::MPPISwerveNode()
         std::string("cmd_vel"), rclcpp::SystemDefaultsQoS()
     );
     /*publisher create end*/
+    
+    this->parameter_callback_handle_ = this->add_on_set_parameters_callback(
+        std::bind(&SwerveVelConverter::parameters_callback, this, _1)
+    );
 }
 /*node end*/
