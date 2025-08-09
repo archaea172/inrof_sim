@@ -63,7 +63,18 @@ std::vector<std::vector<double>> MppiSwerve::swerve_control(const std::vector<st
 double MppiSwerve::calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose)
 {
     Eigen::VectorXd S_array(this->num_evaluation);
-    S_array[0] = this->evaluate_ref();
+    std::vector<std::vector<std::vector<double>>> swerve;
+    for (size_t i = 0; i < this->predict_horizon_; i++)
+    {
+        std::vector<double> return_input(StateList.row(i).transpose().data(), StateList.row(i).transpose().data() + StateList.row(i).transpose().size());
+        swerve[i] = this->swerve_control(this->swerve_cal(StateList(i, 2), return_input));
+    }
+    S_array[0] = this->evaluate_ref(InputList.row(2), GoalPose.row(2));
+    S_array[1] = this->evaluate_ref(InputList.row(0), GoalPose.row(0)) + this->evaluate_ref(InputList.row(1), GoalPose.row(1));
+    S_array[2] = this->evaluate_smooth(InputList.row(2));
+    S_array[3] = this->evaluate_smooth(InputList.row(0)) + this->evaluate_smooth(InputList.row(1));
+    S_array[4] = 0; // this->evaluate_smooth(swerve[0][0])
+    S_array[5] = 0;
     double S = gain_vector.dot(S_array);
     return S;
 }
