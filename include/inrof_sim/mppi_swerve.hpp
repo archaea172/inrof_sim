@@ -38,15 +38,8 @@ private:
     /*declare value begin*/
     double R; // robot radius
     double r; // wheel radius
-
-    /*weight begin*/
-    double k_goal_angle;
-    double k_goal_linear;
-    double k_smooth_angle_vel;
-    double k_smooth_linear_vel;
-    double k_smooth_wheel;
-    double k_smooth_stare;
-    /*weight end*/
+    Eigen::VectorXd gain_vector;
+    int num_evaluation;
     /*declare value end*/
 
     /*evaluation func begin*/
