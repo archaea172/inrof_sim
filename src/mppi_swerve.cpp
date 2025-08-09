@@ -80,3 +80,19 @@ double MppiSwerve::calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd St
 }
 /*evaluation end*/
 /*mppi end*/
+
+/*node begin*/
+MPPISwerveNode::MPPISwerveNode()
+: rclcpp_lifecycle::LifecycleNode(std::string("mppi_swerve_controler"))
+{
+    /*parameter declare begin*/
+    this->declare_parameter<double>("robot_radius", 1.0);
+    this->declare_parameter<double>("wheel_radius", 0.1);
+    /*parameter declare end*/
+
+    /*parameter set begin*/
+    double R = this->get_parameter("robot_radius").as_double();
+    double r = this->get_parameter("wheel_radius").as_double();
+    /*parameter set end*/
+}
+/*node end*/
