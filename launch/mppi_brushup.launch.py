@@ -69,7 +69,7 @@ def generate_launch_description():
         package='ros_gz_bridge',
         name='bridge_pose',
         executable='parameter_bridge',
-        arguments=['/world/swerve_sim/pose/info@geometry_msgs/msg/PoseArray[ignition.msgs.Pose_V']
+        arguments=['/world/mppi_brushup/pose/info@geometry_msgs/msg/PoseArray[ignition.msgs.Pose_V']
     )
 
     swerve_vel = LifecycleNode(
@@ -83,7 +83,8 @@ def generate_launch_description():
         package='inrof_sim',
         name='swerve_pose',
         executable='swerve_pose',
-        namespace='swerve'
+        namespace='swerve',
+        remappings=[('/world/swerve_sim/pose/info', '/world/mppi_brushup/pose/info')]
     )
 
     ld.add_action(sim)
