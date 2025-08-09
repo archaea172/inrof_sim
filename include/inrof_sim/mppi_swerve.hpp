@@ -50,6 +50,7 @@ private:
 
     /*model func begin*/
     Eigen::VectorXd model(const Eigen::VectorXd &input, const Eigen::VectorXd &pre_state);
+    Eigen::MatrixXd generate_model_state(const Eigen::MatrixXd &input_array, const Eigen::VectorXd &init_state);
     /*model func end*/
 };
 
