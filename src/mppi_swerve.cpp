@@ -62,7 +62,9 @@ std::vector<std::vector<double>> MppiSwerve::swerve_control(const std::vector<st
 /*evaluation begin*/
 double MppiSwerve::calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose)
 {
-    
+    double S = 0;
+
+    return S;
 }
 /*evaluation end*/
 /*mppi end*/
