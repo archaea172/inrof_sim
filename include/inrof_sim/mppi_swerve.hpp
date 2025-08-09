@@ -35,6 +35,11 @@ public:
     /*class func end*/
 
 private:
+    /*declare value begin*/
+    double R; // robot radius
+    double r; // wheel radius
+    /*declare value end*/
+
     /*evaluation func begin*/
     double calc_evaluation(Eigen::MatrixXd InputList, Eigen::MatrixXd StateList, Eigen::MatrixXd GoalPose) override;
     /*evaluation func end*/
