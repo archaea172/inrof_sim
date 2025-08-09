@@ -89,7 +89,6 @@ Eigen::MatrixXd MppiControl::generate_model_state(const Eigen::MatrixXd &input_a
 Eigen::VectorXd MppiControl::model(const Eigen::VectorXd &input, const Eigen::VectorXd &pre_state)
 {
     Eigen::VectorXd post_state(this->input_dim_);
-    post_state = pre_state + this->control_cycle_*input;
     return post_state;
 }
 /*generate state end*/
